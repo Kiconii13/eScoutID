@@ -79,6 +79,14 @@ def dashboard():
         user = User.query.filter_by(username=session['username']).first()
         return render_template("dashboard.html", username=user.username)
 
+@app.route("/edit", methods=["POST"])
+def edit():
+    if "username" in session:
+        name = request.form['name']
+        user = User.query.filter_by(username=session['username']).first()
+        user.name = name
+        db.session.commit()
+        return render_template("dashboard.html", username=user.username)
 
 # Logout
 @app.route("/logout")
