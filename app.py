@@ -3,10 +3,10 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
-app.secret_key = "your_secret_key"
+app.secret_key = "8PvUV36JVw59"
 
 # Configure SQL Alchemy
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///users.db"
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///eScoutID.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
 
@@ -17,15 +17,30 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(25), unique=True, nullable=False)
     password_hash = db.Column(db.String(150), nullable=False)
+    password_salt = db.Column(db.String(32), nullable=False)
     role = db.Column(db.String(), default="clan")
-    name = db.Column(db.String(50))
+    first_name = db.Column(db.String(50))
+    last_name = db.Column(db.String(50))
 
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
 
+
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+
+class Odred(db.Model):
+    # Class Variables
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50))
+    city = db.Column(db.String(50))
+    address = db.Column(db.String(50))
+    email = db.Column(db.String(50))
+    founded_at = db.Column(db.Date)
+    staresina_id = db.Column(db.Integer,db.ForeignKey("user.id"))
+    nacelnik_id = db.Column(db.Integer,db.ForeignKey("user.id"))
 
 
 @app.route('/')
@@ -96,4 +111,7 @@ def logout():
 
 
 if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()
+    
     app.run(debug=True)
