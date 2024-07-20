@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% content %}
+
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Ime i prezime</th>
+            <th>Korisničko ime</th>
+            <th>Odred Id</th>
+        </tr>
+    </thead>
+{% for user in users %}
+    <tbody>
+	    <tr>
+            <td>{{ user.id }}</td>
+            <td>{{ user.first_name }} {{ user.last_name }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.odred_id }}</td>
+        </tr>
+    </tbody>
+{% endfor %}
+</table>
+{% endblock %}
