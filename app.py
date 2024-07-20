@@ -17,10 +17,10 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(25), unique=True, nullable=False)
     password_hash = db.Column(db.String(150), nullable=False)
-    password_salt = db.Column(db.String(32), nullable=False)
     role = db.Column(db.String(), default="clan")
     first_name = db.Column(db.String(50))
     last_name = db.Column(db.String(50))
+    odred_id = db.Column(db.Integer,db.ForeignKey("odred.id"))
 
 
     def set_password(self, password):
