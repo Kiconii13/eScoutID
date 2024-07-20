@@ -76,7 +76,8 @@ def register():
 @app.route("/dashboard")
 def dashboard():
     if "username" in session:
-        return render_template("dashboard.html", username=session["username"])
+        user = User.query.filter_by(username=session['username']).first()
+        return render_template("dashboard.html", username=user.username)
 
 
 # Logout
