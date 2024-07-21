@@ -1,25 +1,81 @@
 {% extends "base.html" %}
 
+{% block title %}
+Dashboard
+{% endblock %}
+
 {% block content %}
-    <div class="container">
-        <h1>Welcome, {{ username }}!</h1>
-        <p>Welcome to your dashboard</p>
-        <a href="{{ url_for('logout') }}" class="btn btn-logout">Logout</a>
 
-        <form id = "auth-form" action="{{ url_for('edit') }}" method="post">
-            <input type="text" name="name" placeholder="name" class="input-fieled"/>
-            <input type="button" value="Edit" class="btn btn-login" onClick="setActionForm('edit')" />
-        </form>
+<div class="dash">
+    <div class="img-col">
+        <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="Fotografija">
     </div>
+    <div class="data-col">
+        <h2 class="ime-prezime">
+            {{ current_user.first_name }} {{ current_user.last_name }}
+        </h2>
+        <div class="columns">
+            <div class="left-col">
+                <h3>
+                    Lične informacije
+                </h3>
+                <table>
+                    <tr>
+                        <td>Datum rođenja:</td>
+                        <td>{{ current_user.dob }}</td>
+                    </tr>
+                    <tr>
+                        <td>Broj telefona:</td>
+                        <td>{{ current_user.phone_number }}</td>
+                    </tr>
+                    <tr>
+                        <td>E-Pošta:</td>
+                        <td>{{ current_user.email }}</td>
+                    </tr>
+                    <tr>
+                        <td>Adresa stanovanja:</td>
+                        <td>{{ current_user.address }}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="right-col">
+                <h3>
+                    Odredske informacije
+                </h3>
+                <table>
+                    <tr>
+                        <td>Datum učlanjenja:</td>
+                        <td>{{ current_user.join_date }}</td>
+                    </tr>
+                    <tr>
+                        <td>Jedinica:</td>
+                        <td>{{ current_user.jedinica }}</td>
+                    </tr>
+                    <tr>
+                        <td>Zaduženje:</td>
+                        <td>{{ current_user.role }}</td>
+                    </tr>
+                    <tr>
+                        <td>Plaćena članarina:</td>
+                        <td>{{ current_user.has_paid }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="button-row">
 
-    <script>
-        function setActionForm(action){
-            let form = document.getElementById("auth-form");
-            if (action === 'edit'){
-                form.action = "{{ url_for('edit') }}";
-                form.method = 'post';
-                form.submit();
-            }
-        }
-    </script>
+        </div>
+    </div>
+</div>
+
+<div class="alerts">
+    {% with messages = get_flashed_messages(with_categories=True) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <p class="alert alert-{{ category }}">{{ category }}: {{ message }}</p>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+</div>
+
 {% endblock %}

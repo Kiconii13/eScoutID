@@ -5,10 +5,36 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
-    <title>eScoutID</title>
+    <title>eScoutID - {% block title %}{% endblock %}</title>
 </head>
 <body>
-{% block content %}
-{% endblock %}
+    <nav>
+        <a href="{{ url_for('index') }}">
+            <img src="" alt="eScoutID logo">
+        </a>
+        {% if not current_user.is_anonymous %}
+        <ul>
+            <li>
+                <a href="{{ url_for('dashboard') }}">
+                    Moj nalog
+                </a>
+            </li>
+            <li>
+                <a href="{{ url_for('odred') }}">
+                    Odred
+                </a>
+            </li>
+            <li>
+                <a href="{{ url_for('logout') }}">
+                    Odjavi me
+                </a>
+            </li>
+        </ul>
+        {% endif %}
+    </nav>
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
 </body>
 </html>

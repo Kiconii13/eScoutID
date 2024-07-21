@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}
+Odred
+{% endblock %}
+
+{% block content %}
+
+<div class="alerts">
+    {% with messages = get_flashed_messages(with_categories=True) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <p class="alert alert-{{ category }}">{{ category }}: {{ message }}</p>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+</div>
+
+{% endblock %}
