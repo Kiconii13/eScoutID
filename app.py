@@ -20,12 +20,17 @@ class User(db.Model):
     role = db.Column(db.String(), default="clan")
     first_name = db.Column(db.String(50))
     last_name = db.Column(db.String(50))
-    odred_id = db.Column(db.Integer,db.ForeignKey("odred.id"))
+    odred_id = db.Column(db.Integer, db.ForeignKey("odred.id"))
 
+    # Personal info
+    birth_date = db.Column(db.Date())
+    mobile_number = db.Column(db.String(15))
+    home_address = db.Column(db.String(50))
+    email = db.Column(db.String(50))
+    membership_fee = db.Column(db.Boolean(), unique=False, default=False)
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
-
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
@@ -39,14 +44,18 @@ class Odred(db.Model):
     address = db.Column(db.String(50))
     email = db.Column(db.String(50))
     founded_at = db.Column(db.Date)
-    staresina_id = db.Column(db.Integer,db.ForeignKey("user.id"))
-    nacelnik_id = db.Column(db.Integer,db.ForeignKey("user.id"))
+    staresina_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    nacelnik_id = db.Column(db.Integer, db.ForeignKey("user.id"))
 
 
 @app.route('/')
 def home():  # put application's code here
     if "username" in session:
-        return redirect(url_for("dashboard"))
+        user = User.query.filter_by(username=session["username"]).first()
+        if user.role == "clan":
+            return redirect(url_for("dashboard"))
+        elif user.role == "odred":
+            return redirect(url_for("odredDashboard"))
     return render_template("index.html")
 
 
@@ -61,7 +70,10 @@ def login():
     user = User.query.filter_by(username=username).first()
     if user and user.check_password(password):
         session['username'] = username
-        return redirect(url_for("dashboard"))
+        if user.role == "clan":
+            return redirect(url_for("dashboard"))
+        elif user.role == "odred":
+            return redirect(url_for("odredDashboard"))
     # If False show index
     else:
         return render_template("index.html")
@@ -94,15 +106,22 @@ def dashboard():
         user = User.query.filter_by(username=session['username']).first()
         return render_template("dashboard.html", username=user.username)
 
+
 @app.route("/edit", methods=["POST"])
 def edit():
     if "username" in session:
         name = request.form['name']
         user = User.query.filter_by(username=session['username']).first()
-        user.name = name
+        user.first_name = name
         db.session.commit()
         return render_template("dashboard.html", username=user.username)
 
+@app.route("/odredDashboard")
+def odredDashboard():
+    if "username" in session:
+        odred = User.query.filter_by(username=session['username']).first()
+        users = User.query.filter_by(odred_id = odred.id)
+        return render_template("OdredDashboard.html", users=users)
 # Logout
 @app.route("/logout")
 def logout():
@@ -113,5 +132,5 @@ def logout():
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-    
+
     app.run(debug=True)
