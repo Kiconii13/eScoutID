@@ -84,7 +84,7 @@ def register():
         db.session.commit()
 
         session["username"] = username
-        return redirect(url_for("dashboard"))
+        return redirect(url_for("index"))
 
 
 # Dashboard
@@ -97,8 +97,8 @@ def dashboard():
 @app.route("/odred")
 @login_required
 def odred():
-    flash("Work in progress", "Info")
-    return render_template("odred.html")
+    Broj_Clanova=User.query.filter_by(odred_id = current_user.odred_id).count()
+    return render_template("odred.html", broj_clanova = Broj_Clanova)
 
 @app.route("/odreddashboard")
 @login_required

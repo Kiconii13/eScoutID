@@ -6,6 +6,68 @@ Odred
 
 {% block content %}
 
+<div class="dash">
+    <div class="img-col">
+        <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="Fotografija">
+    </div>
+    <div class="data-col">
+        <h2 class="ime-prezime">
+            Odred Izviđača {{ current_user.odred.name }}
+        </h2>
+        <div class="columns">
+            <div class="left-col">
+                <h3>
+                    Opšte informacije
+                </h3>
+                <table>
+                    <tr>
+                        <td>Datum Osnivanja:</td>
+                        <td>{{ current_user.odred.founded_at }}</td>
+                    </tr>
+                    <tr>
+                        <td>Mesto:</td>
+                        <td>{{ current_user.odred.city }}</td>
+                    </tr>
+                    <tr>
+                        <td>E-Pošta:</td>
+                        <td>{{ current_user.odred.email }}</td>
+                    </tr>
+                    <tr>
+                        <td>Adresa:</td>
+                        <td>{{ current_user.odred.address }}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="right-col">
+                <h3>
+                    Informacije o organizaciji
+                </h3>
+                <table>
+                    <tr>
+                        <td>Starešina odreda: </td>
+                        <td>{{ current_user.odred.staresina.first_name }} {{ current_user.odred.staresina.last_name }}</td>
+                    </tr>
+                    <tr>
+                        <td>Načelnik odreda:</td>
+                        <td>{{ current_user.odred.nacelnik.first_name }} {{ current_user.odred.nacelnik.last_name }}</td>
+                    </tr>
+                    <tr>
+                        <td>Status u savezu:</td>
+                        <td>{{ current_user.odred.status }}</td>
+                    </tr>
+                    <tr>
+                        <td>Broj članova:</td>
+                        <td>{{ broj_clanova }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="button-row">
+
+        </div>
+    </div>
+</div>
+
 <div class="alerts">
     {% with messages = get_flashed_messages(with_categories=True) %}
         {% if messages %}
