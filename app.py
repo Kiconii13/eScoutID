@@ -82,7 +82,7 @@ def register():
         db.session.commit()
 
         session["username"] = username
-        return redirect(url_for("dashboard"))
+        return redirect(url_for("index"))
 
 
 # Dashboard

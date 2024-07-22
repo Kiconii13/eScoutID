@@ -21,6 +21,7 @@ html, body {
 
 body {
   background-image: url('/static/bg_loop.png');
+  background-size: 10%;
   font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif ;
   color: var(--text-color);
   display: flex;
