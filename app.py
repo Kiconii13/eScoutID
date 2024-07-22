@@ -1,3 +1,5 @@
+import datetime
+
 from flask import Flask, render_template, request, redirect, session, url_for, flash
 from flask_login import LoginManager, login_required, login_user, logout_user, current_user
 
@@ -98,22 +100,67 @@ def odred():
     flash("Work in progress", "Info")
     return render_template("odred.html")
 
-
-@app.route("/edit", methods=["POST"])
+@app.route("/odreddashboard")
 @login_required
-def edit():
-    # if "username" in session:
-    name = request.form['name']
+def odreddashboard():
+    return render_template("odredDashboard.html",users = User.query.all())
 
-    user = User.query.filter_by(username=session['username']).first()
-    user.name = name
-    
-    db.session.commit()
-    
-    return render_template("dashboard.html", username=user.username)
+#=>
+@app.route("/add", methods = ["POST","GET"])
+@login_required
+def add():
+    new_user = User()
+    if request.method == "POST":
+        #UPIS U BAZU
+        new_user.username = request.form["username"]
+        new_user.password = User.set_password(new_user, request.form["password"])
+        new_user.first_name = request.form["first_name"]
+        new_user.last_name = request.form["last_name"]
+        new_user.role = request.form["role"]
 
+        dateformat = '%d.%m.%Y.'
+        new_user.dob = datetime.datetime.strptime(request.form["dob"],dateformat)
+        new_user.join_date = datetime.datetime.strptime(request.form["join_date"],dateformat)
 
+        new_user.phone_number = request.form["phone_number"]
+        new_user.email = request.form["email"]
+        new_user.address = request.form["address"]
+        if request.form["has_paid"] == "on": new_user.has_paid = True
+        else: new_user.has_paid = False
+        new_user.jedinica = request.form["jedinica"]
+        new_user.odred_id = request.form["odred_id"]
+        db.session.add(new_user)
+        db.session.commit()
+        return redirect(url_for("odreddashboard"))
+    else:
+        return render_template("addClan.html",h1 = "Dodaj",clan = new_user)
 
+@app.route("/edit/<int:id>", methods = ["POST","GET"])
+@login_required
+def edit(id):
+    if request.method == "POST":
+        user = User.query.get(id)
+        user.username = request.form["username"]
+        user.password = User.set_password(user, request.form["password"])
+        user.first_name = request.form["first_name"]
+        user.last_name = request.form["last_name"]
+        user.role = request.form["role"]
+
+        dateformat = '%Y-%m-%d'
+        user.dob = datetime.datetime.strptime(request.form["dob"],dateformat)
+        user.join_date = datetime.datetime.strptime(request.form["join_date"],dateformat)
+
+        user.phone_number = request.form["phone_number"]
+        user.email = request.form["email"]
+        user.address = request.form["address"]
+        if request.form["has_paid"] == "on": user.has_paid = True
+        else: user.has_paid = False
+        user.jedinica = request.form["jedinica"]
+        user.odred_id = request.form["odred_id"]
+        db.session.commit()
+        return redirect(url_for("odreddashboard"))
+    else:
+        return render_template("addClan.html",h1 = "Izmeni",clan = User.query.get(id))
 
 if __name__ == '__main__':
     with app.app_context():
