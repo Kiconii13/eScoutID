@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>{{ h1 }}</h1>
+<form action="#" method="post">
+    <label for="username">Username: </label>
+    <input type="text" id="username" name="username" value = "{{clan.username}}"><br>
+    <label for="password">Password: </label>
+    <input type="password" id="password" name="password" value = "{{clan.password}}"><br>
+    <label for="first_name">Ime: </label>
+    <input type="text" id="first_name" name="first_name" value = "{{clan.first_name}}"><br>
+    <label for="last_name">Prezime: </label>
+    <input type="text" id="last_name" name="last_name" value = "{{clan.last_name}}"><br>
+    <label for="role">Role: </label>
+    <input type="text" id="role" name="role" value = "{{clan.role}}"><br>
+    <label for="dob">Datum rođenja: </label>
+    <input type="datetime" id="dob" name="dob" placeholder="dd.mm.yyyy" value = "{{clan.dob}}"><br>
+    <label for="join_date">Datum uclanjivanja:</label>
+    <input type="datetime" id="join_date" name="join_date" placeholder="dd.mm.yyyy" value = "{{clan.join_date}}"><br>
+    <label for="phone_number">Broj telefona: </label>
+    <input type="text" id="phone_number" name="phone_number" value = "{{clan.phone_number}}"><br>
+    <label for="email">Email: </label>
+    <input type="text" id="email" name="email" value = "{{clan.email}}"><br>
+    <label for="address">Adresa: </label>
+    <input type="text" id="address" name="address" value = "{{clan.address}}" ><br>
+    <label for="has_paid">Placena clanarina: </label>
+    {% if clan.has_paid %}
+    <input type="checkbox" id="has_paid" name="has_paid" checked><br>
+    {% else %}
+    <input type="checkbox" id="has_paid" name="has_paid"><br>
+    {% endif %}
+    <label for="jedinica">Jedinica: </label>
+    <input type="text" id="jedinica" name="jedinica" value = "{{clan.jedinica}}"><br>
+    <label for="odred_id">Odred: </label>
+    <input type="text" id="odred_id" name="odred_id" value = "{{clan.odred_id}}"><br>
+    <br><input type="submit" value="Submit">
+</form>
+{% endblock %}
+    has_paid = db.Column(db.Boolean(), default=False)
+    jedinica = db.Column(db.String(30))

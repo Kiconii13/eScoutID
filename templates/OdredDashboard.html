@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
-{% content %}
-
+{% block content %}
+<h2>Clanovi:</h2>
 <table>
     <thead>
         <tr>
@@ -13,7 +13,7 @@
 {% for user in users %}
     <tbody>
 	    <tr>
-            <td>{{ user.id }}</td>
+            <td><a href="/edit/{{ user.id }}">{{ user.id }}</a></td>
             <td>{{ user.first_name }} {{ user.last_name }}</td>
             <td>{{ user.username }}</td>
             <td>{{ user.odred_id }}</td>
@@ -21,4 +21,5 @@
     </tbody>
 {% endfor %}
 </table>
+<br><a href="{{ url_for('add') }}">Dodaj novog clana</a>
 {% endblock %}
