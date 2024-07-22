@@ -117,16 +117,13 @@ def add():
         new_user.first_name = request.form["first_name"]
         new_user.last_name = request.form["last_name"]
         new_user.role = request.form["role"]
-
-        dateformat = '%d.%m.%Y.'
-        new_user.dob = datetime.datetime.strptime(request.form["dob"],dateformat)
-        new_user.join_date = datetime.datetime.strptime(request.form["join_date"],dateformat)
+        new_user.dob = request.form["dob"]
+        new_user.join_date = request.form["dob"]
 
         new_user.phone_number = request.form["phone_number"]
         new_user.email = request.form["email"]
         new_user.address = request.form["address"]
-        if request.form["has_paid"] == "on": new_user.has_paid = True
-        else: new_user.has_paid = False
+        new_user.has_paid = 1 if request.form.get('has_paid') else 0
         new_user.jedinica = request.form["jedinica"]
         new_user.odred_id = request.form["odred_id"]
         db.session.add(new_user)
@@ -145,16 +142,13 @@ def edit(id):
         user.first_name = request.form["first_name"]
         user.last_name = request.form["last_name"]
         user.role = request.form["role"]
-
-        dateformat = '%Y-%m-%d'
-        user.dob = datetime.datetime.strptime(request.form["dob"],dateformat)
-        user.join_date = datetime.datetime.strptime(request.form["join_date"],dateformat)
+        user.dob = request.form["dob"]
+        user.join_date = request.form["join_date"]
 
         user.phone_number = request.form["phone_number"]
         user.email = request.form["email"]
         user.address = request.form["address"]
-        if request.form["has_paid"] == "on": user.has_paid = True
-        else: user.has_paid = False
+        user.has_paid = 1 if request.form.get('has_paid') else 0
         user.jedinica = request.form["jedinica"]
         user.odred_id = request.form["odred_id"]
         db.session.commit()

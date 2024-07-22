@@ -13,9 +13,9 @@
     <label for="role">Role: </label>
     <input type="text" id="role" name="role" value = "{{clan.role}}"><br>
     <label for="dob">Datum rođenja: </label>
-    <input type="datetime" id="dob" name="dob" placeholder="dd.mm.yyyy" value = "{{clan.dob}}"><br>
+    <input type="date" id="dob" name="dob" placeholder="dd.mm.yyyy" value = "{{clan.dob}}"><br>
     <label for="join_date">Datum uclanjivanja:</label>
-    <input type="datetime" id="join_date" name="join_date" placeholder="dd.mm.yyyy" value = "{{clan.join_date}}"><br>
+    <input type="date" id="join_date" name="join_date" placeholder="dd.mm.yyyy" value = "{{clan.join_date}}"><br>
     <label for="phone_number">Broj telefona: </label>
     <input type="text" id="phone_number" name="phone_number" value = "{{clan.phone_number}}"><br>
     <label for="email">Email: </label>
@@ -35,5 +35,3 @@
     <br><input type="submit" value="Submit">
 </form>
 {% endblock %}
-    has_paid = db.Column(db.Boolean(), default=False)
-    jedinica = db.Column(db.String(30))
