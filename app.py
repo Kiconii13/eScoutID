@@ -100,11 +100,20 @@ def odred():
     Broj_Clanova=User.query.filter_by(odred_id = current_user.odred_id).count()
     return render_template("odred.html", broj_clanova = Broj_Clanova)
 
+@app.route("/savezdashboard")
+@login_required
+def savezDashboard():
+    odredi = Odred.query.all()
+    # Broj_Clanova = User.query(User.odred_id).group_by(User.odred_id).count()
+    return render_template("savezDashboard.html",odredi = odredi)
+
 @app.route("/odreddashboard")
 @login_required
 def odreddashboard():
-    return render_template("odredDashboard.html",users = User.query.all())
-
+    if current_user.role == "admin":
+        return render_template("odredDashboard.html",users = User.query.all())
+    else:
+        return redirect("dashboard")
 #=>
 @app.route("/add", methods = ["POST","GET"])
 @login_required

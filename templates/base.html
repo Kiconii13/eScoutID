@@ -14,13 +14,21 @@
         </a>
         {% if not current_user.is_anonymous %}
         <ul>
-            {# {% if current_user.role == "admin" %} #}
+{# Postavicu da bude za drugi role, trenutno samo je za admin ~ Kica #}
+            {% if current_user.role == "admin" %}
+            <li>
+                <a href="{{ url_for('savezDashboard') }}">
+                    Edit savez
+                </a>
+            </li>
+             {% endif %}
+             {% if current_user.role == "admin" %}
             <li>
                 <a href="{{ url_for('odreddashboard') }}">
                     Edit odred
                 </a>
             </li>
-            {# {% endif %} #}
+             {% endif %}
             <li>
                 <a href="{{ url_for('dashboard') }}">
                     Moj nalog
