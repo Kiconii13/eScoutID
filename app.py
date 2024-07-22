@@ -1,7 +1,5 @@
 from flask import Flask, render_template, request, redirect, session, url_for, flash
-
-from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager, UserMixin, login_required, login_user, logout_user, current_user
+from flask_login import LoginManager, login_required, login_user, logout_user, current_user
 
 from models import db
 from models import User, Odred
@@ -99,6 +97,7 @@ def dashboard():
 def odred():
     flash("Work in progress", "Info")
     return render_template("odred.html")
+
 
 @app.route("/edit", methods=["POST"])
 @login_required

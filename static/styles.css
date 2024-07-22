@@ -54,6 +54,11 @@ nav a {
   text-decoration: none;
 }
 
+nav a img {
+  height: 30px;
+  color: white;
+}
+
 nav ul li a {
   color: inherit;
   text-decoration: none;
