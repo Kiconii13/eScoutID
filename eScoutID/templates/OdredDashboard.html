@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Ime i prezime</th>
+            <th>Korisničko ime</th>
+            <th>Datum rođenja</th>
+            <th>Adresa stanovanja</th>
+            <th>Email</th>
+            <th>Plaćena članarina</th>
+        </tr>
+    </thead>
+{% for user in users %}
+    <tbody>
+	    <tr>
+            <td>{{ user.id }}</td>
+            <td>{{ user.first_name }} {{ user.last_name }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.birth_date }}</td>
+            <td>{{ user.mobile_number }}</td>
+            <td>{{ user.home_address }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.membership_fee }}</td>
+        </tr>
+    </tbody>
+{% endfor %}
+</table>
+
+<a href="{{ url_for('logout') }}" class="btn btn-logout">Logout</a>
+{% endblock %}
