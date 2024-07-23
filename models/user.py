@@ -1,3 +1,5 @@
+import datetime
+
 from . import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
@@ -13,8 +15,8 @@ class User(db.Model, UserMixin):
     role = db.Column(db.String(16), default="clan")
     first_name = db.Column(db.String(50))
     last_name = db.Column(db.String(50))
-    dob = db.Column(db.String(12))
-    join_date = db.Column(db.String(12))
+    dob = db.Column(db.Date(), default = datetime.datetime.today())
+    join_date = db.Column(db.Date(), default = datetime.datetime.today())
     phone_number = db.Column(db.String(12))
     email = db.Column(db.String(100))
     address = db.Column(db.String(100))
