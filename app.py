@@ -145,7 +145,7 @@ def editSavez(id):
         new_odred.city = request.form["city"]
         new_odred.address = request.form["address"]
         new_odred.email = request.form["email"]
-        new_odred.founded_at = datetime.datetime.strptime(request.form["founded_at"],"%Y-%m-%d")
+        new_odred.founded_at = datetime.strptime(request.form["founded_at"],"%Y-%m-%d")
         staresina = User.query.filter_by(username = request.form["staresina_username"]).first()
         new_odred.staresina_id = staresina.id
         nacelnik = User.query.filter_by(username = request.form["nacelnik_username"]).first()
