@@ -24,6 +24,7 @@ class User(db.Model, UserMixin):
     odred_id = db.Column(db.Integer,db.ForeignKey("odred.id"))
 
     odred = db.relationship('Odred', back_populates='members', foreign_keys=[odred_id])
+    activities = db.relationship('Activity', secondary='participation', back_populates='participants')
 
 
     def set_password(self, password):
