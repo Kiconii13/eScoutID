@@ -126,8 +126,8 @@ def add():
         new_user.first_name = request.form["first_name"]
         new_user.last_name = request.form["last_name"]
         new_user.role = request.form["role"]
-        new_user.dob = request.form["dob"]
-        new_user.join_date = request.form["dob"]
+        new_user.dob = datetime.datetime.strptime(request.form["dob"],"%Y-%m-%d")
+        new_user.join_date = datetime.datetime.strptime(request.form["join_date"],"%Y-%m-%d")
 
         new_user.phone_number = request.form["phone_number"]
         new_user.email = request.form["email"]
@@ -151,8 +151,8 @@ def edit(id):
         user.first_name = request.form["first_name"]
         user.last_name = request.form["last_name"]
         user.role = request.form["role"]
-        user.dob = request.form["dob"]
-        user.join_date = request.form["join_date"]
+        user.dob = datetime.datetime.strptime(request.form["dob"],"%Y-%m-%d")
+        user.join_date = datetime.datetime.strptime(request.form["join_date"],"%Y-%m-%d")
 
         user.phone_number = request.form["phone_number"]
         user.email = request.form["email"]

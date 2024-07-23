@@ -9,7 +9,7 @@ class Odred(db.Model):
     city = db.Column(db.String(50))
     address = db.Column(db.String(50))
     email = db.Column(db.String(50))
-    founded_at = db.Column(db.String(12))
+    founded_at = db.Column(db.Date())
     staresina_id = db.Column(db.Integer,db.ForeignKey("users.id"))
     nacelnik_id = db.Column(db.Integer,db.ForeignKey("users.id"))
     status = db.Column(db.String(11), default = "Pridružen")
