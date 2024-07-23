@@ -102,8 +102,13 @@ def dashboard():
 @app.route("/odred")
 @login_required
 def odred():
-    Broj_Clanova=User.query.filter_by(odred_id = current_user.odred_id).count()
-    return render_template("odred.html", broj_clanova = Broj_Clanova)
+    try:
+        Broj_Clanova=User.query.filter_by(odred_id = current_user.odred_id).count()
+        return render_template("odred.html", broj_clanova = Broj_Clanova)
+    except:
+        flash("Morate biti član odreda!", "Greška")
+        return redirect(url_for("dashboard"))
+        
 
 @app.route("/savezdashboard")
 @login_required
