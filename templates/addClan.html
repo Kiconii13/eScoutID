@@ -5,9 +5,11 @@
 {% block content %}
 <form action="#" method="post">
     <h1>{{ h1 }}</h1>
-    <label for="username">Username: </label>
-    <input type="text" id="username" name="username" value = "{{clan.username}}" 
-    required oninvalid="this.setCustomValidity('Unesite korisnicko ime clana')" oninput="this.setCustomValidity('')"><br>
+    <label for="username">
+        Username: 
+        <input type="text" id="username" name="username" value = "{{clan.username}}" 
+        required oninvalid="this.setCustomValidity('Unesite korisnicko ime clana')" oninput="this.setCustomValidity('')"><br>
+    </label>
     <div class="alerts">
         {% with messages = get_flashed_messages(with_categories=True) %}
             {% if messages %}
@@ -18,47 +20,70 @@
         {% endwith %}
     </div>
     {% if h1 == "Dodaj" %}
-    <label for="password">Password: </label>
-    <input type="password" id="password" name="password" value = "{{clan.password}}" 
-    required oninvalid="this.setCustomValidity('Unesite sifru clana')" oninput="this.setCustomValidity('')"><br>
+    <label for="password">
+        Password: 
+        <input type="password" id="password" name="password" value = "{{clan.password}}" 
+        required oninvalid="this.setCustomValidity('Unesite sifru clana')" oninput="this.setCustomValidity('')"><br>
+    </label>
     {% endif %}
-    <label for="first_name">Ime: </label>
-    <input type="text" id="first_name" name="first_name" value = "{{clan.first_name}}"
-    required oninvalid="this.setCustomValidity('Unesite ime clana')" oninput="this.setCustomValidity('')"><br>
-    <label for="last_name">Prezime: </label>
-    <input type="text" id="last_name" name="last_name" value = "{{clan.last_name}}"
-    required oninvalid="this.setCustomValidity('Unesite prezime clana')" oninput="this.setCustomValidity('')"><br>
-    <label for="role">Role: </label>
-    <select id="role" name="role" data-selected="{{clan.role}}">
-        {% if clan.role == "admin" %}
-        <option value="clan">Clan</option>
-        <option value="admin" selected>Admin</option>
+    <label for="first_name">
+        Ime: 
+        <input type="text" id="first_name" name="first_name" value = "{{clan.first_name}}"
+        required oninvalid="this.setCustomValidity('Unesite ime clana')" oninput="this.setCustomValidity('')"><br>
+    </label>
+    <label for="last_name">
+        Prezime: 
+        <input type="text" id="last_name" name="last_name" value = "{{clan.last_name}}"
+        required oninvalid="this.setCustomValidity('Unesite prezime clana')" oninput="this.setCustomValidity('')"><br>
+    </label>
+    <label for="role">
+        Role: 
+        <select id="role" name="role" data-selected="{{clan.role}}">
+            {% if clan.role == "admin" %}
+                <option value="clan">Clan</option>
+                <option value="admin" selected>Admin</option>
+            {% else %}
+                <option value="clan">Clan</option>
+                <option value="admin">Admin</option>
+            {% endif %}
+        </select><br>
+    </label>
+    <label for="dob">
+        Datum rođenja: 
+        <input type="date" id="dob" name="dob" value = "{{clan.dob}}"><br>
+    </label>
+    <label for="join_date">
+        Datum uclanjivanja: 
+        <input type="date" id="join_date" name="join_date" value = "{{clan.join_date}}"><br>
+    </label>
+    <label for="phone_number">
+        Broj telefona: 
+        <input type="tel" id="phone_number" name="phone_number" value = "{{clan.phone_number}}"><br>
+    </label>
+    <label for="email">
+        Email: 
+        <input type="email" id="email" name="email" value = "{{clan.email}}"><br>    
+    </label>
+    <label for="address">
+        Adresa: 
+        <input type="text" id="address" name="address" value = "{{clan.address}}" ><br>
+    </label>
+    <label for="has_paid">
+        Placena clanarina: 
+        {% if clan.has_paid %}
+            <input type="checkbox" id="has_paid" name="has_paid" checked><br>
         {% else %}
-        <option value="clan">Clan</option>
-        <option value="admin">Admin</option>
+            <input type="checkbox" id="has_paid" name="has_paid"><br>
         {% endif %}
-    </select><br>
-    <label for="dob">Datum rođenja: </label>
-    <input type="date" id="dob" name="dob" value = "{{clan.dob}}"><br>
-    <label for="join_date">Datum uclanjivanja: </label>
-    <input type="date" id="join_date" name="join_date" value = "{{clan.join_date}}"><br>
-    <label for="phone_number">Broj telefona: </label>
-    <input type="tel" id="phone_number" name="phone_number" value = "{{clan.phone_number}}"><br>
-    <label for="email">Email: </label>
-    <input type="email" id="email" name="email" value = "{{clan.email}}"><br>
-    <label for="address">Adresa: </label>
-    <input type="text" id="address" name="address" value = "{{clan.address}}" ><br>
-    <label for="has_paid">Placena clanarina: </label>
-    {% if clan.has_paid %}
-    <input type="checkbox" id="has_paid" name="has_paid" checked><br>
-    {% else %}
-    <input type="checkbox" id="has_paid" name="has_paid"><br>
-    {% endif %}
-    <label for="jedinica">Jedinica: </label>
-    <input type="text" id="jedinica" name="jedinica" value = "{{clan.jedinica}}"><br>
-    <label for="odred_id">Odred: </label>
-    <input type="text" id="odred_id" name="odred_id" value = "{{clan.odred_id}}" disabled><br>
+    </label>
+    <label for="jedinica">
+        Jedinica: 
+        <input type="text" id="jedinica" name="jedinica" value = "{{clan.jedinica}}"><br>
+    </label>
+    <label for="odred_id">
+        Odred: 
+        <input type="text" id="odred_id" name="odred_id" value = "{{clan.odred_id}}" disabled><br>
+    </label>
     <br><input type="submit" value="{{h1}}">
 </form>
-<a href="#">Izbrisi clana</a>
 {% endblock %}
