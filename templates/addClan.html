@@ -1,21 +1,47 @@
 {% extends 'base.html' %}
+{% block title %}
+{{ h1 }}
+{% endblock %}
 {% block content %}
 <h1>{{ h1 }}</h1>
 <form action="#" method="post">
     <label for="username">Username: </label>
-    <input type="text" id="username" name="username" value = "{{clan.username}}"><br>
+    <input type="text" id="username" name="username" value = "{{clan.username}}" 
+    required oninvalid="this.setCustomValidity('Unesite korisnicko ime clana')" oninput="this.setCustomValidity('')"><br>
+    <div class="alerts">
+        {% with messages = get_flashed_messages(with_categories=True) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <p class="alert alert-{{ category }}">{{ category }}: {{ message }}</p>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+    {% if h1 == "Dodaj" %}
     <label for="password">Password: </label>
-    <input type="password" id="password" name="password" value = "{{clan.password}}"><br>
+    <input type="password" id="password" name="password" value = "{{clan.password}}" 
+    required oninvalid="this.setCustomValidity('Unesite sifru clana')" oninput="this.setCustomValidity('')"><br>
+    {% endif %}
     <label for="first_name">Ime: </label>
-    <input type="text" id="first_name" name="first_name" value = "{{clan.first_name}}"><br>
+    <input type="text" id="first_name" name="first_name" value = "{{clan.first_name}}"
+    required oninvalid="this.setCustomValidity('Unesite ime clana')" oninput="this.setCustomValidity('')"><br>
     <label for="last_name">Prezime: </label>
-    <input type="text" id="last_name" name="last_name" value = "{{clan.last_name}}"><br>
+    <input type="text" id="last_name" name="last_name" value = "{{clan.last_name}}"
+    required oninvalid="this.setCustomValidity('Unesite prezime clana')" oninput="this.setCustomValidity('')"><br>
     <label for="role">Role: </label>
-    <input type="text" id="role" name="role" value = "{{clan.role}}"><br>
+    <select id="role" name="role" data-selected="{{clan.role}}">
+        {% if clan.role == "admin" %}
+        <option value="clan">Clan</option>
+        <option value="admin" selected>Admin</option>
+        {% else %}
+        <option value="clan">Clan</option>
+        <option value="admin">Admin</option>
+        {% endif %}
+    </select><br>
     <label for="dob">Datum rođenja: </label>
-    <input type="date" id="dob" name="dob" placeholder="dd.mm.yyyy" value = "{{clan.dob}}"><br>
-    <label for="join_date">Datum uclanjivanja:</label>
-    <input type="date" id="join_date" name="join_date" placeholder="dd.mm.yyyy" value = "{{clan.join_date}}"><br>
+    <input type="date" id="dob" name="dob" value = "{{clan.dob}}"><br>
+    <label for="join_date">Datum uclanjivanja: </label>
+    <input type="date" id="join_date" name="join_date" value = "{{clan.join_date}}"><br>
     <label for="phone_number">Broj telefona: </label>
     <input type="tel" id="phone_number" name="phone_number" value = "{{clan.phone_number}}"><br>
     <label for="email">Email: </label>
@@ -31,7 +57,8 @@
     <label for="jedinica">Jedinica: </label>
     <input type="text" id="jedinica" name="jedinica" value = "{{clan.jedinica}}"><br>
     <label for="odred_id">Odred: </label>
-    <input type="text" id="odred_id" name="odred_id" value = "{{clan.odred_id}}"><br>
-    <br><input type="submit" value="Submit">
+    <input type="text" id="odred_id" name="odred_id" value = "{{clan.odred_id}}" disabled><br>
+    <br><input type="submit" value="{{h1}}">
 </form>
+<a href="#">Izbrisi clana</a>
 {% endblock %}

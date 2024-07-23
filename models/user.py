@@ -1,8 +1,8 @@
-import datetime
-
 from . import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
+
+from datetime import datetime
 from .activity import Activity, Participation
 
 class User(db.Model, UserMixin):
@@ -10,26 +10,39 @@ class User(db.Model, UserMixin):
 
     # Class Variables
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(25), unique=True, nullable=False)
+    username = db.Column(db.String(25), unique=True, nullable=False, default = "")
     password_hash = db.Column(db.String(150), nullable=False)
     role = db.Column(db.String(16), default="clan")
-    first_name = db.Column(db.String(50))
-    last_name = db.Column(db.String(50))
-    dob = db.Column(db.Date(), default = datetime.datetime.today())
-    join_date = db.Column(db.Date(), default = datetime.datetime.today())
-    phone_number = db.Column(db.String(12))
-    email = db.Column(db.String(100))
-    address = db.Column(db.String(100))
+
+    first_name = db.Column(db.String(50), default = "")
+    last_name = db.Column(db.String(50), default = "")
+    dob = db.Column(db.Date, default = datetime.today().date())
+    join_date = db.Column(db.Date, default = datetime.today().date())
+    phone_number = db.Column(db.String(12), default = "")
+    email = db.Column(db.String(100), default = "")
+    address = db.Column(db.String(100), default = "")
+
     has_paid = db.Column(db.Boolean(), default=False)
-    jedinica = db.Column(db.String(30))
+    jedinica = db.Column(db.String(30), default = "")
     
     odred_id = db.Column(db.Integer,db.ForeignKey("odred.id"))
-
     odred = db.relationship('Odred', back_populates='members', foreign_keys=[odred_id])
 
-    activities = db.relationship('Activity', secondary='participations', back_populates='participants')
-    # participations = db.relationship('Participation', back_populates='user')
+    #konstruktor za default vrednosti da ne budu None
+    def __init__(self,username="",role="clan",first_name ="",last_name="",dob = datetime.today().date(),join_date = datetime.today().date(),phone_number="",email="",adress="",has_paid=False,jedinica=""):
+        self.username = username
+        self.role = role
+        self.first_name = first_name
+        self.last_name = last_name
+        self.dob = dob
+        self.join_date = join_date
+        self.phone_number = phone_number
+        self.email = email
+        self.address = adress
+        self.has_paid = has_paid
+        self.jedinica = jedinica
 
+    activities = db.relationship('Activity', secondary='participations', back_populates='participants')
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -42,10 +55,12 @@ class User(db.Model, UserMixin):
     def get_id(self):
         return str(self.id)
     
+    
     @property
     def is_active(self):
         # Optional: Implement if you have an activation process for users
         return True
+
 
     @property
     def is_authenticated(self):
