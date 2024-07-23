@@ -275,5 +275,15 @@ def log_aktivnost():
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
+
+        if len(Odred.query.all()) == 0:
+            odred = Odred()
+            odred.name = "Genericki odred"
+            odred.city = "Genericki grad"
+            odred.address = "Genericka adresa"
+
+            db.session.add(odred)
+            db.session.commit()
+
     
     app.run(debug=True)
