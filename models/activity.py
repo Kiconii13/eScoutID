@@ -2,7 +2,6 @@ from . import db
 from sqlalchemy import Enum
 import enum
 
-
 class ActivityType(enum.Enum):
     Aktivnost = 1
     Tecaj = 2
@@ -30,7 +29,22 @@ class Activity(db.Model):
     organizer_type = db.Column(Enum(OrganizerLevel), default=OrganizerLevel.Odred)
     organizer_name = db.Column(db.String(50))
 
-    participants = db.relationship('User', secondary='participation', back_populates='activities')
+    participants = db.relationship('User', secondary='participations', back_populates='activities')
+
 
     def __repr__(self):
         return f"<Activity {self.username}>"
+
+
+class Participation(db.Model):
+    __tablename__ = "participations"
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    activity_id = db.Column(db.Integer, db.ForeignKey("activities.id"))
+
+    user = db.relationship('User', backref='participations')
+    activity = db.relationship('Activity', backref='participations')
+
+    def __repr__(self):
+        return f"<Participation {self.username}>"

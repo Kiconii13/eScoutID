@@ -1,7 +1,7 @@
 from . import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
-
+from .activity import Activity, Participation
 
 class User(db.Model, UserMixin):
     __tablename__ = "users"
@@ -24,7 +24,7 @@ class User(db.Model, UserMixin):
     odred_id = db.Column(db.Integer,db.ForeignKey("odred.id"))
 
     odred = db.relationship('Odred', back_populates='members', foreign_keys=[odred_id])
-    activities = db.relationship('Activity', secondary='participation', back_populates='participants')
+    activities = db.relationship('Activity', secondary='participations', back_populates='participants')
 
 
     def set_password(self, password):
