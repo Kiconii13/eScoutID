@@ -1,10 +1,10 @@
-import datetime
-
 from flask import Flask, render_template, request, redirect, session, url_for, flash
 from flask_login import LoginManager, login_required, login_user, logout_user, current_user
+from sqlalchemy.exc import IntegrityError
 
 from models import db
 from models import User, Odred
+from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = "8PvUV36JVw59"
@@ -40,7 +40,7 @@ def login():
         password = request.form['password']
 
         # Check if it's in the db / login
-        user = User.query.filter_by(username=username).first()
+        user = User.query.filter_by(username = username).first()
         
         if user and user.check_password(password):
             user.authenticated = True
@@ -72,12 +72,12 @@ def register():
     password = request.form['password']
 
     # Check if it's in the db / index
-    user = User.query.filter_by(username=username).first()
+    user = User.query.filter_by(username = username).first()
 
     if user:
         return render_template("index.html", error="Already registered!")
     else:
-        new_user = User(username=username)
+        new_user = User(username = username)
         new_user.set_password(password)
         
         db.session.add(new_user)
@@ -103,58 +103,59 @@ def odred():
 @app.route("/odreddashboard")
 @login_required
 def odreddashboard():
-    return render_template("odredDashboard.html",users = User.query.all())
+    return render_template("odredDashboard.html",users = User.query.filter_by(odred_id = current_user.odred_id).all())
 
-#=>
+#konstruktor mozda je bolje da bude u klasi
+def defUser(user):
+    user.username = request.form["username"]
+    user.first_name = request.form["first_name"]
+    user.last_name = request.form["last_name"]
+    user.role = request.form.get("role")
+    user.dob = datetime.fromisoformat(request.form["dob"]).date()
+    user.join_date = datetime.fromisoformat(request.form["join_date"]).date()
+    user.phone_number = request.form["phone_number"]
+    user.email = request.form["email"]
+    user.address = request.form["address"]
+    user.has_paid = 1 if request.form.get('has_paid') else 0
+    user.jedinica = request.form["jedinica"]
+    return user
+
 @app.route("/add", methods = ["POST","GET"])
 @login_required
 def add():
     new_user = User()
     if request.method == "POST":
-        #UPIS U BAZU
-        new_user.username = request.form["username"]
-        new_user.password = User.set_password(new_user, request.form["password"])
-        new_user.first_name = request.form["first_name"]
-        new_user.last_name = request.form["last_name"]
-        new_user.role = request.form["role"]
-        new_user.dob = request.form["dob"]
-        new_user.join_date = request.form["join_date"]
-        new_user.phone_number = request.form["phone_number"]
-        new_user.email = request.form["email"]
-        new_user.address = request.form["address"]
-        new_user.has_paid = 1 if request.form.get('has_paid') else 0
-        new_user.jedinica = request.form["jedinica"]
-        new_user.odred_id = request.form["odred_id"]
-        db.session.add(new_user)
-        db.session.commit()
-        return redirect(url_for("odreddashboard"))
+        try:
+            #UPIS U BAZU
+            new_user = defUser(new_user)
+            new_user.password = User.set_password(new_user, request.form["password"])
+            new_user.odred_id = current_user.odred_id
+            db.session.add(new_user)
+            db.session.commit()
+            return redirect(url_for("odreddashboard"))
+        except IntegrityError: #exeption ako korisnicko ime vec postoji (Mogo bi malo drugacije da se napravi ispis greske, funkcionalnost je tu)
+            db.session.rollback()
+            flash("Uneto korisnicko ime vec postoji!","Los unos")
+            return render_template("addClan.html", h1 = "Dodaj", clan = User())
     else:
         return render_template("addClan.html", h1 = "Dodaj", clan = new_user)
 
 @app.route("/edit/<int:id>", methods = ["POST","GET"])
 @login_required
 def edit(id):
+    user = User.query.get(id)
     if request.method == "POST":
-        #AZURIRANJE PODATAKA
-        user = User.query.get(id)
-        user.username = request.form["username"]
-        user.password = User.set_password(user, request.form["password"])
-        user.first_name = request.form["first_name"]
-        user.last_name = request.form["last_name"]
-        user.role = request.form["role"]
-        user.dob = request.form["dob"]
-        user.join_date = request.form["join_date"]
-
-        user.phone_number = request.form["phone_number"]
-        user.email = request.form["email"]
-        user.address = request.form["address"]
-        user.has_paid = 1 if request.form.get('has_paid') else 0
-        user.jedinica = request.form["jedinica"]
-        user.odred_id = request.form["odred_id"]
-        db.session.commit()
-        return redirect(url_for("odreddashboard"))
+        try:
+            #AZURIRANJE PODATAKA
+            user = defUser(user)
+            db.session.commit()
+            return redirect(url_for("odreddashboard"))
+        except IntegrityError: #exeption ako korisnicko ime vec postoji (Mogo bi malo drugacije da se napravi ispis greske, funkcionalnost je tu)
+            db.session.rollback()
+            flash("Uneto korisnicko ime vec postoji!","Los unos")
+            return render_template("addClan.html", h1 = "Izmeni", clan = User.query.get(id))
     else:
-        return render_template("addClan.html", h1 = "Izmeni", clan = User.query.get(id))
+        return render_template("addClan.html", h1 = "Izmeni", clan = user)
 
 if __name__ == '__main__':
     with app.app_context():

@@ -14,13 +14,13 @@
         </a>
         {% if not current_user.is_anonymous %}
         <ul>
-            {# {% if current_user.role == "admin" %} #}
+            {% if current_user.role == "admin" %}
             <li>
                 <a href="{{ url_for('odreddashboard') }}">
                     Edit odred
                 </a>
             </li>
-            {# {% endif %} #}
+            {% endif %}
             <li>
                 <a href="{{ url_for('dashboard') }}">
                     Moj nalog
