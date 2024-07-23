@@ -15,24 +15,25 @@ Savez Dashboard
                 <th>Godina osnivanja</th>
                 <th>Starešina</th>
                 <th>Načelnik</th>
-{#                <th>Broj članova</th>#}
+                <th>Broj članova</th>
                 <th>Status</th>
             </tr>
         </thead>
         <tbody>
-        {% for odred in odredi %}
+        {% for (odred,broj) in odredi %}
             <tr>
-                <td>{{ odred.id }}</td>
+                <td><a href="/editSavez/{{ odred.id }}">{{ odred.id }}</a></td>
                 <td>{{ odred.name }}</td>
                 <td>{{ odred.city }}</td>
                 <td>{{ odred.address }}</td>
                 <td>{{ odred.founded_at }}</td>
                 <td>{{ odred.staresina.id }}</td>
                 <td>{{ odred.nacelnik.id }}</td>
-{#                <td>{{ broj }}</td>#}
+                <td>{{ broj[0] }}</td>
                 <td>{{ odred.status }}</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
+    <br><a href="{{ url_for('addSavez') }}">Dodaj novog clana</a>
 {% endblock %}

@@ -1,7 +1,8 @@
-import datetime
-
 from flask import Flask, render_template, request, redirect, session, url_for, flash
 from flask_login import LoginManager, login_required, login_user, logout_user, current_user
+import datetime
+
+from sqlalchemy import func
 
 from models import db
 from models import User, Odred
@@ -104,8 +105,54 @@ def odred():
 @login_required
 def savezDashboard():
     odredi = Odred.query.all()
-    # Broj_Clanova = User.query(User.odred_id).group_by(User.odred_id).count()
-    return render_template("savezDashboard.html",odredi = odredi)
+    Broj_Clanova = db.session.query(func.count(User.id).label('member_count')
+).outerjoin(Odred.members).group_by(Odred.id).all()
+    return render_template("savezDashboard.html",odredi = zip(odredi,Broj_Clanova))
+
+@app.route("/addSavez", methods = ["POST","GET"])
+@login_required
+def addSavez():
+    new_odred = Odred()
+    if request.method == "POST":
+        #UPIS U BAZU
+        new_odred.name = request.form["name"]
+        new_odred.city = request.form["city"]
+        new_odred.address = request.form["address"]
+        new_odred.email = request.form["email"]
+        new_odred.founded_at = datetime.datetime.strptime(request.form["founded_at"],"%Y-%m-%d")
+        staresina = User.query.filter_by(username = request.form["staresina_username"]).first()
+        new_odred.staresina_id = staresina.id
+        nacelnik = User.query.filter_by(username = request.form["nacelnik_username"]).first()
+        new_odred.nacelnik_id = nacelnik.id
+        new_odred.status = request.form.get('status')
+        db.session.add(new_odred)
+        db.session.commit()
+        return redirect(url_for("savezDashboard"))
+    else:
+        return render_template("addOdred.html",h1 = "Dodaj odred",odred = new_odred)
+
+
+@app.route("/editSavez/<int:id>", methods = ["POST","GET"])
+@login_required
+def editSavez(id):
+    new_odred = Odred()
+    if request.method == "POST":
+        new_odred.name = request.form["name"]
+        new_odred.city = request.form["city"]
+        new_odred.address = request.form["address"]
+        new_odred.email = request.form["email"]
+        new_odred.founded_at = datetime.datetime.strptime(request.form["founded_at"],"%Y-%m-%d")
+        staresina = User.query.filter_by(username = request.form["staresina_username"]).first()
+        new_odred.staresina_id = staresina.id
+        nacelnik = User.query.filter_by(username = request.form["nacelnik_username"]).first()
+        new_odred.nacelnik_id = nacelnik.id
+        new_odred.status = request.form.get('status')
+        db.session.add(new_odred)
+        db.session.commit()
+        return redirect(url_for("savezDashboard"))
+    else:
+        return render_template("addOdred.html",h1 = "Dodaj odred",odred = Odred.query.get(id))
+
 
 @app.route("/odreddashboard")
 @login_required
@@ -114,7 +161,7 @@ def odreddashboard():
         return render_template("odredDashboard.html",users = User.query.all())
     else:
         return redirect("dashboard")
-#=>
+
 @app.route("/add", methods = ["POST","GET"])
 @login_required
 def add():
