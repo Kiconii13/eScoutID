@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>{{ h1 }}</h1>
+<form action="#" method="post">
+    <label for="name">Naziv: </label>
+    <input type="text" id="name" name="name" value = "{{odred.name}}"><br>
+    <label for="city">Grad: </label>
+    <input type="text" id="city" name="city" value = "{{odred.city}}"><br>
+    <label for="address">Adresa: </label>
+    <input type="text" id="address" name="address" placeholder="Ulica Broj" value = "{{odred.address}}"><br>
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" placeholder="mail@mail.com" value = "{{odred.email}}"><br>
+    <label for="founded_at">Datum osnivanja: </label>
+    <input type="date" id="founded_at" name="founded_at" value = "{{odred.founded_at}}"><br>
+    <label for="staresina_username">Username staresine: </label>
+    <input type="text" id="staresina_username" name="staresina_username" value = "{{odred.staresina.username}}"><br>
+    <label for="nacelnik_username">Nacelnik username: </label>
+    <input type="text" id="nacelnik_username" name="nacelnik_username" value = "{{odred.nacelnik.username}}" ><br>
+    <label for="status">Status: </label>
+    <select id="status" name="status">
+        <option value="pridružen">Pridružen</option>
+        <option value="punopravan">Punopravan</option>
+    </select>
+    <br><input type="submit" value="Submit">
+</form>
+{% endblock %}
