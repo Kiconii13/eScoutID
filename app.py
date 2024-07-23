@@ -182,7 +182,7 @@ def defUser(user):
 def odreddashboard():
     if current_user.role != "admin":
         return redirect(url_for("dashboard"))
-    return render_template("odredDashboard.html",users = User.query.all())
+    return render_template("odredDashboard.html",users = User.query.filter_by(odred_id = current_user.odred_id).all())
 
 @app.route("/add", methods = ["POST","GET"])
 @login_required
