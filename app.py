@@ -175,7 +175,6 @@ def add():
         new_user.role = request.form["role"]
         new_user.dob = datetime.datetime.strptime(request.form["dob"],"%Y-%m-%d")
         new_user.join_date = datetime.datetime.strptime(request.form["join_date"],"%Y-%m-%d")
-
         new_user.phone_number = request.form["phone_number"]
         new_user.email = request.form["email"]
         new_user.address = request.form["address"]
@@ -186,12 +185,13 @@ def add():
         db.session.commit()
         return redirect(url_for("odreddashboard"))
     else:
-        return render_template("addClan.html",h1 = "Dodaj",clan = new_user)
+        return render_template("addClan.html", h1 = "Dodaj", clan = new_user)
 
 @app.route("/edit/<int:id>", methods = ["POST","GET"])
 @login_required
 def edit(id):
     if request.method == "POST":
+        #AZURIRANJE PODATAKA
         user = User.query.get(id)
         user.username = request.form["username"]
         user.password = User.set_password(user, request.form["password"])
@@ -210,7 +210,7 @@ def edit(id):
         db.session.commit()
         return redirect(url_for("odreddashboard"))
     else:
-        return render_template("addClan.html",h1 = "Izmeni",clan = User.query.get(id))
+        return render_template("addClan.html", h1 = "Izmeni", clan = User.query.get(id))
 
 if __name__ == '__main__':
     with app.app_context():
