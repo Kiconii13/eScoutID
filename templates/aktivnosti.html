@@ -8,28 +8,35 @@ Aktivnosti
 
 
 {% if current_user.role != "admin" %}
-<table>
-    <tr>
-        <th>Naziv</th>
-        <th>Datum održavanja</th>
-        <th>Mesto održavanja</th>
-        <th>Tip aktivnosti</th>
-        <th>Organizator</th>
-    </tr>
+<table class="activities-table">
+    <caption>Učešće na aktivnostima</caption>
+    <thead>
+        <tr>
+            <th>Naziv</th>
+            <th>Datum održavanja</th>
+            <th>Mesto održavanja</th>
+            <th>Tip aktivnosti</th>
+            <th>Organizator</th>
+        </tr>
+    </thead>
     {% for activity in current_user.activities %}
-    <tr>
-        <td>{{ activity.name }}</td>
-        <td>{{ activity.due_date }}</td>
-        <td>{{ activity.location }}</td>
-        <td>{{ activity.type }}</td>
-        <td>{{ activity.organizer_name }}</td>
-    </tr>
+    <tbody>
+        <tr>
+            <td>{{ activity.name }}</td>
+            <td>{{ activity.due_date }}</td>
+            <td>{{ activity.location }}</td>
+            <td>{{ activity.type }}</td>
+            <td>{{ activity.organizer_name }}</td>
+        </tr>
+    </tbody>
     {% endfor %}
 </table>
 
 {% else %}
-<h2>Dodaj aktivnost</h2>
+<h1>Upravljanje aktivnostima</h1>
+
 <form action="{{ url_for('new_aktivnost') }}" method="POST">
+    <h2>Dodaj aktivnost</h2>
     <label>
         Naziv aktivnosti:
         <input type="text" name="name" placeholder="Pecanje" required>
@@ -69,18 +76,26 @@ Aktivnosti
     <input type="submit" value="Napravi aktivnost" class="btn" />
 </form>
 
-<h2>Zabeleži učešće</h2>
+<hr>
+
 <form action="{{ url_for('log_aktivnost') }}" method="POST">
-    <select name="user">
-        {% for user in user_list %}
-        <option value="{{ user.id }}">{{ user.first_name }} {{ user.last_name }}</option>
-        {% endfor %}
-    </select>
-    <select name="activity">
-        {% for activity in activities %}
-        <option value="{{ activity.id }}">{{ activity.name }} - {{ activity.organizer_name }}</option>
-        {% endfor %}
-    </select>
+    <h2>Zabeleži učešće</h2>
+    <label>
+        Ime i prezime člana:
+        <select name="user">
+            {% for user in user_list %}
+            <option value="{{ user.id }}">{{ user.first_name }} {{ user.last_name }}</option>
+            {% endfor %}
+        </select>
+    </label>
+    <label>
+        Naziv aktivnosti i organizator:
+        <select name="activity">
+            {% for activity in activities %}
+            <option value="{{ activity.id }}">{{ activity.name }} - {{ activity.organizer_name }}</option>
+            {% endfor %}
+        </select>
+    </label>
     <input type="submit" value="Zabeleži učešće" class="btn" />
 </form>
 {% endif %}

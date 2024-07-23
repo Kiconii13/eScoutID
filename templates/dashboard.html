@@ -16,10 +16,10 @@ Dashboard
         </h2>
         <div class="columns">
             <div class="left-col">
-                <h3>
-                    Lične informacije
-                </h3>
                 <table>
+                    <caption>
+                        Lične informacije
+                    </caption>
                     <tr>
                         <td>Datum rođenja:</td>
                         <td>{{ current_user.dob }}</td>
@@ -39,10 +39,10 @@ Dashboard
                 </table>
             </div>
             <div class="right-col">
-                <h3>
-                    Odredske informacije
-                </h3>
                 <table>
+                    <caption>
+                        Odredske informacije
+                    </caption>
                     <tr>
                         <td>Datum učlanjenja:</td>
                         <td>{{ current_user.join_date }}</td>
@@ -57,14 +57,28 @@ Dashboard
                     </tr>
                     <tr>
                         <td>Plaćena članarina:</td>
-                        <td>{{ current_user.has_paid }}</td>
+                        <td>
+                            {% if current_user.has_paid %}
+                            <span class="good">
+                                DA
+                            </span>
+                            {% else %}
+                            <span class="bad">
+                                NE
+                            </span>
+                            {% endif %}
+                        </td>
                     </tr>
                 </table>
             </div>
         </div>
         <div class="button-row">
-            <input type="button" value="Program" class="btn" onclick="window.location.replace(`{{ url_for('program') }}`)" />
-            <input type="button" value="Aktivnosti" class="btn" onclick="window.location.replace(`{{ url_for('aktivnosti') }}`)"/>
+            <a href="{{ url_for('program') }}">
+                <input type="button" value="Program" class="btn" />
+            </a>
+            <a href="{{ url_for('aktivnosti') }}">
+                <input type="button" value="Aktivnosti" class="btn" />
+            </a>
         </div>
     </div>
 </div>
