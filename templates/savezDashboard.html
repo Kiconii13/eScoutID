@@ -6,6 +6,7 @@ Savez Dashboard
 
 {% block content %}
     <table>
+        <caption>Spisak saveza</caption>
         <thead>
             <tr>
                 <th>Id</th>
@@ -35,5 +36,7 @@ Savez Dashboard
         {% endfor %}
         </tbody>
     </table>
-    <br><a href="{{ url_for('addSavez') }}">Dodaj novog clana</a>
+    <a href="{{ url_for('addSavez') }}">
+        Dodaj novi savez
+    </a>
 {% endblock %}

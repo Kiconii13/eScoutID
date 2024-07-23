@@ -10,7 +10,7 @@
     <h1>{{ h1 }}</h1>
     
     <label>
-        Username: 
+        Korisničko ime: 
         <input type="text" id="username" name="username" value = "{{clan.username}}" required oninvalid="this.setCustomValidity('Unesite korisnicko ime clana')" oninput="this.setCustomValidity('')">
     </label>
     
@@ -26,27 +26,27 @@
 
     {% if h1 == "Dodaj" %}
     <label>
-        Password: 
-        <input type="password" id="password" name="password" value = "{{clan.password}}" required oninvalid="this.setCustomValidity('Unesite sifru clana')" oninput="this.setCustomValidity('')">
+        Lozinka: 
+        <input type="password" id="password" name="password" value = "{{clan.password}}" required oninvalid="this.setCustomValidity('Unesite lozinku člana')" oninput="this.setCustomValidity('')">
     </label>
     {% endif %}
 
     <label>
         Ime: 
-        <input type="text" id="first_name" name="first_name" value = "{{clan.first_name}}" required oninvalid="this.setCustomValidity('Unesite ime clana')" oninput="this.setCustomValidity('')">
+        <input type="text" id="first_name" name="first_name" value = "{{clan.first_name}}" required oninvalid="this.setCustomValidity('Unesite ime člana')" oninput="this.setCustomValidity('')">
     </label>
     <label>
         Prezime: 
-        <input type="text" id="last_name" name="last_name" value = "{{clan.last_name}}" required oninvalid="this.setCustomValidity('Unesite prezime clana')" oninput="this.setCustomValidity('')">
+        <input type="text" id="last_name" name="last_name" value = "{{clan.last_name}}" required oninvalid="this.setCustomValidity('Unesite prezime člana')" oninput="this.setCustomValidity('')">
     </label>
     <label>
-        Role: 
+        Status: 
         <select id="role" name="role" data-selected="{{clan.role}}">
             <option value="clan">Član</option>
             {% if clan.role == "admin" %}
-                <option value="admin" selected>Admin</option>
+                <option value="admin" selected>Administrator</option>
             {% else %}
-                <option value="admin">Admin</option>
+                <option value="admin">Administrator</option>
             {% endif %}
         </select>
     </label>

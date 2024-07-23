@@ -1,26 +1,48 @@
 {% extends 'base.html' %}
+
+{% block title %}
+Dodaj
+{% endblock %}
+
 {% block content %}
-<h1>{{ h1 }}</h1>
 <form action="#" method="post">
-    <label for="name">Naziv: </label>
-    <input type="text" id="name" name="name" value = "{{odred.name}}"><br>
-    <label for="city">Grad: </label>
-    <input type="text" id="city" name="city" value = "{{odred.city}}"><br>
-    <label for="address">Adresa: </label>
-    <input type="text" id="address" name="address" placeholder="Ulica Broj" value = "{{odred.address}}"><br>
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email" placeholder="mail@mail.com" value = "{{odred.email}}"><br>
-    <label for="founded_at">Datum osnivanja: </label>
-    <input type="date" id="founded_at" name="founded_at" value = "{{odred.founded_at}}"><br>
-    <label for="staresina_username">Username staresine: </label>
-    <input type="text" id="staresina_username" name="staresina_username" value = "{{odred.staresina.username}}"><br>
-    <label for="nacelnik_username">Nacelnik username: </label>
-    <input type="text" id="nacelnik_username" name="nacelnik_username" value = "{{odred.nacelnik.username}}" ><br>
-    <label for="status">Status: </label>
-    <select id="status" name="status">
-        <option value="pridružen">Pridružen</option>
-        <option value="punopravan">Punopravan</option>
-    </select>
-    <br><input type="submit" value="Submit">
+    <h1>{{ h1 }}</h1>
+    <label>
+        Naziv:
+        <input type="text" name="name" placeholder="Južni savez" required oninvalid="this.setCustomValidity('Unesite naziv saveza')" oninput="this.setCustomValidity('')">
+    </label>
+    <label>
+        Grad:
+        <input type="text" name="city" placeholder="Beograd" required oninvalid="this.setCustomValidity('Unesite naziv grada')" oninput="this.setCustomValidity('')">
+    </label>
+    <label>
+        Adresa:
+        <input type="text" name="address" placeholder="Ulica i broj" required oninvalid="this.setCustomValidity('Unesite adresu saveza')" oninput="this.setCustomValidity('')">
+    </label>
+    <label>
+        Email:
+        <input type="email" name="email" placeholder="juzni.savez@gmail.com" required oninvalid="this.setCustomValidity('Unesite adresu elektronske pošte saveza')" oninput="this.setCustomValidity('')">
+    </label>
+    <label>
+        Datum osnivanja:
+        <input type="date" name="founded_at" required oninvalid="this.setCustomValidity('Unesite datum osnivanja saveza')" oninput="this.setCustomValidity('')">
+    </label>
+    <label>
+        Korisničko ime staresine:
+        <input type="text" name="staresina_username" placeholder="jovan.marinkovic" required oninvalid="this.setCustomValidity('Unesite korisničko ime starešine')" oninput="this.setCustomValidity('')">
+    </label>
+    <label>
+        Korisničko ime načelnika:
+        <input type="text" name="nacelnik_username" placeholder="petar.kocic" required oninvalid="this.setCustomValidity('Unesite korisničko ime načelnika')" oninput="this.setCustomValidity('')">
+    </label>
+    <label>
+        Status:
+        <select id="status" name="status" required>
+            <option value="pridružen">Pridružen</option>
+            <option value="punopravan">Punopravan</option>
+        </select>
+    </label>
+    
+    <input type="submit" value="Dodaj" class="btn">
 </form>
 {% endblock %}
