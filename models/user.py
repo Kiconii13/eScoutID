@@ -24,7 +24,9 @@ class User(db.Model, UserMixin):
     odred_id = db.Column(db.Integer,db.ForeignKey("odred.id"))
 
     odred = db.relationship('Odred', back_populates='members', foreign_keys=[odred_id])
+
     activities = db.relationship('Activity', secondary='participations', back_populates='participants')
+    # participations = db.relationship('Participation', back_populates='user')
 
 
     def set_password(self, password):
@@ -56,4 +58,4 @@ class User(db.Model, UserMixin):
         return User.query.get(int(user_id))
 
     def __repr__(self):
-        return f"<User {self.username}>"
+        return f"<User {self.id}>"

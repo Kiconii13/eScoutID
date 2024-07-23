@@ -86,17 +86,17 @@ main {
   padding-top: min(300px, 10vh);
 }
 
-.login-container form {
+form {
   margin: 20px 0;
 }
 
-.login-container input {
+input {
   width: 100%;
   font: inherit;
   padding: 5px;
 }
 
-.login-container .alerts {
+.alert-Greška {
   color: red;
 }
 
@@ -124,7 +124,7 @@ main {
 }
 
 .dash .img-col img {
-  max-width: 200px;
+  max-width: 250px;
   border-radius: 50%;
 }
 
@@ -137,14 +137,10 @@ main {
   font-size: 1rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  background-color: var(--primary-color);
+  color: #fff;
 
-
-  &.btn-login{
-    background-color: var(--primary-color);
-    color: #fff;
-
-    &:hover{
-      background-color: var(--secondary-color);
-    }
+  &:hover{
+    background-color: var(--secondary-color);
   }
 }

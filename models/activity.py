@@ -11,6 +11,10 @@ class ActivityType(enum.Enum):
     Tabor = 6
     Smotra = 7
 
+    def __str__(self):
+        return self.name
+
+
 
 class OrganizerLevel(enum.Enum):
     Odred = 1
@@ -30,10 +34,11 @@ class Activity(db.Model):
     organizer_name = db.Column(db.String(50))
 
     participants = db.relationship('User', secondary='participations', back_populates='activities')
+    # participations = db.relationship('Participation', back_populates='activity')
 
 
     def __repr__(self):
-        return f"<Activity {self.username}>"
+        return f"<Activity {self.id}>"
 
 
 class Participation(db.Model):
@@ -43,8 +48,8 @@ class Participation(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     activity_id = db.Column(db.Integer, db.ForeignKey("activities.id"))
 
-    user = db.relationship('User', backref='participations')
-    activity = db.relationship('Activity', backref='participations')
+    # user = db.relationship('User', back_populates='participations')
+    # activity = db.relationship('Activity', back_populates='participations')
 
     def __repr__(self):
-        return f"<Participation {self.username}>"
+        return f"<Participation {self.id}>"
