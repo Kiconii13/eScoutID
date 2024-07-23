@@ -5,7 +5,10 @@ Login
 {% endblock %}
 
 {% block content %}
-    <div class="login-container">
+
+
+<div class="login-container">
+        <img src="/static/logo_color.png" alt="Large logo">
         <h1>Dobrodošli na eScoutID sistem</h1>
         <form id = "auth-form" action="{{ url_for('login') }}" method="post">
             <input type="text" name="username" placeholder="Korisničko ime" class="input-fieled"/>
