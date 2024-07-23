@@ -3,8 +3,8 @@
 {{ h1 }}
 {% endblock %}
 {% block content %}
-<h1>{{ h1 }}</h1>
 <form action="#" method="post">
+    <h1>{{ h1 }}</h1>
     <label for="username">Username: </label>
     <input type="text" id="username" name="username" value = "{{clan.username}}" 
     required oninvalid="this.setCustomValidity('Unesite korisnicko ime clana')" oninput="this.setCustomValidity('')"><br>

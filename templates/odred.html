@@ -7,19 +7,16 @@ Odred
 {% block content %}
 
 <div class="dash">
-    <div class="img-col">
-        <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="Fotografija">
-    </div>
     <div class="data-col">
         <h2 class="ime-prezime">
-            Odred Izviđača {{ current_user.odred.name }}
+            {{ current_user.odred.name }}
         </h2>
         <div class="columns">
             <div class="left-col">
-                <h3>
-                    Opšte informacije
-                </h3>
                 <table>
+                    <caption>
+                        Opšte informacije
+                    </caption>
                     <tr>
                         <td>Datum Osnivanja:</td>
                         <td>{{ current_user.odred.founded_at }}</td>
@@ -39,10 +36,10 @@ Odred
                 </table>
             </div>
             <div class="right-col">
-                <h3>
-                    Informacije o organizaciji
-                </h3>
                 <table>
+                    <caption>
+                        Informacije o organizaciji
+                    </caption>
                     <tr>
                         <td>Starešina odreda: </td>
                         <td>{{ current_user.odred.staresina.first_name }} {{ current_user.odred.staresina.last_name }}</td>

@@ -203,7 +203,30 @@ h1 {
 table {
   border-collapse: collapse;
   margin-top: 40px;
+  padding: 0 20px;
+  display: block;
+  max-width: max(350px, 50vw);
+  overflow-y: scroll;
+}
+
+table thead {
   border-top: 2px solid;
+}
+
+.dash table tr:nth-child(1) {
+  border-top: 2px solid;
+}
+
+table th, table td {
+  min-width: 5ch;
+}
+
+table td:nth-child(1), th:nth-child(1) {
+  border-left: 1px solid;
+}
+
+table td:nth-child(n), th:nth-child(n) {
+  border-right: 1px solid;
 }
 
 table tbody tr {

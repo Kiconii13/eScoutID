@@ -175,10 +175,9 @@ def defUser(user):
 @app.route("/odreddashboard")
 @login_required
 def odreddashboard():
-    if current_user.role == "admin":
-        return render_template("odredDashboard.html",users = User.query.all())
-    else:
-        return redirect("dashboard")
+    if current_user.role != "admin":
+        return redirect(url_for("dashboard"))
+    return render_template("odredDashboard.html",users = User.query.all())
 
 @app.route("/add", methods = ["POST","GET"])
 @login_required

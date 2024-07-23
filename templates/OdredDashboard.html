@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
+
 {% block title %}
 Odred Dashboard
 {% endblock %}
+
 {% block content %}
 <table>
     <caption>Članovi:</caption>
@@ -10,16 +12,16 @@ Odred Dashboard
             <th>Id</th>
             <th>Ime i prezime</th>
             <th>Korisničko ime</th>
-            <th>Odred Id</th>
+            <th>Odred</th>
         </tr>
     </thead>
 {% for user in users %}
     <tbody>
-	    <tr>
+        <tr>
             <td><a href="/edit/{{ user.id }}">{{ user.id }}</a></td>
             <td>{{ user.first_name }} {{ user.last_name }}</td>
             <td>{{ user.username }}</td>
-            <td>{{ user.odred_id }}</td>
+            <td>{{ user.odred }}</td>
         </tr>
     </tbody>
 {% endfor %}

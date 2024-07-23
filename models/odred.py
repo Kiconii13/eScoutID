@@ -21,5 +21,8 @@ class Odred(db.Model):
 
     members = db.relationship('User', back_populates='odred', foreign_keys=[User.odred_id])
 
+    def __str__(self):
+        return self.name
+
     def __repr__(self):
         return f"<Odred {self.name}>"
