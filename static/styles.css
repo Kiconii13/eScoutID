@@ -199,7 +199,9 @@ input {
     background-color: var(--secondary-color);
   }
 }
-
+.btn-edit{
+  margin:20px;
+}
 .good {
   color: green;
 }
