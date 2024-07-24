@@ -1,7 +1,7 @@
 from datetime import datetime
 from urllib import request
 
-from flask import Blueprint, redirect, url_for, render_template, request
+from flask import Blueprint, redirect, url_for, render_template, request, flash
 from flask_login import current_user, login_required
 from sqlalchemy import func
 
@@ -71,3 +71,16 @@ def editOdred(id):
         nacelnik = User.query.filter_by(id=odred.nacelnik_id).first()
         return render_template("addOdred.html", h1="Izmeni odred", odred=odred, staresina=staresina.username,
                                nacelnik=nacelnik.username)
+
+@savez_bp.route("/deleteOdred/<int:id>", methods=["GET", "POST"])
+@login_required
+def deleteOdred(id):
+    odred = Odred.query.get(id)
+    if odred:
+        db.session.delete(odred)
+        db.session.commit()
+        flash("Odred je uspešno obrisan.", "success")
+    else:
+        flash("Odred nije pronađen.", "error")
+    return redirect(url_for("savez.savezDashboard"))
+

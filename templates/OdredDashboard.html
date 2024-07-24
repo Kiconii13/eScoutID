@@ -14,7 +14,13 @@ Odred Dashboard
             <th>Id</th>
             <th>Ime i prezime</th>
             <th>Korisničko ime</th>
-            <th>Odred</th>
+            <th>Datum rođenja</th>
+            <th>Datum upisa</th>
+            <th>Broj telefona</th>
+            <th>Email</th>
+            <th>Adresa</th>
+            <th>Jedinica</th>
+            <th>Plaćena članarina</th>
         </tr>
     </thead>
 {% for user in users %}
@@ -23,7 +29,19 @@ Odred Dashboard
             <td><a href="/editClan/{{ user.id }}">{{ user.id }}</a></td>
             <td>{{ user.first_name }} {{ user.last_name }}</td>
             <td>{{ user.username }}</td>
-            <td>{{ user.odred }}</td>
+            <td>{{ user.dob }}</td>
+            <td>{{ user.join_date }}</td>
+            <td>{{ user.phone_number }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.address }}</td>
+            <td>{{ user.jedinica }}</td>
+             <td>
+                {% if current_user.has_paid %}
+                <span class="good">DA</span>
+                {% else %}
+                <span class="bad">NE</span>
+                {% endif %}
+            </td>
         </tr>
     </tbody>
 {% endfor %}
