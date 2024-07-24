@@ -92,7 +92,7 @@ nav ul li a:hover {
   flex-direction: column;
   align-items: center;
   padding: 0 15px;
-  padding-top: min(300px, 10vh);
+  padding-top: min(20px, 10vh);
 }
 
 .login-container img {
@@ -135,7 +135,7 @@ input {
   flex-wrap: wrap;
   justify-content: center;
   padding: 0 20px;
-  padding-top: min(250px, 5vh);
+  padding-top: min(20px, 5vh);
   max-width: 100vw;
 }
 
@@ -213,6 +213,11 @@ input {
 h1 {
   text-align: center;
   margin: 20px 0;
+}
+
+h2, caption{
+  text-align: center;
+  text-decoration: underline;
 }
 
 table {
