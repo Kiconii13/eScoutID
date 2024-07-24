@@ -9,7 +9,7 @@
     <h1>{{ h1 }}</h1>
     <label>
         Naziv:
-        <input type="text" name="name" placeholder="Južni savez" value = "{{odred.name}}" required oninvalid="this.setCustomValidity('Unesite naziv saveza')" oninput="this.setCustomValidity('')">
+        <input type="text" name="name" placeholder="Naziv Odreda" value = "{{odred.name}}" required oninvalid="this.setCustomValidity('Unesite naziv odread')" oninput="this.setCustomValidity('')">
     </label>
     <label>
         Grad:
@@ -17,15 +17,15 @@
     </label>
     <label>
         Adresa:
-        <input type="text" name="address" placeholder="Ulica i broj" value = "{{odred.address}}" required oninvalid="this.setCustomValidity('Unesite adresu saveza')" oninput="this.setCustomValidity('')">
+        <input type="text" name="address" placeholder="Ulica i broj" value = "{{odred.address}}" required oninvalid="this.setCustomValidity('Unesite adresu odreda')" oninput="this.setCustomValidity('')">
     </label>
     <label>
         Email:
-        <input type="email" name="email" placeholder="juzni.savez@gmail.com" value = "{{odred.email}}" required oninvalid="this.setCustomValidity('Unesite adresu elektronske pošte saveza')" oninput="this.setCustomValidity('')">
+        <input type="email" name="email" placeholder="juzni.savez@gmail.com" value = "{{odred.email}}" required oninvalid="this.setCustomValidity('Unesite adresu elektronske pošte odreda')" oninput="this.setCustomValidity('')">
     </label>
     <label>
         Datum osnivanja:
-        <input type="date" name="founded_at" value = "{{odred.founded_at}}" required oninvalid="this.setCustomValidity('Unesite datum osnivanja saveza')" oninput="this.setCustomValidity('')">
+        <input type="date" name="founded_at" value = "{{odred.founded_at}}" required oninvalid="this.setCustomValidity('Unesite datum osnivanja odreda')" oninput="this.setCustomValidity('')">
     </label>
     <label>
         Korisničko ime staresine:
@@ -48,5 +48,8 @@
     </label>
     
     <input type="submit" value="{{ h1 }}" class="btn">
+    {% if h1 != "Dodaj odred" and odred.id != current_user.odred.id%}
+    <a class = 'btn btn-link' href="{{ url_for('savez.deleteOdred', id=odred.id) }}" onclick="return confirm('Da li ste sigurni da želite da obrišete ovaj odred?');">Obriši odred</a>
+    {% endif %}
 </form>
 {% endblock %}

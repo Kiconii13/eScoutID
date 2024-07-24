@@ -202,6 +202,12 @@ input {
 .btn-edit{
   margin:20px;
 }
+
+.btn-link{
+  text-decoration: none;
+  text-align: center;
+}
+
 .good {
   color: green;
 }

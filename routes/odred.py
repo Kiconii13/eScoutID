@@ -58,3 +58,16 @@ def editClan(id):
             return redirect(url_for("dashboard.dashboard"))
         odred = Odred.query.filter_by(id=user.odred_id).first()
         return render_template("addClan.html", h1="Izmeni člana", clan=user, odred=odred.name)
+
+@odred_bp.route("/deleteClan/<int:id>", methods=["GET", "POST"])
+@login_required
+def deleteClan(id):
+    user = User.query.get(id)
+    if user:
+        db.session.delete(user)
+        db.session.commit()
+        flash("Član je uspešno obrisan.", "success")
+    else:
+        flash("Član nije pronađen.", "error")
+    return redirect(url_for("odred.odredDashboard"))
+
