@@ -207,11 +207,11 @@ def addClan():
         except IntegrityError: #exeption ako korisnicko ime vec postoji (Mogo bi malo drugacije da se napravi ispis greske, funkcionalnost je tu)
             db.session.rollback()
             flash("Uneto korisničko ime već postoji!","Greška")
-            return render_template("addClan.html", h1 = "Dodaj", clan = User())
+            return render_template("addClan.html", h1 = "Dodaj člana", clan = User())
     else:
         if current_user.role != "admin":
             return redirect(url_for("dashboard"))
-        return render_template("addClan.html", h1 = "Dodaj", clan = new_user)
+        return render_template("addClan.html", h1 = "Dodaj člana", clan = new_user)
 
 
 @app.route("/editClan/<int:id>", methods = ["POST","GET"])
@@ -227,11 +227,12 @@ def editClan(id):
         except IntegrityError: # exeption ako korisnicko ime vec postoji (Mogo bi malo drugacije da se napravi ispis greske, funkcionalnost je tu)
             db.session.rollback()
             flash("Uneto korisničko ime već postoji!","Greška")
-            return render_template("addClan.html", h1 = "Izmeni", clan = User.query.get(id))
+            return render_template("addClan.html", h1 = "Izmeničlana", clan = User.query.get(id))
     else:
         if current_user.role != "admin":
             return redirect(url_for("dashboard"))
-        return render_template("addClan.html", h1 = "Izmeni", clan = user)
+        odred = Odred.query.filter_by(id = user.odred_id).first()
+        return render_template("addClan.html", h1 = "Izmeni člana", clan = user, odred = odred.name)
 
 
 @app.route("/program")

@@ -24,7 +24,7 @@
         {% endwith %}
     </div>
 
-    {% if h1 == "Dodaj" %}
+    {% if h1 == "Dodaj člana" %}
     <label>
         Lozinka: 
         <input type="password" id="password" name="password" value = "{{clan.password}}" required oninvalid="this.setCustomValidity('Unesite lozinku člana')" oninput="this.setCustomValidity('')">
@@ -82,11 +82,12 @@
         Jedinica: 
         <input type="text" id="jedinica" name="jedinica" value = "{{clan.jedinica}}">
     </label>
+    {% if h1 != "Dodaj člana"%}
     <label>
         Odred: 
-        <input type="text" id="odred_id" name="odred_id" value = "{{clan.odred_id}}" disabled>
+        <input type="text" id="odred_id" name="odred_id" value = "{{ odred }}" disabled>
     </label>
-
+    {% endif %}
     <input type="submit" value="{{h1}}" class="btn">
 </form>
 
