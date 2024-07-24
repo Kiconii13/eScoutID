@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-Dodaj
+{{ h1 }}
 {% endblock %}
 
 {% block content %}
@@ -9,37 +9,41 @@ Dodaj
     <h1>{{ h1 }}</h1>
     <label>
         Naziv:
-        <input type="text" name="name" placeholder="Južni savez" required oninvalid="this.setCustomValidity('Unesite naziv saveza')" oninput="this.setCustomValidity('')">
+        <input type="text" name="name" placeholder="Južni savez" value = "{{odred.name}}" required oninvalid="this.setCustomValidity('Unesite naziv saveza')" oninput="this.setCustomValidity('')">
     </label>
     <label>
         Grad:
-        <input type="text" name="city" placeholder="Beograd" required oninvalid="this.setCustomValidity('Unesite naziv grada')" oninput="this.setCustomValidity('')">
+        <input type="text" name="city" placeholder="Beograd" value = "{{odred.city}}" required oninvalid="this.setCustomValidity('Unesite naziv grada')" oninput="this.setCustomValidity('')">
     </label>
     <label>
         Adresa:
-        <input type="text" name="address" placeholder="Ulica i broj" required oninvalid="this.setCustomValidity('Unesite adresu saveza')" oninput="this.setCustomValidity('')">
+        <input type="text" name="address" placeholder="Ulica i broj" value = "{{odred.address}}" required oninvalid="this.setCustomValidity('Unesite adresu saveza')" oninput="this.setCustomValidity('')">
     </label>
     <label>
         Email:
-        <input type="email" name="email" placeholder="juzni.savez@gmail.com" required oninvalid="this.setCustomValidity('Unesite adresu elektronske pošte saveza')" oninput="this.setCustomValidity('')">
+        <input type="email" name="email" placeholder="juzni.savez@gmail.com" value = "{{odred.email}}" required oninvalid="this.setCustomValidity('Unesite adresu elektronske pošte saveza')" oninput="this.setCustomValidity('')">
     </label>
     <label>
         Datum osnivanja:
-        <input type="date" name="founded_at" required oninvalid="this.setCustomValidity('Unesite datum osnivanja saveza')" oninput="this.setCustomValidity('')">
+        <input type="date" name="founded_at" value = "{{odred.founded_at}}" required oninvalid="this.setCustomValidity('Unesite datum osnivanja saveza')" oninput="this.setCustomValidity('')">
     </label>
     <label>
         Korisničko ime staresine:
-        <input type="text" name="staresina_username" placeholder="jovan.marinkovic" required oninvalid="this.setCustomValidity('Unesite korisničko ime starešine')" oninput="this.setCustomValidity('')">
+        <input type="text" name="staresina_username" placeholder="jovan.marinkovic" value = "{{ staresina }}" required oninvalid="this.setCustomValidity('Unesite korisničko ime starešine')" oninput="this.setCustomValidity('')">
     </label>
     <label>
         Korisničko ime načelnika:
-        <input type="text" name="nacelnik_username" placeholder="petar.kocic" required oninvalid="this.setCustomValidity('Unesite korisničko ime načelnika')" oninput="this.setCustomValidity('')">
+        <input type="text" name="nacelnik_username" placeholder="petar.kocic" value = "{{ nacelnik }}" required oninvalid="this.setCustomValidity('Unesite korisničko ime načelnika')" oninput="this.setCustomValidity('')">
     </label>
     <label>
         Status:
         <select id="status" name="status" required>
             <option value="pridružen">Pridružen</option>
+            {% if odred.status == "punopravan" %}
+            <option value="punopravan" selected>Punopravan</option>
+            {% else %}
             <option value="punopravan">Punopravan</option>
+            {% endif %}
         </select>
     </label>
     
