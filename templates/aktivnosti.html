@@ -6,8 +6,6 @@ Aktivnosti
 
 {% block content %}
 
-
-{% if current_user.role != "admin" %}
 <table class="activities-table">
     <caption>Učešće na aktivnostima</caption>
     <thead>
@@ -31,84 +29,4 @@ Aktivnosti
     </tbody>
     {% endfor %}
 </table>
-
-{% else %}
-<h1>Upravljanje aktivnostima</h1>
-
-<hr>
-
-<form action="{{ url_for('aktivnosti.new_aktivnost') }}" method="POST">
-    <h2>Dodaj aktivnost</h2>
-    <label>
-        Naziv aktivnosti:
-        <input type="text" name="name" placeholder="Pecanje" required>
-    </label>
-    <label>
-        Datum održavanja:
-        <input type="date" name="due_date" required>
-    </label>
-    <label>
-        Mesto održavanja:
-        <input type="text" name="location" placeholder="Velika Plana" required>
-    </label>
-    <label>
-        Tip aktivnosti:
-        <select name="type" required>
-            <option value="Aktivnost">Aktivnost</option>
-            <option value="Tecaj">Tecaj</option>
-            <option value="Seminar">Seminar</option>
-            <option value="Izlet">Izlet</option>
-            <option value="Bivak">Bivak</option>
-            <option value="Tabor">Tabor</option>
-            <option value="Smotra">Smotra</option>
-        </select>
-    </label>
-    <label>
-        Tip organizatora:
-        <select name="organizer_type" required>
-            <option value="Odred">Odred</option>
-            <option value="Savez">Savez</option>
-            <option value="International">International</option>
-        </select>
-    </label>
-    <label>
-        Naziv organizatora:
-        <input type="text" name="organizer_name" placeholder="PFE" required>
-    </label>
-    <input type="submit" value="Napravi aktivnost" class="btn" />
-</form>
-
-<hr>
-
-<form action="{{ url_for('aktivnosti.log_aktivnost') }}" method="POST">
-    <h2>Zabeleži učešće</h2>
-    <label>
-        Ime i prezime člana:
-        <select name="user">
-            {% for user in user_list %}
-            <option value="{{ user.id }}">{{ user.first_name }} {{ user.last_name }}</option>
-            {% endfor %}
-        </select>
-    </label>
-    <label>
-        Naziv aktivnosti i organizator:
-        <select name="activity">
-            {% for activity in activities %}
-            <option value="{{ activity.id }}">{{ activity.name }} - {{ activity.organizer_name }}</option>
-            {% endfor %}
-        </select>
-    </label>
-    <input type="submit" value="Zabeleži učešće" class="btn" />
-</form>
-{% endif %}
-
-<div class="alerts">
-    {% with messages = get_flashed_messages(with_categories=True) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <p class="alert alert-{{ category }}">{{ category }}: {{ message }}</p>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
-</div>
 {% endblock %}

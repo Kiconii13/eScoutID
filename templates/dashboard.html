@@ -77,8 +77,13 @@ Dashboard
                 <input type="button" value="Program" class="btn" />
             </a>
             <a href="{{ url_for('aktivnosti.aktivnosti') }}">
-                <input type="button" value="Aktivnosti" class="btn" />
+                <input type="button" value="Moje aktivnosti" class="btn" />
             </a>
+            {% if current_user.role == 'admin' %}
+            <a href="{{ url_for('aktivnosti.addAktivnost') }}">
+                <input type="button" value="Upravljaj aktivnostima" class="btn" />
+            </a>
+            {% endif %}
         </div>
     </div>
 </div>
