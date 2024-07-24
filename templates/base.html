@@ -10,35 +10,35 @@
 </head>
 <body>
     <nav>
-        <a href="{{ url_for('index') }}">
+        <a href="{{ url_for('auth.index') }}">
             <img src="/static/logo_light.png" alt="eScoutID logo">
         </a>
         {% if not current_user.is_anonymous %}
         <ul>
             {% if current_user.role == "admin" %}
             <li>
-                <a href="{{ url_for('savezDashboard') }}">
+                <a href="{{ url_for('savez.savezDashboard') }}">
                     Edit savez
                 </a>
             </li>
             <li>
-                <a href="{{ url_for('odredDashboard') }}">
+                <a href="{{ url_for('odred.odredDashboard') }}">
                     Edit odred
                 </a>
             </li>
             {% endif %}
             <li>
-                <a href="{{ url_for('dashboard') }}">
+                <a href="{{ url_for('dashboard.dashboard') }}">
                     Moj nalog
                 </a>
             </li>
             <li>
-                <a href="{{ url_for('odred') }}">
+                <a href="{{ url_for('dashboard.odred') }}">
                     Odred
                 </a>
             </li>
             <li>
-                <a href="{{ url_for('logout') }}">
+                <a href="{{ url_for('auth.logout') }}">
                     Odjavi me
                 </a>
             </li>
