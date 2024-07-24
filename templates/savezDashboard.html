@@ -22,7 +22,7 @@ Savez Dashboard
         <tbody>
         {% for (odred,broj) in odredi %}
             <tr>
-                <td><a href="/editSavez/{{ odred.id }}">{{ odred.id }}</a></td>
+                <td><a href="/editOdred/{{ odred.id }}">{{ odred.id }}</a></td>
                 <td>{{ odred.name }}</td>
                 <td>{{ odred.city }}</td>
                 <td>{{ odred.address }}</td>
@@ -35,5 +35,5 @@ Savez Dashboard
         {% endfor %}
         </tbody>
     </table>
-    <br><a href="{{ url_for('addSavez') }}">Dodaj novog clana</a>
+    <br><a href="{{ url_for('addOdred') }}">Dodaj novi odred</a>
 {% endblock %}

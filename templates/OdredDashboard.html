@@ -18,7 +18,7 @@ Odred Dashboard
 {% for user in users %}
     <tbody>
         <tr>
-            <td><a href="/edit/{{ user.id }}">{{ user.id }}</a></td>
+            <td><a href="/editClan/{{ user.id }}">{{ user.id }}</a></td>
             <td>{{ user.first_name }} {{ user.last_name }}</td>
             <td>{{ user.username }}</td>
             <td>{{ user.odred }}</td>
@@ -26,5 +26,5 @@ Odred Dashboard
     </tbody>
 {% endfor %}
 </table>
-<br><a href="{{ url_for('add') }}">Dodaj novog clana</a>
+<br><a href="{{ url_for('addClan') }}">Dodaj novog clana</a>
 {% endblock %}
