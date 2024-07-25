@@ -1,4 +1,4 @@
-from sqlite3 import IntegrityError
+from sqlalchemy.exc import IntegrityError
 
 from flask import Blueprint, redirect, url_for, render_template, flash, request
 from flask_login import login_required, current_user
@@ -14,7 +14,6 @@ def odredDashboard(id):
     if current_user.role != "admin" and current_user.role != "savez_admin":
         return redirect(url_for("dashboard.dashboard"))
     return render_template("odredDashboard.html",odred_name=Odred.query.filter_by(id=id).first(), users=User.query.filter_by(odred_id=id).all())
-
 
 @odred_bp.route("/addClan", methods=["POST", "GET"])
 @login_required
