@@ -23,6 +23,7 @@ class User(db.Model, UserMixin):
     phone_number = db.Column(db.String(12), default="")
     email = db.Column(db.String(100), default="")
     address = db.Column(db.String(100), default="")
+    avatar = db.Column(db.Text, default="")
 
     has_paid = db.Column(db.Boolean(), default=False)
     jedinica = db.Column(db.String(30), default="")
@@ -59,6 +60,7 @@ class User(db.Model, UserMixin):
         user.address = request.form["address"]
         user.has_paid = 1 if request.form.get('has_paid') else 0
         user.jedinica = request.form["jedinica"]
+        user.avatar = request.form["image"]
         return user
 
     def set_password(self, password):

@@ -16,6 +16,7 @@ def aktivnosti():
 
     return render_template("aktivnosti.html", activities=activities)
 
+
 @aktivnosti_bp.route("/addAktivnost")
 @login_required
 def addAktivnost():
@@ -23,6 +24,8 @@ def addAktivnost():
     activities = Activity.query.all()
 
     return render_template("addAktivnost.html", user_list=filtered_users, activities=activities)
+
+
 @aktivnosti_bp.route("/aktivnosti/new", methods=["POST"])
 @login_required
 def new_aktivnost():
