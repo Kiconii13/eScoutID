@@ -24,7 +24,7 @@
             {% endif %}
             {% if current_user.role == "admin" %}
             <li>
-                <a href="odredDashboard/{{ current_user.odred.id }}">
+                <a href="{{ url_for('odred.odredDashboard', id = current_user.odred.id) }}">
                     Edit odred
                 </a>
             </li>
