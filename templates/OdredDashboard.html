@@ -5,7 +5,7 @@ Odred Dashboard
 {% endblock %}
 
 {% block content %}
-<h2>Odreda Izviđača "{{ current_user.odred.name }}"</h2>
+<h2>Odreda Izviđača "{{ odred_name }}"</h2>
 <hr/>
 <table>
     <caption>Članovi:</caption>
@@ -26,7 +26,11 @@ Odred Dashboard
 {% for user in users %}
     <tbody>
         <tr>
+        {% if current_user.role == "admin" %}
             <td><a href="/editClan/{{ user.id }}">{{ user.id }}</a></td>
+        {% elif current_user.role == "savez_admin" %}
+            <td>{{ user.id }}</td>
+        {% endif %}
             <td>{{ user.first_name }} {{ user.last_name }}</td>
             <td>{{ user.username }}</td>
             <td>{{ user.dob }}</td>
@@ -36,7 +40,7 @@ Odred Dashboard
             <td>{{ user.address }}</td>
             <td>{{ user.jedinica }}</td>
              <td>
-                {% if current_user.has_paid %}
+                {% if user.has_paid %}
                 <span class="good">DA</span>
                 {% else %}
                 <span class="bad">NE</span>
@@ -46,5 +50,7 @@ Odred Dashboard
     </tbody>
 {% endfor %}
 </table>
+{% if current_user.role == "admin" %}
 <br><a class="btn btn-edit" href="{{ url_for('odred.addClan') }}">Dodaj novog clana</a>
+{% endif %}
 {% endblock %}

@@ -12,16 +12,6 @@
         Korisničko ime: 
         <input type="text" id="username" name="username" value = "{{clan.username}}" required oninvalid="this.setCustomValidity('Unesite korisnicko ime clana')" oninput="this.setCustomValidity('')">
     </label>
-    
-    <div class="alerts">
-        {% with messages = get_flashed_messages(with_categories=True) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <p class="alert alert-{{ category }}">{{ category }}: {{ message }}</p>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-    </div>
 
     {% if h1 == "Dodaj člana" %}
     <label>
@@ -92,5 +82,16 @@
     <a class = 'btn btn-link' href="{{ url_for('odred.deleteClan', id=clan.id) }}" onclick="return confirm('Da li ste sigurni da želite da obrišete ovog člana?');">Obriši člana</a>
     {% endif %}
 </form>
+
+    <div class="alerts">
+        {% with messages = get_flashed_messages(with_categories=True) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <p class="alert alert-{{ category }}">{{ category }}: {{ message }}</p>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
 
 {% endblock %}
