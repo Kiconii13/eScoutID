@@ -15,14 +15,16 @@
         </a>
         {% if not current_user.is_anonymous %}
         <ul>
-            {% if current_user.role == "admin" %}
+            {% if current_user.role == "savez_admin" %}
             <li>
                 <a href="{{ url_for('savez.savezDashboard') }}">
                     Edit savez
                 </a>
             </li>
+            {% endif %}
+            {% if current_user.role == "admin" %}
             <li>
-                <a href="{{ url_for('odred.odredDashboard') }}">
+                <a href="odredDashboard/{{ current_user.odred.id }}">
                     Edit odred
                 </a>
             </li>

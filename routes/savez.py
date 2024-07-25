@@ -16,7 +16,7 @@ def savezDashboard():
     odredi = Odred.query.all()
     Broj_Clanova = db.session.query(func.count(User.id).label('member_count')).outerjoin(Odred.members).group_by(
         Odred.id).all()
-    if current_user.role != "admin":
+    if current_user.role != "savez_admin":
         return redirect(url_for("dashboard.dashboard"))
     return render_template("savezDashboard.html", odredi=zip(odredi, Broj_Clanova))
 
@@ -41,7 +41,7 @@ def addOdred():
         db.session.commit()
         return redirect(url_for("savez.savezDashboard"))
     else:
-        if current_user.role != "admin":
+        if current_user.role != "savez_admin":
             return redirect(url_for("dashboard.dashboard"))
         return render_template("addOdred.html", h1="Dodaj odred", odred=new_odred, staresina="", nacelnik="")
 
@@ -65,7 +65,7 @@ def editOdred(id):
         db.session.commit()
         return redirect(url_for("savez.savezDashboard"))
     else:
-        if current_user.role != "admin":
+        if current_user.role != "savez_admin":
             return redirect(url_for("dashboard.dashboard"))
         staresina = User.query.filter_by(id=odred.staresina_id).first()
         nacelnik = User.query.filter_by(id=odred.nacelnik_id).first()

@@ -8,12 +8,12 @@ from models import User, db, Odred
 odred_bp = Blueprint("odred", __name__)
 
 
-@odred_bp.route("/odredDashboard")
+@odred_bp.route("/odredDashboard/<int:id>")
 @login_required
-def odredDashboard():
-    if current_user.role != "admin":
+def odredDashboard(id):
+    if current_user.role != "admin" and current_user.role != "savez_admin":
         return redirect(url_for("dashboard.dashboard"))
-    return render_template("odredDashboard.html", users=User.query.filter_by(odred_id=current_user.odred_id).all())
+    return render_template("odredDashboard.html",odred_name=Odred.query.filter_by(id=id).first(), users=User.query.filter_by(odred_id=id).all())
 
 
 @odred_bp.route("/addClan", methods=["POST", "GET"])
@@ -28,7 +28,7 @@ def addClan():
             new_user.odred_id = current_user.odred_id
             db.session.add(new_user)
             db.session.commit()
-            return redirect(url_for("odred.odredDashboard"))
+            return redirect(url_for("odred.odredDashboard", id=current_user.odred.id))
         except IntegrityError:  # exeption ako korisnicko ime vec postoji (Mogo bi malo drugacije da se napravi ispis greske, funkcionalnost je tu)
             db.session.rollback()
             flash("Uneto korisničko ime već postoji!", "Greška")
