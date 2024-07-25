@@ -26,7 +26,11 @@ Odred Dashboard
 {% for user in users %}
     <tbody>
         <tr>
+        {% if current_user.role == "admin" %}
             <td><a href="/editClan/{{ user.id }}">{{ user.id }}</a></td>
+        {% elif current_user.role == "savez_admin" %}
+            <td>{{ user.id }}</td>
+        {% endif %}
             <td>{{ user.first_name }} {{ user.last_name }}</td>
             <td>{{ user.username }}</td>
             <td>{{ user.dob }}</td>

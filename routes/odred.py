@@ -48,7 +48,7 @@ def editClan(id):
             # AZURIRANJE PODATAKA CLANA
             user = User.defUser(user)
             db.session.commit()
-            return redirect(url_for("odred.odredDashboard"))
+            return redirect(url_for("odred.odredDashboard", id = current_user.odred.id))
         except IntegrityError:  # exeption ako korisnicko ime vec postoji (Mogo bi malo drugacije da se napravi ispis greske, funkcionalnost je tu)
             db.session.rollback()
             flash("Uneto korisničko ime već postoji!", "Greška")
@@ -69,5 +69,5 @@ def deleteClan(id):
         flash("Član je uspešno obrisan.", "success")
     else:
         flash("Član nije pronađen.", "error")
-    return redirect(url_for("odred.odredDashboard"))
+    return redirect(url_for("odred.odredDashboard", id = current_user.odred.id))
 
