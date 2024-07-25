@@ -7,7 +7,6 @@ from models import User, db, Odred
 
 odred_bp = Blueprint("odred", __name__)
 
-
 @odred_bp.route("/odredDashboard/<int:id>")
 @login_required
 def odredDashboard(id):
