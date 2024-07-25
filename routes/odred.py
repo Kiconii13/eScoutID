@@ -1,6 +1,6 @@
 from sqlalchemy.exc import IntegrityError
 
-from flask import Blueprint, redirect, url_for, render_template, flash, request
+from flask import Blueprint, redirect, url_for, render_template, flash, request, make_response
 from flask_login import login_required, current_user
 
 from models import User, db, Odred
@@ -70,3 +70,14 @@ def deleteClan(id):
         flash("Član nije pronađen.", "error")
     return redirect(url_for("odred.odredDashboard", id = current_user.odred.id))
 
+
+@odred_bp.route("/clan/avatar/<int:id>")
+@login_required
+def getPfp(id):
+    user = User.query.filter_by(id=id).first()
+    if user.avatar:
+        response = make_response(user.avatar, 200)
+    else:
+        response = make_response("default", 200)
+    response.mimetype = "text/plain"
+    return response
