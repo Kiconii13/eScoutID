@@ -8,7 +8,7 @@ Dashboard
 
 <div class="dash">
     <div class="img-col">
-        <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" alt="Fotografija">
+        <img src="" alt="Fotografija" id="output">
         <h2 class="ime-prezime">
             {{ current_user.first_name }} {{ current_user.last_name }}
         </h2>
@@ -97,5 +97,55 @@ Dashboard
         {% endif %}
     {% endwith %}
 </div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    async function streamToArrayBuffer(stream) {
+        const reader = stream.getReader();
+        let result = new Uint8Array();
+        let done, value;
+        while ({ done, value } = await reader.read(), !done) {
+            const newResult = new Uint8Array(result.length + value.length);
+            newResult.set(result);
+            newResult.set(value, result.length);
+            result = newResult;
+        }
+        return result.buffer;
+    }
+
+    async function decompressData(arrayBuffer) {
+        const stream = new DecompressionStream('gzip');
+        const writer = stream.writable.getWriter();
+        writer.write(new Uint8Array(arrayBuffer));
+        writer.close();
+        
+        const decompressedArrayBuffer = await streamToArrayBuffer(stream.readable);
+        return decompressedArrayBuffer;
+    }
+
+    async function showImage(b64) {
+        const compressedFromBase64 = new Uint8Array(atob(b64).split('').map(char => char.charCodeAt(0)));
+        const decompressedArrayBuffer = await decompressData(compressedFromBase64);
+
+        const blob = new Blob([decompressedArrayBuffer], { type: 'image' });
+        const url = URL.createObjectURL(blob);
+        document.getElementById('output').src = url;
+    }
+
+    window.onload = async () => {
+        fetch(`{{ url_for("odred.getPfp", id = current_user.id ) }}`)
+            .then(data => data.text())
+            .then(text => {
+                if (text !== "default") {
+                    showImage(text);
+                }
+                else {
+                    document.getElementById('output').src = "/static/default_pfp.png";
+                }
+            });
+    };
+</script>
 
 {% endblock %}
