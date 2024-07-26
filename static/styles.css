@@ -29,6 +29,13 @@ body {
 main {
   background-color: var(--backgorund-color);
   flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+a {
+  font: inherit;
+  color: inherit;
 }
 
 nav, footer {
@@ -101,7 +108,6 @@ nav ul li a:hover {
 }
 
 form {
-  /* margin: 20px auto; */
   padding: 0 20px;
   width: 100%;
   display: flex;
@@ -199,9 +205,6 @@ input {
     background-color: var(--secondary-color);
   }
 }
-.btn-edit{
-  margin:20px;
-}
 
 .btn-link{
   text-decoration: none;
@@ -257,6 +260,10 @@ table td:nth-child(n), th:nth-child(n) {
 
 table tbody tr {
   transition: ease 80ms;
+}
+
+.user-row {
+  cursor: pointer;
 }
 
 table tbody tr:hover {

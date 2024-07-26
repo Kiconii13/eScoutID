@@ -5,8 +5,9 @@ Odred Dashboard
 {% endblock %}
 
 {% block content %}
-<h2>Odreda Izviđača "{{ odred_name }}"</h2>
-<hr/>
+
+<h2>Odreda Izviđača<br>"{{ odred_name }}"</h2>
+<hr>
 <table>
     <caption>Članovi:</caption>
     <thead>
@@ -23,20 +24,30 @@ Odred Dashboard
             <th>Plaćena članarina</th>
         </tr>
     </thead>
-{% for user in users %}
     <tbody>
-        <tr>
+{% for user in users %}
+        <tr class="user-row" onclick='window.location.href=`{{ url_for("odred.editClan", id=user.id) }}`'>
         {% if current_user.role == "admin" %}
-            <td><a href="/editClan/{{ user.id }}">{{ user.id }}</a></td>
+            <td>
+                {{ user.id }}
+            </td>
         {% elif current_user.role == "savez_admin" %}
             <td>{{ user.id }}</td>
         {% endif %}
             <td>{{ user.first_name }} {{ user.last_name }}</td>
             <td>{{ user.username }}</td>
-            <td>{{ user.dob }}</td>
-            <td>{{ user.join_date }}</td>
-            <td>{{ user.phone_number }}</td>
-            <td>{{ user.email }}</td>
+            <td>{{ user.dob.day }}.{{ user.dob.month }}.{{ user.dob.year }}.</td>
+            <td>{{ user.join_date.day }}.{{ user.join_date.month }}.{{ user.join_date.year }}.</td>
+            <td>
+                <a href="tel:+{{ user.phone_number }}">
+                    +{{ user.phone_number }}
+                </a>
+            </td>
+            <td>
+                <a href="mailto:{{ user.email }}">
+                    {{ user.email }}
+                </a>
+            </td>
             <td>{{ user.address }}</td>
             <td>{{ user.jedinica }}</td>
              <td>
@@ -47,10 +58,23 @@ Odred Dashboard
                 {% endif %}
             </td>
         </tr>
+        {% endfor %}
     </tbody>
-{% endfor %}
 </table>
 {% if current_user.role == "admin" %}
-<br><a class="btn btn-edit" href="{{ url_for('odred.addClan') }}">Dodaj novog clana</a>
+<br>
+
+<input type="button" value="Dodaj novog člana" class="btn" onclick="window.location.href = `{{ url_for('odred.addClan') }}`">
 {% endif %}
+
+<div class="alerts">
+    {% with messages = get_flashed_messages(with_categories=True) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <p class="alert alert-{{ category }}">{{ category }}: {{ message }}</p>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+</div>
+
 {% endblock %}

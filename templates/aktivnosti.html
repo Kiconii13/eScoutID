@@ -17,16 +17,17 @@ Aktivnosti
             <th>Organizator</th>
         </tr>
     </thead>
-    {% for activity in current_user.activities %}
     <tbody>
+    {% for activity in current_user.activities %}
         <tr>
             <td>{{ activity.name }}</td>
-            <td>{{ activity.due_date }}</td>
+            <td>{{ activity.due_date.day }}.{{ activity.due_date.month }}.{{ activity.due_date.year }}.</td>
             <td>{{ activity.location }}</td>
             <td>{{ activity.type }}</td>
             <td>{{ activity.organizer_name }}</td>
         </tr>
+        {% endfor %}
     </tbody>
-    {% endfor %}
 </table>
+<input type="button" value="Nazad" class="btn" onclick="window.location.href = '{{ url_for('dashboard.dashboard') }}'">
 {% endblock %}

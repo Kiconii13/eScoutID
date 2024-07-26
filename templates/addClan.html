@@ -10,13 +10,13 @@
     
     <label>
         Korisničko ime: 
-        <input type="text" id="username" name="username" value = "{{clan.username}}" required oninvalid="this.setCustomValidity('Unesite korisnicko ime clana')" oninput="this.setCustomValidity('')">
+        <input type="text" id="username" name="username" value = "{{clan.username}}" oninvalid="this.setCustomValidity('Unesite korisnicko ime clana')" oninput="this.setCustomValidity('')" disabled>
     </label>
 
     {% if h1 == "Dodaj člana" %}
     <label>
         Lozinka: 
-        <input type="password" id="password" name="password" value = "{{clan.password}}" required oninvalid="this.setCustomValidity('Unesite lozinku člana')" oninput="this.setCustomValidity('')">
+        <input type="password" id="password" name="password" value = "{{clan.password}}" oninvalid="this.setCustomValidity('Unesite lozinku člana')" oninput="this.setCustomValidity('')" disabled>
     </label>
     {% endif %}
 
@@ -90,6 +90,8 @@
     {% if h1 != "Dodaj člana" and clan.id != current_user.id %}
     <a class = 'btn btn-link' href="{{ url_for('odred.deleteClan', id=clan.id) }}" onclick="return confirm('Da li ste sigurni da želite da obrišete ovog člana?');">Obriši člana</a>
     {% endif %}
+
+    <input type="button" value="Nazad" class="btn" onclick="window.location.href = '{{ url_for('odred.odredDashboard', id=current_user.odred.id) }}'">
 </form>
 <div class="alerts">
     {% with messages = get_flashed_messages(with_categories=True) %}
@@ -104,7 +106,7 @@
 
 {% block scripts %}
 <script>
-    let b64 = ''
+    let b64 = '';
     const form = document.querySelector('form');
 
     async function streamToArrayBuffer(stream) {
@@ -136,6 +138,12 @@
 
         const file = document.querySelector('input[type=file]')['files'][0];
         const reader = new FileReader();
+
+        if (document.querySelector('input[type=file]')['files'].length != 1) {
+            document.getElementById("b64_img").value = "nochange";
+            event.target.submit();
+            return;
+        }
         
         reader.onload = async () => {
             const arrayBuffer = reader.result;
