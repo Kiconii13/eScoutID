@@ -20,7 +20,10 @@ def aktivnosti():
 @aktivnosti_bp.route("/addAktivnost")
 @login_required
 def addAktivnost():
-    filtered_users = User.query.filter_by(odred_id = current_user.odred.id).all()
+    if current_user.role == "admin":
+        filtered_users = User.query.filter_by(odred_id = current_user.odred.id).all()
+    elif current_user.role == "savez_admin":
+        filtered_users = User.query.all()
     activities = Activity.query.all()
 
     return render_template("addAktivnost.html", user_list=filtered_users, activities=activities)
