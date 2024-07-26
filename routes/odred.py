@@ -19,7 +19,7 @@ def odred():
         return redirect(url_for("dashboard.dashboard"))
 
 
-@odred_bp.route("/odred/dashboard/<int:id>")
+@odred_bp.route("/odredDashboard/<int:id>")
 @login_required
 def odredDashboard(id):
     if current_user.role == "clan":
@@ -50,7 +50,7 @@ def addClan():
             return render_template("addClan.html", h1 = "Dodaj člana", action = action, clan = User())
     else:
         if current_user.role != "admin":
-            return redirect(url_for("dasboard.dashboard"))
+            return redirect(url_for("dashboard.dashboard"))
         return render_template("addClan.html", h1 = "Dodaj člana", action = action, clan = new_user)
 
 
