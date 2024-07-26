@@ -76,7 +76,7 @@ Upravljanje aktivnostima
 
 <hr>
 
-<input type="button" value="Nazad" class="btn" onclick="window.location.href = '{{ url_for('dashboard.dashboard') }}'">
+<input type="button" value="Nazad" class="btn" onclick="window.location.href = `{{ url_for('dashboard.dashboard') }}`">
 
 <div class="alerts">
     {% with messages = get_flashed_messages(with_categories=True) %}

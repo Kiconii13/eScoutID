@@ -91,7 +91,7 @@
     <a class = 'btn btn-link' href="{{ url_for('odred.deleteClan', id=clan.id) }}" onclick="return confirm('Da li ste sigurni da želite da obrišete ovog člana?');">Obriši člana</a>
     {% endif %}
 
-    <input type="button" value="Nazad" class="btn" onclick="window.location.href = '{{ url_for('odred.odredDashboard', id=current_user.odred.id) }}'">
+    <input type="button" value="Nazad" class="btn" onclick="window.location.href = `{{ url_for('odred.odredDashboard', id=current_user.odred.id) }}`">
 </form>
 <div class="alerts">
     {% with messages = get_flashed_messages(with_categories=True) %}
