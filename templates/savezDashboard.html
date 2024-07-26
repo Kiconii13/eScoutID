@@ -29,9 +29,9 @@ Savez Dashboard
                 <td>{{ odred.name }}</td>
                 <td>{{ odred.city }}</td>
                 <td>{{ odred.address }}</td>
-                <td>{{ odred.founded_at }}</td>
-                <td>{{ odred.staresina.username }}</td>
-                <td>{{ odred.nacelnik.username }}</td>
+                <td>{{ odred.founded_at.day }}.{{ odred.founded_at.month }}.{{ odred.founded_at.year }}.</td>
+                <td>{{ odred.staresina.first_name }} {{ odred.staresina.last_name }}</td>
+                <td>{{ odred.nacelnik.first_name }} {{ odred.nacelnik.last_name }}</td>
                 <td><a href="odredDashboard/{{ odred.id }}">{{ broj[0] }}</a></td>
                 <td>{{ odred.status }}</td>
             </tr>

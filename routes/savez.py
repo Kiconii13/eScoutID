@@ -66,8 +66,14 @@ def editOdred(id):
         odred.email = request.form["email"]
         odred.founded_at = datetime.fromisoformat(request.form["founded_at"]).date()
         staresina = User.query.filter_by(username=request.form["staresina_username"]).first()
+        if (not staresina) or staresina.odred_id != odred.id :
+            flash("Nepostoji član odreda sa tim usernameom (starešina)")
+            return redirect(url_for("savez.editOdred", id=odred.id))
         odred.staresina_id = staresina.id
         nacelnik = User.query.filter_by(username=request.form["nacelnik_username"]).first()
+        if (not nacelnik) or nacelnik.odred_id != odred.id:
+            flash("Nepostoji član odreda sa tim usernameom (načelnik)")
+            return redirect(url_for("savez.editOdred", id=odred.id))
         odred.nacelnik_id = nacelnik.id
         odred.status = request.form.get('status')
         db.session.commit()

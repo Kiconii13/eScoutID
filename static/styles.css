@@ -192,6 +192,7 @@ input {
 
 .dash .img-col img {
   max-width: 200px;
+  min-width: 200px;
   border-radius: 50%;
 }
 
