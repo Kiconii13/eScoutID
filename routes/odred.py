@@ -7,14 +7,16 @@ from models import User, db, Odred
 
 odred_bp = Blueprint("odred", __name__)
 
+
 @odred_bp.route("/odredDashboard/<int:id>")
 @login_required
 def odredDashboard(id):
-    if current_user.role != "admin" and current_user.role != "savez_admin":
+    if current_user.role == "clan":
         return redirect(url_for("dashboard.dashboard"))
-    return render_template("odredDashboard.html",odred_name=Odred.query.filter_by(id=id).first(), users=User.query.filter_by(odred_id=id).all())
+    return render_template("odredDashboard.html", odred_name=Odred.query.filter_by(id=id).first(), users=User.query.filter_by(odred_id=id).all())
 
-@odred_bp.route("/addClan", methods=["POST", "GET"])
+
+@odred_bp.route("/clan/add", methods=["POST", "GET"])
 @login_required
 def addClan():
     new_user = User()
@@ -22,8 +24,11 @@ def addClan():
         try:
             # UPIS NOVOG CLANA U BAZU
             new_user = User.defUser(new_user)
-            new_user.password = User.set_password(new_user, request.form["password"])
+
+            new_user.password = User.set_password(new_user, "123") # TODO: trenutno je hard kodovana lozinka 123 - treba dodati funkcionalnost za slanje mejlova i u tom mejlu korisnicima poslati link na kom mogu postaviti sifru kako bi mogli da se uloguju
+            
             new_user.odred_id = current_user.odred_id
+
             db.session.add(new_user)
             db.session.commit()
             return redirect(url_for("odred.odredDashboard", id=current_user.odred.id))
@@ -37,7 +42,7 @@ def addClan():
         return render_template("addClan.html", h1="Dodaj člana", clan=new_user)
 
 
-@odred_bp.route("/editClan/<int:id>", methods=["POST", "GET"])
+@odred_bp.route("/clan/edit/<int:id>", methods=["POST", "GET"])
 @login_required
 def editClan(id):
     user = User.query.get(id)
@@ -57,16 +62,17 @@ def editClan(id):
         odred = Odred.query.filter_by(id=user.odred_id).first()
         return render_template("addClan.html", h1="Izmeni člana", clan=user, odred=odred.name)
 
-@odred_bp.route("/deleteClan/<int:id>", methods=["GET", "POST"])
+
+@odred_bp.route("/clan/delete/<int:id>", methods=["GET", "POST"])
 @login_required
 def deleteClan(id):
     user = User.query.get(id)
     if user:
         db.session.delete(user)
         db.session.commit()
-        flash("Član je uspešno obrisan.", "success")
+        flash("Član je uspešno obrisan.", "Info")
     else:
-        flash("Član nije pronađen.", "error")
+        flash("Član nije pronađen.", "Greška")
     return redirect(url_for("odred.odredDashboard", id = current_user.odred.id))
 
 

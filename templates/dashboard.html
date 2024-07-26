@@ -22,15 +22,23 @@ Dashboard
                     </caption>
                     <tr>
                         <td>Datum rođenja:</td>
-                        <td>{{ current_user.dob }}</td>
+                        <td>{{ current_user.dob.day }}.{{ current_user.dob.month }}.{{ current_user.dob.year }}.</td>
                     </tr>
                     <tr>
                         <td>Broj telefona:</td>
-                        <td>+{{ current_user.phone_number }}</td>
+                        <td>
+                            <a href="tel:+{{ current_user.phone_number }}">
+                                +{{ current_user.phone_number }}
+                            </a>
+                        </td>
                     </tr>
                     <tr>
                         <td>E-Pošta:</td>
-                        <td>{{ current_user.email }}</td>
+                        <td>
+                            <a href="mailto:{{ current_user.email }}">
+                                {{ current_user.email }}
+                            </a>
+                        </td>
                     </tr>
                     <tr>
                         <td>Adresa stanovanja:</td>
@@ -45,10 +53,10 @@ Dashboard
                     </caption>
                     <tr>
                         <td>Datum učlanjenja:</td>
-                        <td>{{ current_user.join_date }}</td>
+                        <td>{{ current_user.join_date.day }}.{{ current_user.join_date.month }}.{{ current_user.join_date.year }}.</td>
                     </tr>
                     <tr>
-                        <td>Jedinica:</td>
+                        <td>Vod:</td>
                         <td>{{ current_user.jedinica }}</td>
                     </tr>
                     <tr>

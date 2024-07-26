@@ -74,6 +74,10 @@ Upravljanje aktivnostima
     <input type="submit" value="Zabeleži učešće" class="btn" />
 </form>
 
+<hr>
+
+<input type="button" value="Nazad" class="btn" onclick="window.location.href = '{{ url_for('dashboard.dashboard') }}'">
+
 <div class="alerts">
     {% with messages = get_flashed_messages(with_categories=True) %}
         {% if messages %}

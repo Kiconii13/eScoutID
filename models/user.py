@@ -5,7 +5,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 
 from datetime import datetime
-
+from random import randint
 
 class User(db.Model, UserMixin):
     __tablename__ = "users"
@@ -49,7 +49,6 @@ class User(db.Model, UserMixin):
     activities = db.relationship('Activity', secondary='participations', back_populates='participants')
 
     def defUser(user):
-        user.username = request.form["username"]
         user.first_name = request.form["first_name"]
         user.last_name = request.form["last_name"]
         user.role = request.form.get("role")
@@ -60,7 +59,10 @@ class User(db.Model, UserMixin):
         user.address = request.form["address"]
         user.has_paid = 1 if request.form.get('has_paid') else 0
         user.jedinica = request.form["jedinica"]
-        user.avatar = request.form["image"]
+        if request.form["image"] != "nochange":
+            user.avatar = request.form["image"]
+        if not user.username:
+            user.username = f"{user.last_name[0].lower()}{user.first_name[0].lower()}.{randint(1000,9999)}c"
         return user
 
     def set_password(self, password):
