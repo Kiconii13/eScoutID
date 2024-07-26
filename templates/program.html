@@ -5,6 +5,10 @@ Program
 {% endblock %}
 
 {% block content %}
+    <a href="{{ url_for('dashboard.dashboard') }}" class="btn btn-link">
+        Nazad
+    </a>
+
 <div class="alerts">
     {% with messages = get_flashed_messages(with_categories=True) %}
         {% if messages %}

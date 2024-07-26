@@ -38,5 +38,7 @@ Savez Dashboard
         {% endfor %}
         </tbody>
     </table>
-    <br><a class="btn btn-edit" href="{{ url_for('savez.addOdred') }}">Dodaj novi odred</a>
+    <a href="{{ url_for('savez.addOdred') }}">
+        <input type="button" value="Dodaj odred" class="btn" />
+    </a>
 {% endblock %}

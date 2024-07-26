@@ -55,5 +55,8 @@
     {% if h1 != "Dodaj odred" and odred.id != current_user.odred.id%}
     <a class = 'btn btn-link' href="{{ url_for('savez.deleteOdred', id=odred.id) }}" onclick="return confirm('Da li ste sigurni da želite da obrišete ovaj odred?');">Obriši odred</a>
     {% endif %}
+    <a href="{{ url_for('savez.savezDashboard') }}" class="btn btn-link">
+        Nazad
+    </a>
 </form>
 {% endblock %}
