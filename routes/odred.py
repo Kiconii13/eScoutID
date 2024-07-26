@@ -30,6 +30,8 @@ def odredDashboard(id):
 @odred_bp.route("/clan/add", methods=["POST", "GET"])
 @login_required
 def addClan():
+    heading1 = "Dodaj člana"
+    action = "add"
     new_user = User()
     if request.method == "POST":
         try:
@@ -43,19 +45,21 @@ def addClan():
             db.session.add(new_user)
             db.session.commit()
             return redirect(url_for("odred.odredDashboard", id=current_user.odred.id))
-        except IntegrityError:  # exeption ako korisnicko ime vec postoji (Mogo bi malo drugacije da se napravi ispis greske, funkcionalnost je tu)
+        except IntegrityError:  # exeption ako korisnicko ime vec postoji (Mogao bi malo drugacije da se napravi ispis greske, funkcionalnost je tu)
             db.session.rollback()
             flash("Uneto korisničko ime već postoji!", "Greška")
-            return render_template("addClan.html", h1="Dodaj člana", clan=User())
+            return render_template("addClan.html", h1 = heading1, action = action, clan = User())
     else:
         if current_user.role != "admin":
             return redirect(url_for("dasboard.dashboard"))
-        return render_template("addClan.html", h1="Dodaj člana", clan=new_user)
+        return render_template("addClan.html", h1 = heading1, action = action, clan = new_user)
 
 
 @odred_bp.route("/clan/edit/<int:id>", methods=["POST", "GET"])
 @login_required
 def editClan(id):
+    heading1 = "Izmeni člana"
+    action = "edit"
     user = User.query.get(id)
     if request.method == "POST":
         try:
@@ -66,12 +70,12 @@ def editClan(id):
         except IntegrityError:  # exeption ako korisnicko ime vec postoji (Mogo bi malo drugacije da se napravi ispis greske, funkcionalnost je tu)
             db.session.rollback()
             flash("Uneto korisničko ime već postoji!", "Greška")
-            return render_template("addClan.html", h1="Izmeničlana", clan=User.query.get(id))
+            return render_template("addClan.html", h1 = heading1, action = action, clan = User.query.get(id))
     else:
         if current_user.role != "admin":
             return redirect(url_for("dashboard.dashboard"))
         odred = Odred.query.filter_by(id=user.odred_id).first()
-        return render_template("addClan.html", h1="Izmeni člana", clan=user, odred=odred.name)
+        return render_template("addClan.html", h1 = heading1, action = action, clan = user, odred = odred.name)
 
 
 @odred_bp.route("/clan/delete/<int:id>", methods=["GET", "POST"])

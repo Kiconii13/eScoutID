@@ -13,7 +13,7 @@
         <input type="text" id="username" name="username" value = "{{clan.username}}" oninvalid="this.setCustomValidity('Unesite korisnicko ime clana')" oninput="this.setCustomValidity('')" disabled>
     </label>
 
-    {% if h1 == "Dodaj člana" %}
+    {% if action == "add" %}
     <label>
         Lozinka: 
         <input type="password" id="password" name="password" value = "{{clan.password}}" oninvalid="this.setCustomValidity('Unesite lozinku člana')" oninput="this.setCustomValidity('')" disabled>
@@ -76,10 +76,10 @@
         <input type="file">
     </label>
 
-    {% if h1 != "Dodaj člana"%}
+    {% if action != "add" %}
     <label>
         Odred: 
-        <input type="text" id="odred_id" name="odred_id" value = "{{ odred }}" disabled>
+        <input type="text" id="odred_id" name="odred_id" value = "{{odred}}" disabled>
     </label>
     {% endif %}
     
@@ -87,7 +87,7 @@
 
     <input type="submit" value="{{h1}}" class="btn">
     
-    {% if h1 != "Dodaj člana" and clan.id != current_user.id %}
+    {% if action != "add" and clan.id != current_user.id %}
     <a class = 'btn btn-link' href="{{ url_for('odred.deleteClan', id=clan.id) }}" onclick="return confirm('Da li ste sigurni da želite da obrišete ovog člana?');">Obriši člana</a>
     {% endif %}
 
