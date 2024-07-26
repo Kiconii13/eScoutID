@@ -8,7 +8,18 @@ from models import User, db, Odred
 odred_bp = Blueprint("odred", __name__)
 
 
-@odred_bp.route("/odredDashboard/<int:id>")
+@odred_bp.route("/odred")
+@login_required
+def odred():
+    try:
+        Broj_Clanova = User.query.filter_by(odred_id=current_user.odred_id).count()
+        return render_template("odred.html", broj_clanova=Broj_Clanova)
+    except:
+        flash("Morate biti član odreda!", "Greška")
+        return redirect(url_for("dashboard.dashboard"))
+
+
+@odred_bp.route("/odred/dashboard/<int:id>")
 @login_required
 def odredDashboard(id):
     if current_user.role == "clan":

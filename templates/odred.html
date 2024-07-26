@@ -69,6 +69,12 @@ Odred
     </div>
 </div>
 
+{% if current_user.role != "clan" %}
+
+<input type="button" value="Upravljaj odredom" class="btn" onclick="window.location.href = `{{ url_for('odred.odredDashboard', id = current_user.odred.id) }}`">
+
+{% endif %}
+
 <div class="alerts">
     {% with messages = get_flashed_messages(with_categories=True) %}
         {% if messages %}

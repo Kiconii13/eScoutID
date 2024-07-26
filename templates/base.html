@@ -22,20 +22,20 @@
                 </a>
             </li>
             {% endif %}
-            {% if current_user.role == "admin" %}
+            <!-- {% if current_user.role == "admin" %}
             <li>
                 <a href="{{ url_for('odred.odredDashboard', id = current_user.odred.id) }}">
                     Edit odred
                 </a>
             </li>
-            {% endif %}
+            {% endif %} -->
             <li>
                 <a href="{{ url_for('dashboard.dashboard') }}">
                     Moj nalog
                 </a>
             </li>
             <li>
-                <a href="{{ url_for('dashboard.odred') }}">
+                <a href="{{ url_for('odred.odred') }}">
                     Odred
                 </a>
             </li>

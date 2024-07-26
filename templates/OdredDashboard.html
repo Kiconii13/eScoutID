@@ -61,11 +61,12 @@ Odred Dashboard
         {% endfor %}
     </tbody>
 </table>
-{% if current_user.role == "admin" %}
+
 <br>
 
 <input type="button" value="Dodaj novog člana" class="btn" onclick="window.location.href = `{{ url_for('odred.addClan') }}`">
-{% endif %}
+<input type="button" value="Nazad" class="btn" onclick="window.location.href = `{{ url_for('odred.odred') }}`">
+
 
 <div class="alerts">
     {% with messages = get_flashed_messages(with_categories=True) %}
