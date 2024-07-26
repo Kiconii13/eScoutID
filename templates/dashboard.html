@@ -87,6 +87,9 @@ Dashboard
             <a href="{{ url_for('aktivnosti.aktivnosti') }}">
                 <input type="button" value="Moje aktivnosti" class="btn" />
             </a>
+            <a href="{{ url_for('dashboard.changePassword') }}">
+                <input type="button" value="Promena lozinke" class="btn" />
+            </a>
             {% if current_user.role == 'admin' %}
             <a href="{{ url_for('aktivnosti.addAktivnost') }}">
                 <input type="button" value="Upravljaj aktivnostima" class="btn" />
@@ -94,16 +97,6 @@ Dashboard
             {% endif %}
         </div>
     </div>
-</div>
-
-<div class="alerts">
-    {% with messages = get_flashed_messages(with_categories=True) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <p class="alert alert-{{ category }}">{{ category }}: {{ message }}</p>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
 </div>
 
 {% endblock %}

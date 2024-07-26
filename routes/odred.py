@@ -37,7 +37,7 @@ def addClan():
             # UPIS NOVOG CLANA U BAZU
             new_user = User.defUser(new_user)
 
-            new_user.password = User.set_password(new_user, "123") # TODO: trenutno je hard kodovana lozinka 123 - treba dodati funkcionalnost za slanje mejlova i u tom mejlu korisnicima poslati link na kom mogu postaviti sifru kako bi mogli da se uloguju
+            new_user.set_password(new_user.username)
             
             new_user.odred_id = current_user.odred_id
 
