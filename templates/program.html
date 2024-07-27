@@ -5,8 +5,109 @@ Program
 {% endblock %}
 
 {% block content %}
+    <h1>Položeni program</h1>
+    <hr/>
+    <div class="achivements" id="achivements">
+        <h3>Letovi</h3>
+        <div class = "program-col">
+            {% if current_user.let_level > 0 %}
+            <div id="let_vrapca">
+                <img src="/static/let_vrapca.png" alt="let_vrapca">
+            </div>
+            {% endif %}
+            {% if current_user.let_level > 1 %}
+            <div id="let_laste">
+                <img src="/static/let_laste.png" alt="let_laste">
+            </div>
+            {% endif %}
+            {% if current_user.let_level > 2 %}
+            <div id="let_orla">
+                <img src="/static/let_orla.png" alt="let_orla">
+            </div>
+            {% endif %}
+    </div>
+        <hr/>
+        <h3>Zvezde</h3>
+        <div class="program-col">
+            {% if current_user.zvezda_level > 0 %}
+            <div id ="prva_zvezda">
+                <img src="/static/prva_zvezda.png" alt="prva_zvezda">
+            </div>
+            {% endif %}
+            {% if current_user.zvezda_level > 1 %}
+            <div id="druga_zvezda">
+                <img src="/static/druga_zvezda.png" alt="druga_zvezda">
+            </div>
+            {% endif %}
+            {% if current_user.zvezda_level > 2 %}
+            <div id="treca_zvezda">
+                <img src="/static/treca_zvezda.png" alt="treca_zvezda">
+            </div>
+            {% endif %}
+        </div>
+    <hr/>
+    <h3>Krinovi</h3>
+    <div class="program-col">
+        {% if current_user.krin_level > 0 %}
+            <div id ="prvi_krin">
+                <img src="/static/prvi_krin.png" alt="prvi_krin">
+            </div>
+        {% endif %}
+        {% if current_user.krin_level > 1 %}
+            <div id="drugi_krin">
+                <img src="/static/drugi_krin.png" alt="drugi_krin">
+            </div>
+        {% endif %}
+        {% if current_user.krin_level > 2 %}
+            <div id="treci_krin">
+                <img src="/static/treci_krin.png" alt="treci_krin">
+            </div>
+        {% endif %}
+        </div>
+    <hr/>
+    </div>
+    <div class="skills">
+        <table id="skills_table">
+            <caption>Veštine - Veštarstva - Specijalnosti</caption>
+            <thead>
+                <tr>
+                    <th>Naziv</th>
+                    <th>Nivo</th>
+                    <th>Datum priznanja</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+
     <a href="{{ url_for('dashboard.dashboard') }}" class="btn btn-link">
         Nazad
     </a>
 
+{% endblock %}
+
+{% block scripts %}
+    <script>
+      function updateSkills() {
+        var userId = {{ current_user.id }};
+        $.ajax({
+          url: '/get_user_skills/' + userId,
+          method: 'GET',
+          success: function(data) {
+            var skillsTableBody = $('#skills_table tbody');
+            skillsTableBody.empty();  // Clear the table body before adding new rows
+            if (data.length === 0) {
+              skillsTableBody.append('<tr><td colspan="3">Nema posebnog programa</td></tr>');
+            } else {
+              data.forEach(function(skill) {
+                var row = '<tr><td>' + skill.name + '</td><td>' + skill.level + '</td><td>' + skill.date_got + '</td></tr>';
+                skillsTableBody.append(row);
+              });
+            }
+          },
+        });
+      }
+    updateSkills();
+      </script>
 {% endblock %}

@@ -7,6 +7,7 @@ from flask_login import UserMixin
 from datetime import datetime
 from random import randint
 
+
 class User(db.Model, UserMixin):
     __tablename__ = "users"
 
@@ -28,6 +29,10 @@ class User(db.Model, UserMixin):
     has_paid = db.Column(db.Boolean(), default=False)
     jedinica = db.Column(db.String(30), default="")
 
+    let_level = db.Column(db.Integer(), default=0)
+    zvezda_level = db.Column(db.Integer(), default=0)
+    krin_level = db.Column(db.Integer(), default=0)
+
     odred_id = db.Column(db.Integer, db.ForeignKey("odred.id"))
     odred = db.relationship('Odred', back_populates='members', foreign_keys=[odred_id])
 
@@ -45,6 +50,9 @@ class User(db.Model, UserMixin):
         self.address = adress
         self.has_paid = has_paid
         self.jedinica = jedinica
+        self.let_level = 0
+        self.zvezda_level = 0
+        self.krin_level = 0
 
     activities = db.relationship('Activity', secondary='participations', back_populates='participants')
 
@@ -62,7 +70,7 @@ class User(db.Model, UserMixin):
         if request.form["image"] != "nochange":
             user.avatar = request.form["image"]
         if not user.username:
-            user.username = f"{user.last_name[0].lower()}{user.first_name[0].lower()}.{randint(1000,9999)}c"
+            user.username = f"{user.last_name[0].lower()}{user.first_name[0].lower()}.{randint(1000, 9999)}c"
         return user
 
     def set_password(self, password):
