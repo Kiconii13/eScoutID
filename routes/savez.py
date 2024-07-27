@@ -65,12 +65,12 @@ def editOdred(id):
         odred.address = request.form["address"]
         odred.email = request.form["email"]
         odred.founded_at = datetime.fromisoformat(request.form["founded_at"]).date()
-        staresina = User.query.filter_by(username=request.form["staresina_username"]).first()
+        staresina = User.query.filter_by(username=request.form.get("staresina_username")).first()
         if (not staresina) or staresina.odred_id != odred.id :
             flash("Nepostoji član odreda sa tim usernameom (starešina)")
             return redirect(url_for("savez.editOdred", id=odred.id))
         odred.staresina_id = staresina.id
-        nacelnik = User.query.filter_by(username=request.form["nacelnik_username"]).first()
+        nacelnik = User.query.filter_by(username=request.form.get("nacelnik_username")).first()
         if (not nacelnik) or nacelnik.odred_id != odred.id:
             flash("Nepostoji član odreda sa tim usernameom (načelnik)")
             return redirect(url_for("savez.editOdred", id=odred.id))
@@ -81,8 +81,7 @@ def editOdred(id):
     else:
         if current_user.role != "savez_admin":
             return redirect(url_for("dashboard.dashboard"))
-        return render_template("addOdred.html", h1="Izmeni odred", odred=odred, staresina=odred.staresina.username,
-                               nacelnik=odred.nacelnik.username)
+        return render_template("addOdred.html", h1="Izmeni odred", odred = odred, clanovi = User.query.filter_by(odred_id=odred.id).order_by(User.dob.asc()))
 
 
 @savez_bp.route("/deleteOdred/<int:id>", methods=["GET", "POST"])

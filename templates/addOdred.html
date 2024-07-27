@@ -29,14 +29,30 @@
     </label>
 {% if odred.staresina %}
     <label>
-        Korisničko ime staresine:
-        <input type="text" name="staresina_username" placeholder="jovan.marinkovic" value = "{{ staresina }}" required oninvalid="this.setCustomValidity('Unesite korisničko ime starešine')" oninput="this.setCustomValidity('')">
+        Starešina odreda:
+        <select id="staresina_username" name="staresina_username">
+            {% for clan in clanovi %}
+                {% if odred.staresina.id != clan.id %}
+                <option value="{{ clan.username }}">{{ clan.first_name }} {{ clan.last_name }}</option>
+                {% else %}
+                <option value="{{ clan.username }}" selected>{{ clan.first_name }} {{ clan.last_name }}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
     </label>
 {% endif %}
 {% if odred.nacelnik %}
     <label>
-        Korisničko ime načelnika:
-        <input type="text" name="nacelnik_username" placeholder="petar.kocic" value = "{{ nacelnik }}" required oninvalid="this.setCustomValidity('Unesite korisničko ime načelnika')" oninput="this.setCustomValidity('')">
+        Načelnik odreda:
+        <select id="nacelnik_username" name="nacelnik_username">
+            {% for clan in clanovi %}
+                {% if odred.nacelnik.id != clan.id %}
+                <option value="{{ clan.username }}">{{ clan.first_name }} {{ clan.last_name }}</option>
+                {% else %}
+                <option value="{{ clan.username }}" selected>{{ clan.first_name }} {{ clan.last_name }}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
     </label>
 {% endif %}
     <label>
