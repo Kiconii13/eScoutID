@@ -2,124 +2,78 @@
 {% block content %}
 <h1>Položeni program</h1>
 
+
+    {# Odabir usera pomocu selecta, na svaku promenu se dinamicki bira novi user #}
 <form method="POST">
-      <label for="user">Član:</label>
-      <select name="user" id="user" onchange="updateLevelsAndSkills()">
+    <label for="user">Član:</label>
+    <select name="user" id="user" onchange="this.form.submit()">
         {% for user in users %}
-        <option value="{{ user.id }}">{{ user.first_name }} {{ user.last_name }}</option>
+        <option value="{{ user.id }}" {% if selected_user and selected_user.id == user.id %}selected{% endif %}>{{ user.first_name }} {{ user.last_name }}</option>
         {% endfor %}
-      </select>
-      <br>
-      <label for="let_level">Nivo leta:</label>
-      <input type="number" name="let_level" id="let_level" min="0" max="3" required>
-      <br>
-      <label for="zvezda_level">Nivo zvezde:</label>
-      <input type="number" name="zvezda_level" id="zvezda_level" min="0" max="3" required>
-      <br>
-      <label for="krin_level">Nivo krina:</label>
-      <input type="number" name="krin_level" id="krin_level" min="0" max="3" required>
-      <br>
-      <button class="btn" type="submit">Ažuriraj</button>
-    </form>
+    </select>
+    <input type="hidden" name="select_user">
+</form>
+
+
+    {# Promena nivoa polozenog stepena programa (0 = nema polozenog stepena) #}
+{% if selected_user %}
+<form method="POST">
+    <input type="hidden" name="user" value="{{ selected_user.id }}">
+    <label for="let_level">Nivo leta:</label>
+    <input type="number" name="let_level" id="let_level" min="0" max="3" value="{{ selected_user.let_level }}" required>
+    <br>
+    <label for="zvezda_level">Nivo zvezde:</label>
+    <input type="number" name="zvezda_level" id="zvezda_level" min="0" max="3" value="{{ selected_user.zvezda_level }}" required>
+    <br>
+    <label for="krin_level">Nivo krina:</label>
+    <input type="number" name="krin_level" id="krin_level" min="0" max="3" value="{{ selected_user.krin_level }}" required>
+    <br>
+    <button class="btn" type="submit" name="update_levels">Ažuriraj</button>
+</form>
+
+
+    {# Prikaz posebnog programa, nivo 1 = vestina, nivo 2 = vestarstvo, nivo 3 = specijalnost #}
 <div class="skills">
     <h2>Veštine - Veštarstva - Specijalnosti</h2>
     <table id="skills_table">
-      <thead>
-        <tr>
-          <th>Naziv</th>
-          <th>Nivo</th>
-          <th>Datum polaganja</th>
-        </tr>
-      </thead>
-      <tbody>
-      </tbody>
+        <thead>
+            <tr>
+                <th>Naziv</th>
+                <th>Nivo</th>
+                <th>Datum polaganja</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for skill in skills %}
+            <tr>
+                <td>{{ skill.name }}</td>
+                <td>{{ skill.level }}</td>
+                <td>{{ skill.date_got.strftime('%d.%m.%Y') }}</td>
+            </tr>
+            {% endfor %}
+            {% if skills|length == 0 %}
+            <tr>
+                <td colspan="3">Nema posebnog programa</td>
+            </tr>
+            {% endif %}
+        </tbody>
     </table>
 </div>
-       <h2>Dodaj novi poseban program</h2>
-    <form id="new_skill_form">
-      <label for="skill_name">Naziv:</label>
-      <input type="text" id="skill_name" name="skill_name" required>
-      <br>
-      <label for="skill_level">Nivo:</label>
-      <input type="number" id="skill_level" name="skill_level" min="1" max="3" required>
-      <br>
-      <label for="skill_date">Datum polaganja:</label>
-      <input type="date" id="skill_date" name="skill_date" value="" required>
-      <br>
-      <button class="btn" type="submit">Dodaj posebni program</button>
-    </form>
 
-{% endblock %}
-
-{% block scripts %}
-<script>
-      function updateLevels() {
-        var userId = document.getElementById('user').value;
-        $.ajax({
-          url: '/get_user_levels/' + userId,
-          method: 'GET',
-          success: function(data) {
-            $('#let_level').val(data.let_level);
-            $('#zvezda_level').val(data.zvezda_level);
-            $('#krin_level').val(data.krin_level);
-          }
-        });
-      }
-      function updateSkills() {
-        var userId = document.getElementById('user').value;
-        $.ajax({
-          url: '/get_user_skills/' + userId,
-          method: 'GET',
-          success: function(data) {
-            var skillsTableBody = $('#skills_table tbody');
-            skillsTableBody.empty();  // Clear the table body before adding new rows
-            if (data.length === 0) {
-              skillsTableBody.append('<tr><td colspan="3">Nema posebnog programa</td></tr>');
-            } else {
-              data.forEach(function(skill) {
-                var row = '<tr><td>' + skill.name + '</td><td>' + skill.level + '</td><td>' + skill.date_got + '</td></tr>';
-                skillsTableBody.append(row);
-              });
-            }
-          },
-        });
-      }
-
-      function updateLevelsAndSkills() {
-        updateLevels();
-        updateSkills();
-      }
-
-$(document).ready(function() {
-        $('#user').change(updateLevelsAndSkills);
-        updateLevelsAndSkills();  // Initial call to populate data
-
-        $('#new_skill_form').submit(function(event) {
-          event.preventDefault();
-          var userId = $('#user').val();
-          var skillName = $('#skill_name').val();
-          var skillLevel = $('#skill_level').val();
-          var skillDate = $('#skill_date').val();
-
-          $.ajax({
-            url: '/add_skill',
-            method: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify({
-              user_id: userId,
-              name: skillName,
-              level: skillLevel,
-              date_got: skillDate
-            }),
-            success: function(data) {
-              console.log('Skill added:', data);  // Debug log
-              updateSkills();  // Refresh skills table
-            },
-            error: function(xhr, status, error) {
-              console.error('Error adding skill:', status, error);  // Debug log
-            }
-          });
-        });
-      });
-    </script>
+<h2>Dodaj novi poseban program</h2>
+<form method="POST" action="{{ url_for('program.addProgram') }}">
+    <input type="hidden" name="user_id" value="{{ selected_user.id }}">
+    <label for="skill_name">Naziv:</label>
+    <input type="text" id="skill_name" name="name" required>
+    <br>
+    <label for="skill_level">Nivo:</label>
+    <input type="number" id="skill_level" name="level" min="1" max="3" required>
+    <br>
+    <label for="skill_date">Datum polaganja:</label>
+    <input type="date" id="skill_date" name="date_got" required>
+    <br>
+    <button class="btn" type="submit" name="add_skill">Dodaj posebni program</button>
+</form>
+<input type="button" value="Nazad" class="btn" onclick="window.location.href = `{{ url_for('odred.odredDashboard', id=current_user.odred.id) }}`">
+{% endif %}
 {% endblock %}
