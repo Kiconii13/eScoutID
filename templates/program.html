@@ -77,6 +77,13 @@ Program
                 </tr>
             </thead>
             <tbody>
+                {% for skill in skills %}
+                <tr>
+                    <td>{{ skill.name }}</td>
+                    <td>{{ skill.level }}</td>
+                    <td>{{ skill.date_got.strftime('%d.%m.%Y') }}</td>
+                {% endfor %}
+                </tr>
             </tbody>
         </table>
     </div>
@@ -85,29 +92,4 @@ Program
         Nazad
     </a>
 
-{% endblock %}
-
-{% block scripts %}
-    <script>
-      function updateSkills() {
-        var userId = {{ current_user.id }};
-        $.ajax({
-          url: '/get_user_skills/' + userId,
-          method: 'GET',
-          success: function(data) {
-            var skillsTableBody = $('#skills_table tbody');
-            skillsTableBody.empty();  // Clear the table body before adding new rows
-            if (data.length === 0) {
-              skillsTableBody.append('<tr><td colspan="3">Nema posebnog programa</td></tr>');
-            } else {
-              data.forEach(function(skill) {
-                var row = '<tr><td>' + skill.name + '</td><td>' + skill.level + '</td><td>' + skill.date_got + '</td></tr>';
-                skillsTableBody.append(row);
-              });
-            }
-          },
-        });
-      }
-    updateSkills();
-      </script>
 {% endblock %}

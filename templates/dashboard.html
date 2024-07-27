@@ -81,10 +81,10 @@ Dashboard
             </div>
         </div>
         <div class="button-row">
-        {% if current_user.role != "savez_admin" %}
             <a href="{{ url_for('program.program') }}">
                 <input type="button" value="Program" class="btn" />
             </a>
+        {% if current_user.role != "savez_admin" %}
             <a href="{{ url_for('aktivnosti.aktivnosti') }}">
                 <input type="button" value="Moje aktivnosti" class="btn" />
             </a>
