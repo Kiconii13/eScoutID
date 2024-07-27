@@ -66,7 +66,12 @@ Odred Dashboard
 {% if current_user.role == "admin" %}
 <input type="button" value="Dodaj novog člana" class="btn" onclick="window.location.href = `{{ url_for('odred.addClan') }}`">
 {% endif %}
-<input type="button" value="Nazad" class="btn" onclick="window.location.href = `{{ url_for('odred.odred') }}`">
-
+{% if current_user.role != "savez_admin" %}
+    <input type="button" value="Nazad" class="btn" onclick="window.location.href = `{{ url_for('odred.odred') }}`">
+{% else %}
+    <a href="{{ url_for('savez.savezDashboard') }}" class="btn btn-link">
+        Nazad
+    </a>
+{% endif %}
 
 {% endblock %}
