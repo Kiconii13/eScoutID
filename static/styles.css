@@ -331,3 +331,7 @@ table caption {
   margin-left: auto;
   margin-right: auto;
 }
+
+select[readonly] option{
+  display: none;
+}

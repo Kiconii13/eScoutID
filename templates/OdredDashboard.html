@@ -27,13 +27,7 @@ Odred Dashboard
     <tbody>
 {% for user in users %}
         <tr class="user-row" onclick='window.location.href=`{{ url_for("odred.editClan", id=user.id) }}`'>
-        {% if current_user.role == "admin" %}
-            <td>
-                {{ user.id }}
-            </td>
-        {% elif current_user.role == "savez_admin" %}
-            <td>{{ user.id }}</td>
-        {% endif %}
+            <td>{{ user.id }}</td> <!-- nzm sta su trebali da rade ovi if-ovi -->
             <td>{{ user.first_name }} {{ user.last_name }}</td>
             <td>{{ user.username }}</td>
             <td>{{ user.dob.day }}.{{ user.dob.month }}.{{ user.dob.year }}.</td>

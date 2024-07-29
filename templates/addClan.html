@@ -30,8 +30,8 @@
     </label>
     <label>
         Status:
-        {% if clan.role == "admin" %}
-        <select id="role" name="role" data-selected="{{clan.role}}" disabled>
+        {% if clan.role == "admin" and current_user.id == clan.id %}
+        <select id="role" name="role" data-selected="{{clan.role}}" readonly>
             <option value="clan">Član</option>
             {% if clan.role == "admin" %}
                 <option value="admin" selected>Administrator</option>
