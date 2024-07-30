@@ -110,8 +110,7 @@ nav ul li a:hover {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0 15px;
-  padding-top: min(300px, 10vh);
+  padding: min(300px, 10vh) 15px 0;
 }
 
 .login-container img {
@@ -133,8 +132,12 @@ form label {
   margin: 10px 0;
 }
 
+form select {
+  font: inherit;
+  width: 100%;
+}
 
-input, select {
+input {
   width: 100%;
   font: inherit;
   padding: 5px;
@@ -148,8 +151,7 @@ input, select {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  padding: 0 20px;
-  padding-top: min(250px, 5vh);
+  padding: min(250px, 5vh) 20px 0;
   max-width: 100vw;
 }
 

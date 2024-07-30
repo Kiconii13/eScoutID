@@ -11,7 +11,8 @@ dashboard_bp = Blueprint('dashboard', __name__)
 def dashboard():
     return render_template("dashboard.html")
 
-@dashboard_bp.route('/dashboard/changePassword', methods=["POST","GET"])
+
+@dashboard_bp.route('/dashboard/changePassword', methods=["POST", "GET"])
 @login_required
 def changePassword():
     if request.method == "POST":
@@ -25,7 +26,7 @@ def changePassword():
             return redirect(url_for("dashboard.changePassword"))
         current_user.set_password(request.form["new_password"])
         db.session.commit()
-        flash("Uspešno ste promenili lozinku!","info")
+        flash("Uspešno ste promenili lozinku!", "info")
         return redirect(url_for("dashboard.dashboard"))
     else:
         return render_template("changePassword.html")

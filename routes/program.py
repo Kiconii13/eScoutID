@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from flask import Blueprint, flash, render_template, request, redirect, url_for, jsonify
+from flask import Blueprint, render_template, request
 from flask_login import login_required, current_user
 
 from models import User, db, Skill
@@ -11,14 +11,14 @@ program_bp = Blueprint('program', __name__)
 @program_bp.route("/program")
 @login_required
 def program():
-    skills = Skill.query.filter_by(user_id = current_user.id).all()
-    return render_template("program.html", skills = skills)
+    skills = Skill.query.filter_by(user_id=current_user.id).all()
+    return render_template("program.html", skills=skills)
 
 
 @program_bp.route('/addProgram', methods=['GET', 'POST'])
 @login_required
 def addProgram():
-    users = User.query.filter_by(odred_id = current_user.odred.id)
+    users = User.query.filter_by(odred_id=current_user.odred.id)
     selected_user = None
     skills = []
 
@@ -37,7 +37,7 @@ def addProgram():
         elif 'select_user' in request.form:
             user_id = request.form['user']
             selected_user = User.query.get(user_id)
-            skills = Skill.query.filter_by(user_id = user_id).all()
+            skills = Skill.query.filter_by(user_id=user_id).all()
         elif 'add_skill' in request.form:
             user_id = request.form['user_id']
             name = request.form['name']

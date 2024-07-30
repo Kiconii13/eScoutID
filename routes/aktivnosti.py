@@ -21,7 +21,7 @@ def aktivnosti():
 @login_required
 def addAktivnost():
     if current_user.role == "admin":
-        filtered_users = User.query.filter_by(odred_id = current_user.odred.id).all()
+        filtered_users = User.query.filter_by(odred_id=current_user.odred.id).all()
     elif current_user.role == "savez_admin":
         filtered_users = User.query.all()
     activities = Activity.query.all()
