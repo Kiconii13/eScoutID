@@ -36,6 +36,9 @@ class User(db.Model, UserMixin):
     odred_id = db.Column(db.Integer, db.ForeignKey("odred.id"))
     odred = db.relationship('Odred', back_populates='members', foreign_keys=[odred_id])
 
+    vod_id = db.Column(db.Integer, db.ForeignKey("vod.id"))
+    vod = db.relationship('Vod', back_populates='members', foreign_keys=[vod_id])
+
     # konstruktor za default vrednosti da ne budu None
     def __init__(self, username="", role="clan", first_name="", last_name="", dob=datetime.today().date(),
                  join_date=datetime.today().date(), phone_number="", email="", adress="", has_paid=False, jedinica=""):
