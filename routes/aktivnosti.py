@@ -4,7 +4,8 @@ from flask import Blueprint, render_template, flash, redirect, url_for, request
 from flask_login import login_required, current_user
 
 from models import User, db
-from models.activity import Activity, Participation
+from models.activity import Activity, Participation,OrganizerLevel
+
 
 aktivnosti_bp = Blueprint('aktivnosti', __name__)
 
@@ -21,10 +22,11 @@ def aktivnosti():
 @login_required
 def addAktivnost():
     if current_user.role == "admin":
-        filtered_users = User.query.filter_by(odred_id=current_user.odred.id).all()
+        activities = Activity.query.filter_by(organizer_name = current_user.odred.name).all()
     elif current_user.role == "savez_admin":
-        filtered_users = User.query.all()
-    activities = Activity.query.all()
+        activities = Activity.query.filter(Activity.organizer_type != OrganizerLevel(1))
+
+    filtered_users = User.query.all()
 
     return render_template("addAktivnost.html", user_list=filtered_users, activities=activities)
 
@@ -37,9 +39,12 @@ def new_aktivnost():
     aktivnost.due_date = datetime.fromisoformat(request.form["due_date"]).date()
     aktivnost.location = request.form["location"]
     aktivnost.type = request.form["type"]
-    aktivnost.organizer_type = request.form["organizer_type"]
-    aktivnost.organizer_name = request.form["organizer_name"]
-
+    if current_user.role == "savez_admin":
+        aktivnost.organizer_type = request.form["organizer_type"]
+        aktivnost.organizer_name = request.form["organizer_name"]
+    elif current_user.role == "admin":
+        aktivnost.organizer_type = OrganizerLevel(1)
+        aktivnost.organizer_name = current_user.odred.name
     db.session.add(aktivnost)
     db.session.commit()
 

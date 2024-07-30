@@ -36,10 +36,10 @@ Upravljanje aktivnostima
             <option value="Smotra">Smotra</option>
         </select>
     </label>
+    {% if current_user.role == "savez_admin" %}
     <label>
         Tip organizatora:
         <select name="organizer_type" required>
-            <option value="Odred">Odred</option>
             <option value="Savez">Savez</option>
             <option value="International">International</option>
         </select>
@@ -48,6 +48,12 @@ Upravljanje aktivnostima
         Naziv organizatora:
         <input type="text" name="organizer_name" placeholder="PFE" required>
     </label>
+    {% else %}
+    <label>
+        Naziv organizatora:
+        <input type="text" name="organizer_name" value="{{current_user.odred.name}}" disabled>
+    </label>
+    {% endif %}
     <input type="submit" value="Napravi aktivnost" class="btn" />
 </form>
 

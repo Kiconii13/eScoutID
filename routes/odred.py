@@ -50,7 +50,7 @@ def addClan():
             flash("Uneto korisničko ime već postoji!", "Greška")
             return render_template("addClan.html", h1="Dodaj člana", action=action, clan=User())
     else:
-        if current_user.role != "admin":
+        if current_user.role != "admin" and current_user.role != "savez_admin":
             return redirect(url_for("dashboard.dashboard"))
         return render_template("addClan.html", h1="Dodaj člana", action=action, clan=new_user)
 
@@ -71,7 +71,7 @@ def editClan(id):
             flash("Uneto korisničko ime već postoji!", "Greška")
             return render_template("addClan.html", h1="Izmeni člana", action=action, clan=User.query.get(id))
     else:
-        if current_user.role != "admin":
+        if current_user.role != "admin" and current_user.role != "savez_admin":
             return redirect(url_for("dashboard.dashboard"))
         odred = Odred.query.filter_by(id=user.odred_id).first()
         return render_template("addClan.html", h1="Izmeni člana", action=action, clan=user, odred=odred.name)
