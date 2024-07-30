@@ -13,13 +13,6 @@
         <input type="text" id="username" name="username" value = "{{clan.username}}" oninvalid="this.setCustomValidity('Unesite korisnicko ime clana')" oninput="this.setCustomValidity('')" disabled>
     </label>
 
-    {% if action == "add" %}
-    <label>
-        Lozinka: 
-        <input type="password" id="password" name="password" value = "{{clan.password}}" oninvalid="this.setCustomValidity('Unesite lozinku člana')" oninput="this.setCustomValidity('')" disabled>
-    </label>
-    {% endif %}
-
     <label>
         Ime: 
         <input type="text" id="first_name" name="first_name" value = "{{clan.first_name}}" required oninvalid="this.setCustomValidity('Unesite ime člana')" oninput="this.setCustomValidity('')">
@@ -63,7 +56,7 @@
         <input type="tel" id="phone_number" name="phone_number" value = "{{clan.phone_number}}">
     </label>
     <label>
-        E-Mail:
+        E-pošta:
         <input type="email" id="email" name="email" value = "{{clan.email}}">
     </label>
     <label>
@@ -83,7 +76,7 @@
         <input type="text" id="jedinica" name="jedinica" value = "{{clan.jedinica}}">
     </label>
     <label>
-        Profilna:
+        Profilna fotografija:
         <input type="file">
     </label>
 
