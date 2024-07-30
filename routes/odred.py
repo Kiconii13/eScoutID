@@ -3,7 +3,7 @@ from sqlalchemy.exc import IntegrityError
 from flask import Blueprint, redirect, url_for, render_template, flash, request, make_response
 from flask_login import login_required, current_user
 
-from models import User, db, Odred
+from models import User, db, Odred, Ceta, Vod
 
 odred_bp = Blueprint("odred", __name__)
 
@@ -100,3 +100,40 @@ def getPfp(id):
         response = make_response("default", 200)
     response.mimetype = "text/plain"
     return response
+
+
+@odred_bp.route("/cv/add", methods=["GET", "POST"])
+@login_required
+def addCetaVod():
+    return render_template("addCetaVod.html", users=User.query.all(), cetas=Ceta.query.all(), odreds=Odred.query.all())
+
+
+@odred_bp.route("/ceta/new", methods=["POST"])
+@login_required
+def newCeta():
+    ceta = Ceta()
+
+    ceta.name = request.form["name"]
+    ceta.odred_id = request.form["odred"]
+
+    db.session.add(ceta)
+    db.session.commit()
+
+    flash("Četa uspešno dodata!", "Info")
+    return render_template("addCetaVod.html", users=User.query.all(), cetas=Ceta.query.all(), odreds=Odred.query.all())
+
+
+@odred_bp.route("/vod/new", methods=["POST"])
+@login_required
+def newVod():
+    vod = Vod()
+
+    vod.name = request.form["name"]
+    vod.vodnik_id = request.form["vodnik"]
+    vod.ceta_id = request.form["ceta"]
+
+    db.session.add(vod)
+    db.session.commit()
+
+    flash("Vod uspešno dodat!", "Info")
+    return render_template("addCetaVod.html", users=User.query.all(), cetas=Ceta.query.all(), odreds=Odred.query.all())

@@ -59,7 +59,16 @@ Odred Dashboard
 <br>
 {% if current_user.role == "admin" %}
 <input type="button" value="Dodaj novog člana" class="btn" onclick="window.location.href = `{{ url_for('odred.addClan') }}`">
-<a class="btn btn-link" href="{{ url_for("program.addProgram") }}">Položeni program članova</a>
+<a class="btn btn-link" href='{{ url_for("program.addProgram") }}'>Položeni program članova</a>
+
+<hr>
+
+<input type="button" value="Kreiraj vod/četu" class="btn" onclick="window.location.href = `{{ url_for('odred.addCetaVod') }}`" />
+<input type="button" value="Upravljaj pozicijama" class="btn" />
+
+<hr>
+
+
 {% endif %}
 {% if current_user.role != "savez_admin" %}
     <input type="button" value="Nazad" class="btn" onclick="window.location.href = `{{ url_for('odred.odred') }}`">

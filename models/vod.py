@@ -8,6 +8,7 @@ class Vod(db.Model):
     # Class Variables
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
+
     vodnik_id = db.Column(db.Integer, db.ForeignKey("users.id"))
 
     ceta_id = db.Column(db.Integer, db.ForeignKey("ceta.id"))

@@ -41,6 +41,7 @@ if __name__ == '__main__':
             admin.set_password("")
 
             admin.odred_id = 1
+            admin.role = "admin"
 
             db.session.add(admin)
             db.session.commit()
