@@ -26,7 +26,7 @@ def addAktivnost():
     elif current_user.role == "savez_admin":
         activities = Activity.query.filter(Activity.organizer_type != OrganizerLevel(1))
 
-    filtered_users = User.query.all()
+    filtered_users = User.query.filter(User.role != "savez_admin")
 
     return render_template("addAktivnost.html", user_list=filtered_users, activities=activities)
 
