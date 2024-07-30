@@ -68,5 +68,5 @@ def register():
         db.session.add(new_user)
         db.session.commit()
 
-        session["username"] = username
+        # session["username"] = username
         return redirect(url_for("auth.index"))

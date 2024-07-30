@@ -36,4 +36,14 @@ if __name__ == '__main__':
             db.session.add(odred)
             db.session.commit()
 
+        if len(User.query.all()) == 0:
+            admin = User(username="admin")
+            admin.set_password("")
+
+            admin.odred_id = 1
+
+            db.session.add(admin)
+            db.session.commit()
+
+
     app.run(debug=True)
