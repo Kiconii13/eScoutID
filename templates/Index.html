@@ -12,10 +12,10 @@ Login
         <h1>Dobrodošli na eScoutID sistem</h1>
         <form id = "auth-form" action="{{ url_for('auth.login') }}" method="post">
             <label>Korisničko ime:
-                <input type="text" name="username" placeholder="Korisničko ime" class="input-fieled"/>
+                <input type="text" name="username" placeholder="Korisničko ime" class="input-fieled" autofocus />
             </label>
             <label>Lozinka:
-                <input type="password" name="password" placeholder="Lozinka" class="input-fieled"/>
+                <input type="password" name="password" placeholder="Lozinka" class="input-fieled" />
             </label>
 
             <input type="submit" value="Prijavi se" class="btn btn-login" onClick="setActionForm('login')" />
