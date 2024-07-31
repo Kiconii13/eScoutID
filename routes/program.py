@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, redirect, url_for
 from flask_login import login_required, current_user
 
 from models import User, db, Skill
@@ -8,6 +8,9 @@ from models import User, db, Skill
 program_bp = Blueprint('program', __name__)
 
 
+# Ispis položenog programa trenutnog člana
+# Skills se odnosi na veštine, veštarstva i specijalnosti
+# Podaci o letovima, zvezdama i krinovima se čuvaju u tabeli user po nivoima (od 0 do 3)
 @program_bp.route("/program")
 @login_required
 def program():
@@ -15,44 +18,62 @@ def program():
     return render_template("program.html", skills=skills)
 
 
-@program_bp.route('/addProgram', methods=['GET', 'POST'])
+# Pomoćna funkcija za prikupljanje informacija za prikaz stranice za upravljanje programom
+def get_users_and_selected_user(user_id=None):
+    users = User.query.filter_by(odred_id=current_user.odred.id).all()
+    selected_user = User.query.get(user_id) if user_id else (users[0] if users else None)
+    skills = Skill.query.filter_by(user_id=selected_user.id).all() if selected_user else []
+    return users, selected_user, skills
+
+
+# Priakaz stranice
+@program_bp.route('/addProgram', methods=['GET'])
 @login_required
-def addProgram():
-    users = User.query.filter_by(odred_id=current_user.odred.id)
-    selected_user = None
-    skills = []
-
-    if request.method == 'POST':
-        if 'update_levels' in request.form:
-            user_id = request.form['user']
-            let_level = request.form['let_level']
-            zvezda_level = request.form['zvezda_level']
-            krin_level = request.form['krin_level']
-
-            selected_user = User.query.get(user_id)
-            selected_user.let_level = let_level
-            selected_user.zvezda_level = zvezda_level
-            selected_user.krin_level = krin_level
-            db.session.commit()
-        elif 'select_user' in request.form:
-            user_id = request.form['user']
-            selected_user = User.query.get(user_id)
-            skills = Skill.query.filter_by(user_id=user_id).all()
-        elif 'add_skill' in request.form:
-            user_id = request.form['user_id']
-            name = request.form['name']
-            level = request.form['level']
-            date_got = datetime.strptime(request.form['date_got'], '%Y-%m-%d')
-
-            new_skill = Skill(user_id=user_id, name=name, level=level, date_got=date_got)
-            db.session.add(new_skill)
-            db.session.commit()
-
-            selected_user = User.query.get(user_id)
-            skills = Skill.query.filter_by(user_id=user_id).all()
-
-    if not selected_user and users:
-        selected_user = users[0]
-        skills = Skill.query.filter_by(user_id=selected_user.id).all()
-
+def add_program():
+    users, selected_user, skills = get_users_and_selected_user()
     return render_template('addProgram.html', users=users, selected_user=selected_user, skills=skills)
+
+
+# Ruta za prikaz člana izabranog u select-u
+@program_bp.route('/select_user', methods=['POST'])
+@login_required
+def select_user():
+    user_id = request.form['user']
+    users, selected_user, skills = get_users_and_selected_user(user_id)
+    return render_template('addProgram.html', users=users, selected_user=selected_user, skills=skills)
+
+
+# Prikupljaju se rednosti upisane u formi za nivoe položenog programa člana
+# Prikupljaju se trenutne informacije o nivoima položenog programa za odabranog člana
+# Unose se izmene i osvežava se stranica
+@program_bp.route('/update_levels', methods=['POST'])
+@login_required
+def update_levels():
+    user_id = request.form['user']
+    let_level = request.form['let_level']
+    zvezda_level = request.form['zvezda_level']
+    krin_level = request.form['krin_level']
+
+    selected_user = User.query.get(user_id)
+    selected_user.let_level = let_level
+    selected_user.zvezda_level = zvezda_level
+    selected_user.krin_level = krin_level
+    db.session.commit()
+
+    return redirect(url_for('program.add_program'))
+
+
+# Sličan princip kao za rutu iznad
+@program_bp.route('/add_skill', methods=['POST'])
+@login_required
+def add_skill():
+    user_id = request.form['user_id']
+    name = request.form['name']
+    level = request.form['level']
+    date_got = datetime.strptime(request.form['date_got'], '%Y-%m-%d')
+
+    new_skill = Skill(user_id=user_id, name=name, level=level, date_got=date_got)
+    db.session.add(new_skill)
+    db.session.commit()
+
+    return redirect(url_for('program.add_program', user_id=user_id))

@@ -3,7 +3,7 @@
   --primary-hover-color: #0056b3;
   --secondary-color: #28a745;
   --secondary-hover-color: #218838;
-  --backgorund-color: rgba(221,221,221,0.8);
+  --background-color: rgba(221,221,221,0.8);
   --container-bg-color: #0fffff;
   --text-color: #333;
   --subtext-color: #666;
@@ -20,7 +20,7 @@
 body {
   background-image: url('/static/bg_loop.png');
   background-size: 10%;
-  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif ;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
   color: var(--text-color);
   display: flex;
   flex-direction: column;
@@ -29,21 +29,29 @@ body {
   animation: none;
   background-position: var(--bg-pos-x, 0) var(--bg-pos-y, 0);
 }
+
 @keyframes moveBackground {
-    from {
-        background-position: var(--bg-pos-x, 0) var(--bg-pos-y, 0);
-    }
-    to {
-        background-position: calc(var(--bg-pos-x, 0) + 100%) calc(var(--bg-pos-y, 0) + 100%);
-    }
+  from {
+    background-position: var(--bg-pos-x, 0) var(--bg-pos-y, 0);
+  }
+  to {
+    background-position: calc(var(--bg-pos-x, 0) + 100%) calc(var(--bg-pos-y, 0) + 100%);
+  }
+}
+
+@media (min-width: 426px) {
+  body {
+    animation: moveBackground 1000s linear infinite;
+  }
 }
 
 main {
-  background-color: var(--backgorund-color);
+  background-color: var(--background-color);
   flex: 1;
   display: flex;
   flex-direction: column;
 }
+
 
 a {
   font: inherit;
@@ -52,7 +60,7 @@ a {
 
 nav, footer {
   width: 100vw;
-  color: var(--backgorund-color);
+  color: var(--background-color);
   background-color: var(--text-color);
   display: flex;
   justify-content: space-between;
@@ -279,7 +287,7 @@ table tbody tr {
 
 table tbody tr:hover {
   background-color: var(--text-color);
-  color: var(--backgorund-color);
+  color: var(--background-color);
 }
 
 table td, th {

@@ -4,7 +4,7 @@
 
 
     {# Odabir usera pomocu selecta, na svaku promenu se dinamicki bira novi user #}
-<form method="POST">
+<form method="POST" action="{{ url_for("program.select_user") }}">
     <label for="user">Član:</label>
     <select name="user" id="user" onchange="this.form.submit()">
         {% for user in users %}
@@ -17,7 +17,7 @@
 
     {# Promena nivoa polozenog stepena programa (0 = nema polozenog stepena) #}
 {% if selected_user %}
-<form method="POST">
+<form method="POST" action = {{ url_for("program.update_levels") }}>
     <input type="hidden" name="user" value="{{ selected_user.id }}">
     <label for="let_level">Nivo leta:</label>
     <input type="number" name="let_level" id="let_level" min="0" max="3" value="{{ selected_user.let_level }}" required>
@@ -61,7 +61,7 @@
 </div>
 
 <h2>Dodaj novi poseban program</h2>
-<form method="POST" action="{{ url_for('program.addProgram') }}">
+<form method="POST" action="{{ url_for('program.add_skill') }}">
     <input type="hidden" name="user_id" value="{{ selected_user.id }}">
     <label for="skill_name">Naziv:</label>
     <input type="text" id="skill_name" name="name" required>

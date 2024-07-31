@@ -7,6 +7,7 @@ from models.user import User
 auth_bp = Blueprint('auth', __name__)
 
 
+# Preusmeravanje ulogovanih i neulogovanih usera na login screen i na dashboard respektivno
 @auth_bp.route('/')
 def index():
     if current_user.is_anonymous:
@@ -15,6 +16,7 @@ def index():
         return redirect(url_for("dashboard.dashboard"))
 
 
+# Logovanje trenutnog usera, izvrsava se samo na index.html
 @auth_bp.route('/login', methods=["GET", "POST"])
 def login():
     if request.method == "POST":
@@ -39,7 +41,6 @@ def login():
 @auth_bp.route("/logout")
 @login_required
 def logout():
-    # session.pop("username", None)
     user = current_user
     user.authenticated = False
     db.session.commit()
@@ -68,5 +69,5 @@ def register():
         db.session.add(new_user)
         db.session.commit()
 
-        session["username"] = username
+        # session["username"] = username
         return redirect(url_for("auth.index"))
