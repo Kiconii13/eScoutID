@@ -12,18 +12,22 @@ def dashboard():
     return render_template("dashboard.html")
 
 
+# Promena lozinke; Mora se uneti trenutna lozinka i nova lozinka sa potvrdom.
 @dashboard_bp.route('/dashboard/changePassword', methods=["POST", "GET"])
 @login_required
 def changePassword():
     if request.method == "POST":
         check_user = User()
         check_user.set_password(request.form["current_password"])
+        # Provera da li se unesena lozinka poklapa sa trenutnom lozinkom
         if not current_user.check_password(request.form["current_password"]):
             flash("Niste uneli tačnu trenutnu lozinku!", "greška")
             return redirect(url_for("dashboard.changePassword"))
+        # Provera da li se nova lozinka poklapa sa potvrdom
         if request.form["new_password"] != request.form["new_password_check"]:
             flash("Nova lozinka i potvrda nove lozinke se ne poklapaju!", "greška")
             return redirect(url_for("dashboard.changePassword"))
+        # Uspešna promena
         current_user.set_password(request.form["new_password"])
         db.session.commit()
         flash("Uspešno ste promenili lozinku!", "info")
