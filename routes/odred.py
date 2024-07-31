@@ -23,7 +23,10 @@ def odredDashboard(id):
     #Mogu da pristupe samo admini
     if current_user.role == "clan":
         return redirect(url_for("dashboard.dashboard"))
-    return render_template("odredDashboard.html", odred_name=Odred.query.filter_by(id=id).first(), users=User.query.filter_by(odred_id=id).all())
+    cetas = Ceta.query.filter_by(odred_id=current_user.odred_id).all()
+    ceta_ids = [ceta.id for ceta in cetas]
+    vods = Vod.query.filter(Vod.ceta_id.in_(ceta_ids)).all()
+    return render_template("odredDashboard.html", odred_name=Odred.query.filter_by(id=id).first(), users=User.query.filter_by(odred_id=id).all(), vods = vods)
 
 #Dodavanje novog clana u odred
 @odred_bp.route("/clan/add", methods=["POST", "GET"])
@@ -180,3 +183,8 @@ def editNacelnikStaresina():
 
     flash("Načelnik i starešina uspešno ažurirani", "Info")
     return render_template("editRoles.html")
+
+@odred_bp.route("/vodInfo/<int:id>")
+@login_required
+def vodInfo(id):
+    return render_template("editVod.html",vod=Vod.query.filter_by(id=id).first(), users = User.query.filter_by(vod_id=id))

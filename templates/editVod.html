@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Vod: {{vod.name}}
+{% endblock %}
+
+{% block content %}
+
+<label>
+    Četa: {{vod.ceta.name}}
+</label>
+
+<label>
+    Vod: {{vod.name}}
+</label>
+
+<label>
+    Vođa čete: {{ vod.ceta.vodja.first_name }} {{ vod.ceta.vodja.last_name }}
+</label>
+
+<label>
+    Vodnik: {{ vod.vodnik.first_name }} {{ vod.vodnik.last_name }}
+</label>
+<table>
+    <caption>Članovi:</caption>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Ime i prezime</th>
+            <th>Korisničko ime</th>
+            <th>Datum rođenja</th>
+            <th>Datum upisa</th>
+            <th>Broj telefona</th>
+            <th>E-pošta</th>
+            <th>Adresa</th>
+            <th>Jedinica</th>
+            <th>Plaćena članarina</th>
+        </tr>
+    </thead>
+    <tbody>
+{% for user in users %}
+        <tr class="user-row">
+            <td>{{ user.id }}</td>
+            <td>{{ user.first_name }} {{ user.last_name }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.dob.day }}.{{ user.dob.month }}.{{ user.dob.year }}.</td>
+            <td>{{ user.join_date.day }}.{{ user.join_date.month }}.{{ user.join_date.year }}.</td>
+            <td>
+                <a href="tel:+{{ user.phone_number }}">
+                    +{{ user.phone_number }}
+                </a>
+            </td>
+            <td>
+                <a href="mailto:{{ user.email }}">
+                    {{ user.email }}
+                </a>
+            </td>
+            <td>{{ user.address }}</td>
+            <td>{{ user.jedinica }}</td>
+             <td>
+                {% if user.has_paid %}
+                <span class="good">DA</span>
+                {% else %}
+                <span class="bad">NE</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
