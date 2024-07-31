@@ -12,11 +12,12 @@ class Odred(db.Model):
     address = db.Column(db.String(50))
     email = db.Column(db.String(50))
     founded_at = db.Column(db.Date(), default=datetime.today().date())
-    staresina_id = db.Column(db.Integer, db.ForeignKey("users.id"))
-    nacelnik_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     status = db.Column(db.String(11), default="Pridružen")
 
+    staresina_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     staresina = db.relationship('User', foreign_keys=[staresina_id])
+    
+    nacelnik_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     nacelnik = db.relationship('User', foreign_keys=[nacelnik_id])
 
     members = db.relationship('User', back_populates='odred', foreign_keys=[User.odred_id])

@@ -15,7 +15,7 @@
 
     <label>
         Ime: 
-        <input type="text" id="first_name" name="first_name" value = "{{clan.first_name}}" required oninvalid="this.setCustomValidity('Unesite ime člana')" oninput="this.setCustomValidity('')">
+        <input type="text" id="first_name" name="first_name" value = "{{clan.first_name}}" required oninvalid="this.setCustomValidity('Unesite ime člana')" oninput="this.setCustomValidity('')" autofocus>
     </label>
     <label>
         Prezime: 
@@ -72,8 +72,16 @@
         {% endif %}
     </label>
     <label>
-        Jedinica: 
-        <input type="text" id="jedinica" name="jedinica" value = "{{clan.jedinica}}">
+        Vod:
+        <select name="vod">
+            {% for vod in vods %}
+            {% if clan.vod_id == vod.id %}
+            <option value="{{ vod.id }}" selected>{{ vod.name }}</option>
+            {% else %}
+            <option value="{{ vod.id }}">{{ vod.name }}</option>
+            {% endif %}
+            {% endfor %}
+        </select>
     </label>
     <label>
         Profilna fotografija:
@@ -86,8 +94,10 @@
         <input type="text" id="odred_id" name="odred_id" value = "{{odred}}" disabled>
     </label>
     {% endif %}
+
     
     <input type="text" name="image" hidden id="b64_img">
+
 
     <input type="submit" value="{{h1}}" class="btn">
     

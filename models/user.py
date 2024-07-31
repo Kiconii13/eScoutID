@@ -69,7 +69,7 @@ class User(db.Model, UserMixin):
         user.email = request.form["email"]
         user.address = request.form["address"]
         user.has_paid = 1 if request.form.get('has_paid') else 0
-        user.jedinica = request.form["jedinica"]
+        user.vod_id = request.form["vod"]
         if request.form["image"] != "nochange":
             user.avatar = request.form["image"]
         if not user.username:

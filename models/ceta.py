@@ -8,6 +8,7 @@ class Ceta(db.Model):
     # Class Variables
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50))
+    vodja_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     odred_id = db.Column(db.Integer, db.ForeignKey("odred.id"))
 
     def __str__(self):

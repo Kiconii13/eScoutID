@@ -48,11 +48,11 @@ def addClan():
         except IntegrityError:  # exeption ako korisnicko ime vec postoji (Mogao bi malo drugacije da se napravi ispis greske, funkcionalnost je tu)
             db.session.rollback()
             flash("Uneto korisničko ime već postoji!", "Greška")
-            return render_template("addClan.html", h1="Dodaj člana", action=action, clan=User())
+            return render_template("addClan.html", h1="Dodaj člana", action=action, clan=User(), vods = Vod.query.all())
     else:
         if current_user.role != "admin" and current_user.role != "savez_admin":
             return redirect(url_for("dashboard.dashboard"))
-        return render_template("addClan.html", h1="Dodaj člana", action=action, clan=new_user)
+        return render_template("addClan.html", h1="Dodaj člana", action=action, clan=new_user, vods = Vod.query.all())
 
 
 @odred_bp.route("/clan/edit/<int:id>", methods=["POST", "GET"])
@@ -69,12 +69,12 @@ def editClan(id):
         except IntegrityError:  # exeption ako korisnicko ime vec postoji (Mogo bi malo drugacije da se napravi ispis greske, funkcionalnost je tu)
             db.session.rollback()
             flash("Uneto korisničko ime već postoji!", "Greška")
-            return render_template("addClan.html", h1="Izmeni člana", action=action, clan=User.query.get(id))
+            return render_template("addClan.html", h1="Izmeni člana", action=action, clan=User.query.get(id), vods = Vod.query.all())
     else:
         if current_user.role != "admin" and current_user.role != "savez_admin":
             return redirect(url_for("dashboard.dashboard"))
         odred = Odred.query.filter_by(id=user.odred_id).first()
-        return render_template("addClan.html", h1="Izmeni člana", action=action, clan=user, odred=odred.name)
+        return render_template("addClan.html", h1="Izmeni člana", action=action, clan=user, odred=odred.name, vods = Vod.query.all())
 
 
 @odred_bp.route("/clan/delete/<int:id>", methods=["GET", "POST"])
@@ -137,3 +137,49 @@ def newVod():
 
     flash("Vod uspešno dodat!", "Info")
     return render_template("addCetaVod.html", users=User.query.all(), cetas=Ceta.query.all(), odreds=Odred.query.all())
+
+
+@odred_bp.route("/edit/roles")
+@login_required
+def editRoles():
+    return render_template("editRoles.html", vods=Vod.query.all(), users=User.query.all(), cetas=Ceta.query.all(), odreds=Odred.query.all())
+
+
+@odred_bp.route("/edit/roles/vodnik", methods=["POST"])
+@login_required
+def editVodnik():
+    vod = Vod.query.filter_by(id=request.form["vod"]).first()
+
+    vod.vodnik_id = request.form["vodnik"]
+
+    db.session.commit()
+
+    flash("Novi vodnik postavljen", "Info")
+    return redirect(url_for("odred.editRoles"))
+
+
+@odred_bp.route("/edit/roles/vodjacete", methods=["POST"])
+@login_required
+def editVodjacete():
+    ceta = Ceta.query.filter_by(id = request.form["ceta"]).first()
+
+    ceta.vodja_id = request.form["vodjacete"]
+
+    db.session.commit()
+
+    flash("Novi vođa čete postavljen", "Info")
+    return render_template("editRoles.html")
+
+
+@odred_bp.route("/edit/nacelnik", methods=["POST"])
+@login_required
+def editNacelnikStaresina():
+    odred = Odred.query.filter_by(id = request.form["odred"]).first()
+
+    odred.staresina_id = request.form["staresina"]
+    odred.nacelnik_id = request.form["nacelnik"]
+
+    db.session.commit()
+
+    flash("Načelnik i starešina uspešno ažurirani", "Info")
+    return render_template("editRoles.html")
