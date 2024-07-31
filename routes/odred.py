@@ -171,7 +171,7 @@ def editVodjacete():
 @odred_bp.route("/edit/nacelnik", methods=["POST"])
 @login_required
 def editNacelnikStaresina():
-    odred = Odred.query.filter_by(id = request.form["odred"]).first()
+    odred = current_user.odred
 
     odred.staresina_id = request.form["staresina"]
     odred.nacelnik_id = request.form["nacelnik"]

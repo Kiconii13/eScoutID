@@ -59,14 +59,6 @@ Upravlj pozicijama
 <h2>Imenuj novog načelnika i starešinu odreda</h2>
 <form action="{{ url_for('odred.editNacelnikStaresina') }}" method="post">
     <label>
-        Odred:
-        <select name="odred">
-            {% for odred in odreds %}
-            <option value="{{odred.id}}">{{ odred.name }}</option>
-            {% endfor %}
-        </select>
-    </label>
-    <label>
         Starešina
         <select name="staresina">
             {% for staresina in users %}
