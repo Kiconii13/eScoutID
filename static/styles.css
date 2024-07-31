@@ -140,12 +140,8 @@ form label {
   margin: 10px 0;
 }
 
-form select {
-  font: inherit;
-  width: 100%;
-}
 
-input {
+input, select {
   width: 100%;
   font: inherit;
   padding: 5px;
