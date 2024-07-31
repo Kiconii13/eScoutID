@@ -9,41 +9,43 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <title>eScoutID - {% block title %}{% endblock %}</title>
     <script>
-        document.addEventListener('DOMContentLoaded', (event) => {
-            // Load the background position from localStorage if available
-            const bgPosX = localStorage.getItem('bgPosX') || '0%';
-            const bgPosY = localStorage.getItem('bgPosY') || '0%';
+    document.addEventListener('DOMContentLoaded', (event) => {
+      const updateBackgroundPosition = () => {
+        const computedStyle = getComputedStyle(document.documentElement);
+        const currentBgPosX = parseFloat(computedStyle.getPropertyValue('--bg-pos-x'));
+        const currentBgPosY = parseFloat(computedStyle.getPropertyValue('--bg-pos-y'));
 
-            document.documentElement.style.setProperty('--bg-pos-x', bgPosX);
-            document.documentElement.style.setProperty('--bg-pos-y', bgPosY);
+        const newBgPosX = (currentBgPosX + 0.005) % 100; // Adjust the speed and direction as needed
+        const newBgPosY = (currentBgPosY + 0.005) % 100; // Adjust the speed and direction as needed
 
-            // Function to update background position
-            const updateBackgroundPosition = () => {
-                const computedStyle = getComputedStyle(document.documentElement);
-                const currentBgPosX = parseFloat(computedStyle.getPropertyValue('--bg-pos-x'));
-                const currentBgPosY = parseFloat(computedStyle.getPropertyValue('--bg-pos-y'));
+        document.documentElement.style.setProperty('--bg-pos-x', `${newBgPosX}%`);
+        document.documentElement.style.setProperty('--bg-pos-y', `${newBgPosY}%`);
 
-                const newBgPosX = (currentBgPosX + 0.005) % 100; // Adjust the speed and direction as needed
-                const newBgPosY = (currentBgPosY + 0.005) % 100; // Adjust the speed and direction as needed
+        // Save the new positions to localStorage
+        localStorage.setItem('bgPosX', `${newBgPosX}%`);
+        localStorage.setItem('bgPosY', `${newBgPosY}%`);
+      };
 
-                document.documentElement.style.setProperty('--bg-pos-x', `${newBgPosX}%`);
-                document.documentElement.style.setProperty('--bg-pos-y', `${newBgPosY}%`);
+      // Check if screen width is greater than or equal to 426px
+      if (window.innerWidth >= 426) {
+        // Load the background position from localStorage if available
+        const bgPosX = localStorage.getItem('bgPosX') || '0%';
+        const bgPosY = localStorage.getItem('bgPosY') || '0%';
 
-                // Save the new positions to localStorage
-                localStorage.setItem('bgPosX', `${newBgPosX}%`);
-                localStorage.setItem('bgPosY', `${newBgPosY}%`);
-            };
+        document.documentElement.style.setProperty('--bg-pos-x', bgPosX);
+        document.documentElement.style.setProperty('--bg-pos-y', bgPosY);
 
-            // Update the background position every frame
-            setInterval(updateBackgroundPosition, 10); // Adjust the interval as needed
+        // Update the background position every frame
+        setInterval(updateBackgroundPosition, 10); // Adjust the interval as needed
 
-            // Save the background position before the page unloads
-            window.addEventListener('beforeunload', () => {
-                const computedStyle = getComputedStyle(document.documentElement);
-                localStorage.setItem('bgPosX', computedStyle.getPropertyValue('--bg-pos-x'));
-                localStorage.setItem('bgPosY', computedStyle.getPropertyValue('--bg-pos-y'));
-            });
+        // Save the background position before the page unloads
+        window.addEventListener('beforeunload', () => {
+          const computedStyle = getComputedStyle(document.documentElement);
+          localStorage.setItem('bgPosX', computedStyle.getPropertyValue('--bg-pos-x'));
+          localStorage.setItem('bgPosY', computedStyle.getPropertyValue('--bg-pos-y'));
         });
+      }
+    });
     </script>
 
 
