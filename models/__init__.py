@@ -7,3 +7,5 @@ db = SQLAlchemy()
 from .user import User
 from .odred import Odred
 from .skill import Skill
+from .vod import Vod
+from .ceta import Ceta

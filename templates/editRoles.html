@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}
+Upravlj pozicijama
+{% endblock %}
+
+{% block content %}
+
+<h1>Upravljaj pozicijama</h1>
+
+<hr>
+
+<h2>Imenuj vodnika</h2>
+<form action="{{ url_for('odred.editVodnik') }}" method="post">
+    <label>
+        Vod:
+        <select name="vod">
+            {% for vod in vods %}
+            <option value="{{vod.id}}">{{ vod.name }}</option>
+            {% endfor %}
+        </select>
+    </label>
+    <label>
+        Vodnik
+        <select name="vodnik">
+            {% for vodnik in users %}
+            <option value="{{vodnik.id}}">{{vodnik.first_name}} {{vodnik.last_name}}</option>
+            {% endfor %}
+        </select>
+    </label>
+    <input type="submit" value="Imenuj" class="btn">
+</form>
+
+<hr>
+
+<h2>Imenuj vođu čete</h2>
+<form action="{{ url_for('odred.editVodjacete') }}" method="post">
+    <label>
+        Četa:
+        <select name="ceta">
+            {% for ceta in cetas %}
+            <option value="{{ceta.id}}">{{ ceta.name }}</option>
+            {% endfor %}
+        </select>
+    </label>
+    <label>
+        Vođa čete:
+        <select name="vodjacete">
+            {% for vodjacete in users %}
+            <option value="{{vodjacete.id}}">{{vodjacete.first_name}} {{vodjacete.last_name}}</option>
+            {% endfor %}
+        </select>
+    </label>
+    <input type="submit" value="Imenuj" class="btn">
+</form>
+
+<hr>
+
+<h2>Imenuj novog načelnika i starešinu odreda</h2>
+<form action="{{ url_for('odred.editNacelnikStaresina') }}" method="post">
+    <label>
+        Odred:
+        <select name="odred">
+            {% for odred in odreds %}
+            <option value="{{odred.id}}">{{ odred.name }}</option>
+            {% endfor %}
+        </select>
+    </label>
+    <label>
+        Starešina
+        <select name="staresina">
+            {% for staresina in users %}
+            <option value="{{staresina.id}}">{{staresina.first_name}} {{staresina.last_name}}</option>
+            {% endfor %}
+        </select>
+    </label>
+    <label>
+        Načelnik
+        <select name="nacelnik">
+            {% for nacelnik in users %}
+            <option value="{{nacelnik.id}}">{{nacelnik.first_name}} {{nacelnik.last_name}}</option>
+            {% endfor %}
+        </select>
+    </label>
+    <input type="submit" value="Imenuj" class="btn">
+</form>
+
+<input type="button" value="Nazad" class="btn" onclick="window.location.replace(`{{ url_for('odred.odredDashboard', id=current_user.odred.id) }}`)">
+
+{% endblock %}

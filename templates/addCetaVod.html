@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Dodaj vod/četu
+{% endblock %}
+
+{% block content %}
+
+<form action="{{ url_for('odred.newVod') }}" method="post">
+    <h1>Dodaj vod</h1>
+    <label>
+        Naziv:
+        <input type="text" name="name" />
+    </label>
+    <label>
+        Vodnik:
+        <select name="vodnik">
+            {% for vodnik in users %}
+                <option value="{{vodnik.id}}">{{vodnik.first_name}} {{vodnik.last_name}}</option>
+            {% endfor %}
+        </select>
+    </label>
+    <label>
+        Četa:
+        <select name="ceta">
+            {% for ceta in cetas %}
+                <option value="{{ceta.id}}">{{ceta.name}}</option>
+            {% endfor %}
+        </select>
+    </label>
+    <input type="submit" value="Dodaj" class="btn" />
+</form>
+
+<hr>
+
+<form action="{{ url_for('odred.newCeta') }}" method="post">
+    <h1>Dodaj četu</h1>
+    <label>
+        Naziv:
+        <input type="text" name="name" />
+    </label>
+    <label>
+        Odred:
+        <select name="odred">
+            {% for odred in odreds %}
+                <option value="{{odred.id}}">{{odred.name}}</option>
+            {% endfor %}
+        </select>
+    </label>
+    <input type="submit" value="Dodaj" class="btn" />
+</form>
+
+<hr>
+
+<input type="button" value="Nazad" class="btn" onclick="window.location.href = `{{url_for('odred.odredDashboard', id=current_user.odred.id)}}`" />
+{% endblock %}
