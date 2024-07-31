@@ -73,7 +73,7 @@ class User(db.Model, UserMixin):
         if request.form["image"] != "nochange":
             user.avatar = request.form["image"]
         if not user.username:
-            user.username = f"{user.last_name[0].lower()}{user.first_name[0].lower()}.{randint(1000, 9999)}c"
+            user.username = f"{user.last_name[0].lower()}{user.first_name[0].lower()}.{randint(1000, 9999)}"
         return user
 
     def set_password(self, password):

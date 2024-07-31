@@ -39,7 +39,7 @@ def addClan():
 
         db.session.add(new_user)
         db.session.commit()
-        new_user.username = f"{new_user.username[:-1]}{new_user.id}c"
+        new_user.username = f"{new_user.username}{new_user.id}c"
         db.session.commit()
         return redirect(url_for("odred.odredDashboard", id=current_user.odred.id))
     else:
