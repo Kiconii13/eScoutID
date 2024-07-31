@@ -8,18 +8,20 @@ from models import db, Odred, User
 
 savez_bp = Blueprint('savez', __name__)
 
-
+#Prikaz tabele sa svim odredima
 @savez_bp.route("/savezDashboard")
 @login_required
 def savezDashboard():
+    #Moze da pristupi samo savez_admin
+    if current_user.role != "savez_admin":
+        return redirect(url_for("dashboard.dashboard"))
+    
     odredi = Odred.query.all()
     Broj_Clanova = db.session.query(func.count(User.id).label('member_count')).outerjoin(Odred.members).group_by(
         Odred.id).all()
-    if current_user.role != "savez_admin":
-        return redirect(url_for("dashboard.dashboard"))
     return render_template("savezDashboard.html", odredi=zip(odredi, Broj_Clanova))
 
-
+#Dodavanje novog odreda u bazu
 @savez_bp.route("/addOdred", methods=["POST", "GET"])
 @login_required
 def addOdred():
@@ -35,6 +37,7 @@ def addOdred():
         db.session.add(new_odred)
         db.session.commit()
 
+        #Generisanje prvog clana u odredu; Preko njega se dodaje par clanova dodeljuje se novi admin i onda se brise iz baze.
         first_user = User()
         first_user.username = "Generic" + str(new_odred.id)
         first_user.role = "admin"
@@ -49,16 +52,16 @@ def addOdred():
 
         return redirect(url_for("savez.savezDashboard"))
     else:
+        #Moze da pristupi samo savez_admin
         if current_user.role != "savez_admin":
             return redirect(url_for("dashboard.dashboard"))
         return render_template("addOdred.html", h1="Dodaj odred", odred=Odred(), staresina="", nacelnik="")
 
-
+#Izmena podataka postojeceg odreda
 @savez_bp.route("/editOdred/<int:id>", methods=["POST", "GET"])
 @login_required
 def editOdred(id):
     odred = Odred.query.get(id)
-    # AZURIRANJE PODATAKA ODREDA
     if request.method == "POST":
         odred.name = request.form["name"]
         odred.city = request.form["city"]
@@ -79,15 +82,19 @@ def editOdred(id):
         db.session.commit()
         return redirect(url_for("savez.savezDashboard"))
     else:
+        #Moze da pristupi samo savez_admin
         if current_user.role != "savez_admin":
             return redirect(url_for("dashboard.dashboard"))
-        return render_template("addOdred.html", h1="Izmeni odred", odred=odred,
-                               clanovi=User.query.filter_by(odred_id=odred.id).order_by(User.dob.asc()))
+        return render_template("addOdred.html", h1="Izmeni odred", odred=odred, clanovi=User.query.filter_by(odred_id=odred.id).order_by(User.dob.asc()))
 
-
+#Brisanje odreda iz baze
 @savez_bp.route("/deleteOdred/<int:id>", methods=["GET", "POST"])
 @login_required
 def deleteOdred(id):
+    #Moze da pristupi samo savez_admin
+    if current_user.role != "savez_admin":
+        return redirect(url_for("dashboard.dashboard"))
+    
     odred = Odred.query.get(id)
     if odred:
         db.session.delete(odred)
