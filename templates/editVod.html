@@ -68,5 +68,6 @@ Vod: {{vod.name}}
         {% endfor %}
     </tbody>
 </table>
+    <input type="button" value="Nazad" class="btn" onclick="window.location.href = `{{ url_for('odred.odredDashboard', id=vod.ceta.odred_id) }}`">
 
 {% endblock %}
