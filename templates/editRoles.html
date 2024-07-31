@@ -62,7 +62,11 @@ Upravlj pozicijama
         Starešina
         <select name="staresina">
             {% for staresina in users %}
-            <option value="{{staresina.id}}">{{staresina.first_name}} {{staresina.last_name}}</option>
+                {% if staresina.id == current_staresina %}
+                <option value="{{staresina.id}}" selected>{{staresina.first_name}} {{staresina.last_name}}</option>
+                {% else %}
+                <option value="{{staresina.id}}">{{staresina.first_name}} {{staresina.last_name}}</option>
+                {% endif %}
             {% endfor %}
         </select>
     </label>
@@ -70,7 +74,11 @@ Upravlj pozicijama
         Načelnik
         <select name="nacelnik">
             {% for nacelnik in users %}
-            <option value="{{nacelnik.id}}">{{nacelnik.first_name}} {{nacelnik.last_name}}</option>
+                {% if nacelnik.id == current_nacelnik %}
+                <option value="{{nacelnik.id}}" selected>{{nacelnik.first_name}} {{nacelnik.last_name}}</option>
+                {% else %}
+                <option value="{{nacelnik.id}}">{{nacelnik.first_name}} {{nacelnik.last_name}}</option>
+                {% endif %}
             {% endfor %}
         </select>
     </label>

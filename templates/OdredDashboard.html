@@ -20,7 +20,8 @@ Odred Dashboard
             <th>Broj telefona</th>
             <th>E-pošta</th>
             <th>Adresa</th>
-            <th>Jedinica</th>
+            <th>Četa</th>
+            <th>Vod</th>
             <th>Plaćena članarina</th>
         </tr>
     </thead>
@@ -43,7 +44,13 @@ Odred Dashboard
                 </a>
             </td>
             <td>{{ user.address }}</td>
-            <td>{{ user.jedinica }}</td>
+            <td>{% for ceta in cete %}
+                    {% if user.vod.ceta_id == ceta.id %}
+                    {{ ceta.name }}
+                    {% endif %}
+                {% endfor %}
+            </td>
+            <td>{{ user.vod.name }}</td>
              <td>
                 {% if user.has_paid %}
                 <span class="good">DA</span>
