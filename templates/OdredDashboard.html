@@ -28,7 +28,7 @@ Odred Dashboard
     <tbody>
 {% for user in users %}
         <tr class="user-row" onclick='window.location.href=`{{ url_for("odred.editClan", id=user.id) }}`'>
-            <td>{{ user.id }}</td> <!-- nzm sta su trebali da rade ovi if-ovi -->
+            <td>{{ user.id }}</td>
             <td>{{ user.first_name }} {{ user.last_name }}</td>
             <td>{{ user.username }}</td>
             <td>{{ user.dob.day }}.{{ user.dob.month }}.{{ user.dob.year }}.</td>
@@ -70,6 +70,28 @@ Odred Dashboard
 
 <hr>
 
+<table>
+    <caption>Vodovi:</caption>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Naziv voda</th>
+            <th>Vodnik</th>
+            <th>Četa</th>
+            <th>Vođa čete</th>
+        </tr>
+    </thead>
+    <tbody>
+{% for vod in vods %}
+        <tr class="user-row" onclick='window.location.href=`{{ url_for("odred.vodInfo", id=vod.id) }}`'>
+            <td>{{ vod.id }}</td>
+            <td>{{ vod.name }}</td>
+            <td>{{ vod.vodnik.first_name }} {{ vod.vodnik.last_name }}</td>
+            <td>{{ vod.ceta.name }}</td>
+            <td>{{ vod.ceta.vodja.first_name }} {{ vod.ceta.vodja.last_name }}</td>
+        {% endfor %}
+    </tbody>
+</table>
 <input type="button" value="Kreiraj vod/četu" class="btn" onclick="window.location.href = `{{ url_for('odred.addCetaVod') }}`" />
 <input type="button" value="Upravljaj pozicijama" class="btn" onclick="window.location.href = `{{ url_for('odred.editRoles') }}`" />
 
