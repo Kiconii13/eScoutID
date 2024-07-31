@@ -21,12 +21,13 @@ def aktivnosti():
 @aktivnosti_bp.route("/addAktivnost")
 @login_required
 def addAktivnost():
+    filtered_users = User.query.filter(User.role != "savez_admin")
     if current_user.role == "admin":
         activities = Activity.query.filter_by(organizer_name = current_user.odred.name).all()
     elif current_user.role == "savez_admin":
         activities = Activity.query.filter(Activity.organizer_type != OrganizerLevel(1))
-
-    filtered_users = User.query.filter(User.role != "savez_admin")
+    else:
+        return redirect(url_for("dashboard.dashboard"))
 
     return render_template("addAktivnost.html", user_list=filtered_users, activities=activities)
 
