@@ -39,14 +39,6 @@ Dodaj vod/četu
         Naziv:
         <input type="text" name="name" />
     </label>
-    <label>
-        Odred:
-        <select name="odred">
-            {% for odred in odreds %}
-                <option value="{{odred.id}}">{{odred.name}}</option>
-            {% endfor %}
-        </select>
-    </label>
     <input type="submit" value="Dodaj" class="btn" />
 </form>
 

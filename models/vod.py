@@ -12,7 +12,9 @@ class Vod(db.Model):
     vodnik_id = db.Column(db.Integer, db.ForeignKey("users.id"))
 
     ceta_id = db.Column(db.Integer, db.ForeignKey("ceta.id"))
-
+    
+    vodnik = db.relationship('User',foreign_keys=[vodnik_id])
+    ceta = db.relationship('Ceta',foreign_keys=[ceta_id])
     members = db.relationship('User', back_populates='vod', foreign_keys=[User.vod_id])
 
     def __str__(self):

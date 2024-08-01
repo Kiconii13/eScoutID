@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Vod: {{vod.name}}
+{% endblock %}
+
+{% block content %}
+<table>
+    <thead>
+        <tr>
+            <th colspan="8">Četa: {{vod.ceta.name}}</th>
+        </tr>
+        <tr>
+            <th colspan="8">Vod: {{vod.name}}</th>
+        </tr>
+        <tr>
+            <th colspan="8">Vođa čete: {{ vod.ceta.vodja.first_name }} {{ vod.ceta.vodja.last_name }}</th>
+        </tr>
+        <tr>
+            <th colspan="8">Vodnik: {{ vod.vodnik.first_name }} {{ vod.vodnik.last_name }}</th></tr>
+        <tr>
+            <th>Ime i prezime</th>
+            <th>Korisničko ime</th>
+            <th>Datum rođenja</th>
+            <th>Datum upisa</th>
+            <th>Broj telefona</th>
+            <th>E-pošta</th>
+            <th>Adresa</th>
+            <th>Plaćena članarina</th>
+        </tr>
+    </thead>
+    <tbody>
+{% for user in users %}
+        <tr class="user-row">
+            <td>{{ user.first_name }} {{ user.last_name }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.dob.day }}.{{ user.dob.month }}.{{ user.dob.year }}.</td>
+            <td>{{ user.join_date.day }}.{{ user.join_date.month }}.{{ user.join_date.year }}.</td>
+            <td>
+                <a href="tel:+{{ user.phone_number }}">
+                    +{{ user.phone_number }}
+                </a>
+            </td>
+            <td>
+                <a href="mailto:{{ user.email }}">
+                    {{ user.email }}
+                </a>
+            </td>
+            <td>{{ user.address }}</td>
+             <td>
+                {% if user.has_paid %}
+                <span class="good">DA</span>
+                {% else %}
+                <span class="bad">NE</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+    <form action="{{ url_for('odred.editVod', id=vod.id) }}" method="POST">
+    <label> Naziv voda
+        <input type="text" name="vod_name" id="vod_name" value="{{ vod.name }}" required>
+    </label>
+    <label>
+        Četa
+        <select name="ceta" id="ceta" required>
+            {% for ceta in cete %}
+            {% if vod.ceta_id == ceta.id %}
+                <option value="{{ ceta.id }}" selected>{{ ceta.name }}</option>
+            {% else %}
+                <option value="{{ ceta.id }}">{{ ceta.name }}</option>
+            {% endif %}
+            {% endfor %}
+        </select>
+    </label>
+    <input type="submit" value="Ažuriraj vod" class="btn">
+            <input type="button" value="Obriši vod" class="btn" onclick="window.location.href = `{{ url_for('odred.deleteVod', id=vod.id) }}`">
+</form>
+    <input type="button" value="Nazad" class="btn" onclick="window.location.href = `{{ url_for('odred.odredDashboard', id=vod.ceta.odred_id) }}`">
+
+{% endblock %}

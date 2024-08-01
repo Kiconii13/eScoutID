@@ -12,7 +12,6 @@ Odred Dashboard
     <caption>Članovi:</caption>
     <thead>
         <tr>
-            <th>Id</th>
             <th>Ime i prezime</th>
             <th>Korisničko ime</th>
             <th>Datum rođenja</th>
@@ -20,14 +19,14 @@ Odred Dashboard
             <th>Broj telefona</th>
             <th>E-pošta</th>
             <th>Adresa</th>
-            <th>Jedinica</th>
+            <th>Četa</th>
+            <th>Vod</th>
             <th>Plaćena članarina</th>
         </tr>
     </thead>
     <tbody>
 {% for user in users %}
         <tr class="user-row" onclick='window.location.href=`{{ url_for("odred.editClan", id=user.id) }}`'>
-            <td>{{ user.id }}</td> <!-- nzm sta su trebali da rade ovi if-ovi -->
             <td>{{ user.first_name }} {{ user.last_name }}</td>
             <td>{{ user.username }}</td>
             <td>{{ user.dob.day }}.{{ user.dob.month }}.{{ user.dob.year }}.</td>
@@ -43,7 +42,8 @@ Odred Dashboard
                 </a>
             </td>
             <td>{{ user.address }}</td>
-            <td>{{ user.jedinica }}</td>
+            <td>{{ user.vod.ceta.name }}</td>
+            <td>{{ user.vod.name }}</td>
              <td>
                 {% if user.has_paid %}
                 <span class="good">DA</span>
@@ -56,13 +56,35 @@ Odred Dashboard
     </tbody>
 </table>
 
+    <hr>
+{% if current_user.role == "admin" %}
+    <table style="margin: auto;">
+    <caption>Vodovi:</caption>
+    <thead>
+        <tr>
+            <th>Naziv voda</th>
+            <th>Vodnik</th>
+            <th>Četa</th>
+            <th>Vođa čete</th>
+        </tr>
+    </thead>
+    <tbody>
+{% for vod in vods %}
+        <tr class="user-row" onclick='window.location.href=`{{ url_for("odred.vodInfo", id=vod.id) }}`'>
+            <td>{{ vod.name }}</td>
+            <td>{{ vod.vodnik.first_name }} {{ vod.vodnik.last_name }}</td>
+            <td>{{ vod.ceta.name }}</td>
+            <td>{{ vod.ceta.vodja.first_name }} {{ vod.ceta.vodja.last_name }}</td>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
 <br>
 {% if current_user.role == "admin" %}
 <input type="button" value="Dodaj novog člana" class="btn" onclick="window.location.href = `{{ url_for('odred.addClan') }}`">
 <a class="btn btn-link" href='{{ url_for("program.add_program") }}'>Položeni program članova</a>
 
 <hr>
-
 <input type="button" value="Kreiraj vod/četu" class="btn" onclick="window.location.href = `{{ url_for('odred.addCetaVod') }}`" />
 <input type="button" value="Upravljaj pozicijama" class="btn" onclick="window.location.href = `{{ url_for('odred.editRoles') }}`" />
 

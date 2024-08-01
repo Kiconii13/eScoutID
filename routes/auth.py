@@ -48,26 +48,3 @@ def logout():
     logout_user()
 
     return redirect(url_for('auth.index'))
-
-
-# Register
-@auth_bp.route("/register", methods=["POST"])
-def register():
-    # Collect info from the form
-    username = request.form['username']
-    password = request.form['password']
-
-    # Check if it's in the db / index
-    user = User.query.filter_by(username=username).first()
-
-    if user:
-        return render_template("index.html", error="Already registered!")
-    else:
-        new_user = User(username=username)
-        new_user.set_password(password)
-
-        db.session.add(new_user)
-        db.session.commit()
-
-        # session["username"] = username
-        return redirect(url_for("auth.index"))

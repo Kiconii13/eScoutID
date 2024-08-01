@@ -1,6 +1,8 @@
+import os
+
 from flask import Flask
 from flask_login import LoginManager
-from models import db, User, Odred
+from models import db, User, Odred, Ceta, Vod
 from routes import register_blueprints
 
 from config import Config
@@ -14,9 +16,11 @@ def create_app(config_class=Config):
 
     # app.secret_key = "8PvUV36JVw59"
 
-    # Configure SQL Alchemy
-    # app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///eScoutID.db"
-    # app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+# Configure SQL Alchemy
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///eScoutID.db"
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config['UPLOAD_FOLDER'] = 'uploads/'
+os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
     db.init_app(app)
 
@@ -40,15 +44,33 @@ def create_app(config_class=Config):
             odred.name = "Genericki odred"
             odred.city = "Genericki grad"
             odred.address = "Genericka adresa"
+            odred.nacelnik_id = 1
+            odred.staresina_id = 1
             db.session.add(odred)
             db.session.commit()
+
+        if len(Ceta.query.all()) == 0:
+            ceta = Ceta()
+            ceta.name = "Generička četa"
+            ceta.vodja_id = 1
+            ceta.odred_id = 1
+            db.session.add(ceta)
+            db.session.commit()
+
+        if len(Vod.query.all()) == 0:
+            vod = Vod()
+            vod.name = "Generički vod"
+            vod.ceta_id = 1
+            vod.vodnik_id = 1
+            db.session.add(vod)
 
         if len(User.query.all()) == 0:
             admin = User(username="admin")
             admin.set_password("")
 
             admin.odred_id = 1
-            admin.role = "admin"
+            admin.vod_id = 1
+            admin.role = "savez_admin"
 
             db.session.add(admin)
             db.session.commit()
