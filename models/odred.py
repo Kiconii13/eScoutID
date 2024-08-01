@@ -13,6 +13,7 @@ class Odred(db.Model):
     email = db.Column(db.String(50))
     founded_at = db.Column(db.Date(), default=datetime.today().date())
     status = db.Column(db.String(11), default="Pridružen")
+    avatar = db.Column(db.Text, default="")
 
     staresina_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     staresina = db.relationship('User', foreign_keys=[staresina_id])

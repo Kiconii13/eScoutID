@@ -29,7 +29,9 @@ body {
   animation: none;
   background-position: var(--bg-pos-x, 0) var(--bg-pos-y, 0);
 }
-
+@media (min-width: 1024px){
+  overflow-x: hidden;
+}
 @keyframes moveBackground {
   from {
     background-position: var(--bg-pos-x, 0) var(--bg-pos-y, 0);
@@ -250,6 +252,7 @@ table {
   padding: 0 20px;
   display: block;
   max-width: max(350px, 50vw);
+  max-height: max(350px, 50vh);
   overflow-y: scroll;
 }
 
@@ -301,6 +304,10 @@ table td:nth-last-child(n+2), th:nth-last-child(n+2) {
 table caption {
   font-size: 20pt;
   margin-bottom: 10px;
+}
+
+.skills{
+  text-align: center;
 }
 
 .achivements h3{

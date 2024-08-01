@@ -62,12 +62,8 @@ Upravljanje aktivnostima
 <form action="{{ url_for('aktivnosti.log_aktivnost') }}" method="POST">
     <h2>Zabeleži učešće</h2>
     <label>
-        Ime i prezime člana:
-        <select name="user">
-            {% for user in user_list %}
-            <option value="{{ user.id }}">{{ user.first_name }} {{ user.last_name }}</option>
-            {% endfor %}
-        </select>
+        Username člana:
+        <input type="text" name="user" placeholder="aa.12345c">
     </label>
     <label>
         Naziv aktivnosti i organizator:

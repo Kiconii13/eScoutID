@@ -66,7 +66,14 @@
             {% endif %}
         </select>
     </label>
-    
+
+    <label>
+        Profilna fotografija:
+        <input type="file">
+    </label>
+
+    <input type="text" name="image" hidden id="b64_img">
+
     <input type="submit" value="{{ h1 }}" class="btn">
     {% if h1 != "Dodaj odred" and odred.id != current_user.odred.id%}
     <a class = 'btn btn-link' href="{{ url_for('savez.deleteOdred', id=odred.id) }}" onclick="return confirm('Da li ste sigurni da želite da obrišete ovaj odred?');">Obriši odred</a>
@@ -75,4 +82,60 @@
         Nazad
     </a>
 </form>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    let b64 = '';
+    const form = document.querySelector('form');
+
+    async function streamToArrayBuffer(stream) {
+      const reader = stream.getReader();
+      let result = new Uint8Array();
+      let done, value;
+      while ({ done, value } = await reader.read(), !done) {
+        const newResult = new Uint8Array(result.length + value.length);
+        newResult.set(result);
+        newResult.set(value, result.length);
+        result = newResult;
+      }
+      return result.buffer;
+    }
+
+    async function compressData(arrayBuffer) {
+      const stream = new CompressionStream('gzip');
+      const writer = stream.writable.getWriter();
+      writer.write(new Uint8Array(arrayBuffer));
+      writer.close();
+
+      const compressedArrayBuffer = await streamToArrayBuffer(stream.readable);
+      return compressedArrayBuffer;
+    }
+
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const file = document.querySelector('input[type=file]')['files'][0];
+        const reader = new FileReader();
+
+        if (document.querySelector('input[type=file]')['files'].length != 1) {
+            document.getElementById("b64_img").value = "nochange";
+            event.target.submit();
+            return;
+        }
+
+        reader.onload = async () => {
+            const arrayBuffer = reader.result;
+
+            const compressedArrayBuffer = await compressData(arrayBuffer);
+            const base64Encoded = btoa(String.fromCharCode(...new Uint8Array(compressedArrayBuffer)));
+
+            document.getElementById("b64_img").value = base64Encoded;
+
+            // Podnesi obrazac tek nakon što se b64_img popuni
+            event.target.submit();
+        }
+        reader.readAsArrayBuffer(file);
+    });
+</script>
 {% endblock %}
