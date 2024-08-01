@@ -19,7 +19,6 @@ Login
             </label>
 
             <input type="submit" value="Prijavi se" class="btn btn-login" onClick="setActionForm('login')" />
-            <input type="button" value="Register" class="btn btn-register" onClick="setActionForm('register')"/>
         </form>
     </div>
 
@@ -29,11 +28,6 @@ Login
             let form = document.getElementById("auth-form");
             if (action === 'login'){
                 form.action = "{{ url_for('auth.login') }}";
-                form.method = 'post';
-                form.submit();
-            }
-            else if (action === 'register'){
-                form.action = "{{ url_for('auth.register') }}";
                 form.method = 'post';
                 form.submit();
             }

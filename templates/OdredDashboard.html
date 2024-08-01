@@ -12,7 +12,6 @@ Odred Dashboard
     <caption>Članovi:</caption>
     <thead>
         <tr>
-            <th>Id</th>
             <th>Ime i prezime</th>
             <th>Korisničko ime</th>
             <th>Datum rođenja</th>
@@ -28,7 +27,6 @@ Odred Dashboard
     <tbody>
 {% for user in users %}
         <tr class="user-row" onclick='window.location.href=`{{ url_for("odred.editClan", id=user.id) }}`'>
-            <td>{{ user.id }}</td>
             <td>{{ user.first_name }} {{ user.last_name }}</td>
             <td>{{ user.username }}</td>
             <td>{{ user.dob.day }}.{{ user.dob.month }}.{{ user.dob.year }}.</td>
@@ -44,12 +42,7 @@ Odred Dashboard
                 </a>
             </td>
             <td>{{ user.address }}</td>
-            <td>{% for ceta in cete %}
-                    {% if user.vod.ceta_id == ceta.id %}
-                    {{ ceta.name }}
-                    {% endif %}
-                {% endfor %}
-            </td>
+            <td>{{ user.vod.ceta.name }}</td>
             <td>{{ user.vod.name }}</td>
              <td>
                 {% if user.has_paid %}
@@ -63,18 +56,12 @@ Odred Dashboard
     </tbody>
 </table>
 
-<br>
+    <hr>
 {% if current_user.role == "admin" %}
-<input type="button" value="Dodaj novog člana" class="btn" onclick="window.location.href = `{{ url_for('odred.addClan') }}`">
-<a class="btn btn-link" href='{{ url_for("program.add_program") }}'>Položeni program članova</a>
-
-<hr>
-
-<table style="margin: auto;">
+    <table style="margin: auto;">
     <caption>Vodovi:</caption>
     <thead>
         <tr>
-            <th>Id</th>
             <th>Naziv voda</th>
             <th>Vodnik</th>
             <th>Četa</th>
@@ -84,7 +71,6 @@ Odred Dashboard
     <tbody>
 {% for vod in vods %}
         <tr class="user-row" onclick='window.location.href=`{{ url_for("odred.vodInfo", id=vod.id) }}`'>
-            <td>{{ vod.id }}</td>
             <td>{{ vod.name }}</td>
             <td>{{ vod.vodnik.first_name }} {{ vod.vodnik.last_name }}</td>
             <td>{{ vod.ceta.name }}</td>
@@ -92,6 +78,13 @@ Odred Dashboard
         {% endfor %}
     </tbody>
 </table>
+{% endif %}
+<br>
+{% if current_user.role == "admin" %}
+<input type="button" value="Dodaj novog člana" class="btn" onclick="window.location.href = `{{ url_for('odred.addClan') }}`">
+<a class="btn btn-link" href='{{ url_for("program.add_program") }}'>Položeni program članova</a>
+
+<hr>
 <input type="button" value="Kreiraj vod/četu" class="btn" onclick="window.location.href = `{{ url_for('odred.addCetaVod') }}`" />
 <input type="button" value="Upravljaj pozicijama" class="btn" onclick="window.location.href = `{{ url_for('odred.editRoles') }}`" />
 
