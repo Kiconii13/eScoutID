@@ -5,30 +5,30 @@ from flask_login import LoginManager
 from models import db, User, Odred, Ceta, Vod
 from routes import register_blueprints
 
-app = Flask(__name__)
-app.secret_key = "8PvUV36JVw59"
-
-# Configure SQL Alchemy
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///eScoutID.db"
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-app.config['UPLOAD_FOLDER'] = 'uploads/'
-os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
-
-db.init_app(app)
-
-login_manager = LoginManager()
-login_manager.init_app(app)
+from config import Config
 
 
-@login_manager.user_loader
-def load_user(user_id):
-    return User.query.filter_by(id=user_id).first()
+def create_app(config_class=Config):
+
+    app = Flask(__name__)
+
+    app.config.from_object(config_class)
+
+    db.init_app(app)
+    os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+
+    login_manager = LoginManager()
+    login_manager.init_app(app)
 
 
-# Register Blueprints
-register_blueprints(app)
+    @login_manager.user_loader
+    def load_user(user_id):
+        return User.query.filter_by(id=user_id).first()
 
-if __name__ == '__main__':
+
+    # Register Blueprints
+    register_blueprints(app)
+
     with app.app_context():
         db.create_all()
 
@@ -58,7 +58,7 @@ if __name__ == '__main__':
             db.session.add(vod)
 
         if len(User.query.all()) == 0:
-            admin = User(username="admin")
+            admin = User(username="savez_admin")
             admin.set_password("")
 
             admin.odred_id = 1
@@ -66,7 +66,21 @@ if __name__ == '__main__':
             admin.role = "savez_admin"
 
             db.session.add(admin)
+
+            admin = User(username="admin")
+            admin.set_password("")
+
+            admin.odred_id = 1
+            admin.vod_id = 1
+            admin.role = "admin"
+
+            db.session.add(admin)
+
             db.session.commit()
 
+    return app
 
+
+if __name__ == '__main__':
+    app = create_app()
     app.run(debug=True)
