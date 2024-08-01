@@ -5,25 +5,19 @@ Vod: {{vod.name}}
 {% endblock %}
 
 {% block content %}
-
-<label>
-    Četa: {{vod.ceta.name}}
-</label>
-
-<label>
-    Vod: {{vod.name}}
-</label>
-
-<label>
-    Vođa čete: {{ vod.ceta.vodja.first_name }} {{ vod.ceta.vodja.last_name }}
-</label>
-
-<label>
-    Vodnik: {{ vod.vodnik.first_name }} {{ vod.vodnik.last_name }}
-</label>
 <table>
-    <caption>Članovi:</caption>
     <thead>
+        <tr>
+            <th colspan="9">Četa: {{vod.ceta.name}}</th>
+        </tr>
+        <tr>
+            <th colspan="9">Vod: {{vod.name}}</th></tr>
+        </tr>
+        <tr>
+            <th colspan="9">Vođa čete: {{ vod.ceta.vodja.first_name }} {{ vod.ceta.vodja.last_name }}</th>
+        </tr>
+        <tr>
+            <th colspan="9">Vodnik: {{ vod.vodnik.first_name }} {{ vod.vodnik.last_name }}</th></tr>
         <tr>
             <th>Id</th>
             <th>Ime i prezime</th>
@@ -33,7 +27,6 @@ Vod: {{vod.name}}
             <th>Broj telefona</th>
             <th>E-pošta</th>
             <th>Adresa</th>
-            <th>Jedinica</th>
             <th>Plaćena članarina</th>
         </tr>
     </thead>
@@ -56,7 +49,6 @@ Vod: {{vod.name}}
                 </a>
             </td>
             <td>{{ user.address }}</td>
-            <td>{{ user.jedinica }}</td>
              <td>
                 {% if user.has_paid %}
                 <span class="good">DA</span>
