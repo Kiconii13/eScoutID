@@ -14,7 +14,7 @@ class User(db.Model, UserMixin):
     # Class Variables
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(25), unique=True, nullable=False, default="")
-    password_hash = db.Column(db.String(150), nullable=False)
+    password_hash = db.Column(db.String(256), nullable=False)
     role = db.Column(db.String(16), default="clan")
 
     first_name = db.Column(db.String(50), default="")
@@ -80,6 +80,8 @@ class User(db.Model, UserMixin):
         self.password_hash = generate_password_hash(password)
 
     def check_password(self, password):
+        print(self.password_hash, check_password_hash(self.password_hash, password))
+
         return check_password_hash(self.password_hash, password)
 
     def get_id(self):

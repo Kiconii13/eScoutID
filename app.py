@@ -1,7 +1,7 @@
 import os
 
 from flask import Flask
-from flask_migrate import Migrate
+# from flask_migrate import Migrate
 from flask_login import LoginManager
 from models import db, User, Odred, Ceta, Vod
 from routes import register_blueprints
@@ -15,7 +15,7 @@ def create_app(config_class=Config):
     app.config.from_object(config_class)
 
     db.init_app(app)
-    migrate = Migrate(app, db)
+    # migrate = Migrate(app, db)
 
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
@@ -32,54 +32,49 @@ def create_app(config_class=Config):
     register_blueprints(app)
 
     with app.app_context():
+        db.create_all()
         if not User.query.first():
-            db.create_all()
+            odred = Odred()
+            odred.name = "Genericki odred"
+            odred.city = "Genericki grad"
+            odred.address = "Genericka adresa"
+            
+            db.session.add(odred)
+            
+            ceta = Ceta()
+            ceta.name = "Generička četa"
+            
+            db.session.add(ceta)
 
-            if len(Odred.query.all()) == 0:
-                odred = Odred()
-                odred.name = "Genericki odred"
-                odred.city = "Genericki grad"
-                odred.address = "Genericka adresa"
-                odred.nacelnik_id = 1
-                odred.staresina_id = 1
-                db.session.add(odred)
-                db.session.commit()
+            vod = Vod()
+            vod.name = "Generički vod"
+            
+            db.session.add(vod)
 
-            if len(Ceta.query.all()) == 0:
-                ceta = Ceta()
-                ceta.name = "Generička četa"
-                ceta.vodja_id = 1
-                ceta.odred_id = 1
-                db.session.add(ceta)
-                db.session.commit()
+            savez_admin = User(username="savez_admin")
+            savez_admin.set_password("")
+            savez_admin.role = "savez_admin"
+            savez_admin.odred_id = odred.id
+            savez_admin.vod_id = vod.id
 
-            if len(Vod.query.all()) == 0:
-                vod = Vod()
-                vod.name = "Generički vod"
-                vod.ceta_id = 1
-                vod.vodnik_id = 1
-                db.session.add(vod)
+            db.session.add(savez_admin)
 
-            if len(User.query.all()) == 0:
-                admin = User(username="savez_admin")
-                admin.set_password("")
+            admin = User(username="admin")
+            admin.set_password("")
+            admin.role = "admin"
 
-                admin.odred_id = 1
-                admin.vod_id = 1
-                admin.role = "savez_admin"
+            db.session.add(admin)
 
-                db.session.add(admin)
+            odred.nacelnik_id = admin.id
+            odred.staresina_id = admin.id
+            ceta.vodja_id = admin.id
+            ceta.odred_id = odred.id
+            vod.ceta_id = ceta.id
+            vod.vodnik_id = admin.id
+            admin.odred_id = odred.id
+            admin.vod_id = vod.id
 
-                admin = User(username="admin")
-                admin.set_password("")
-
-                admin.odred_id = 1
-                admin.vod_id = 1
-                admin.role = "admin"
-
-                db.session.add(admin)
-
-                db.session.commit()
+            db.session.commit()
 
         return app
 
