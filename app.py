@@ -64,15 +64,40 @@ def create_app(config_class=Config):
             admin.role = "admin"
 
             db.session.add(admin)
+            db.session.commit()
 
-            odred.nacelnik_id = admin.id
-            odred.staresina_id = admin.id
-            ceta.vodja_id = admin.id
-            ceta.odred_id = odred.id
-            vod.ceta_id = ceta.id
-            vod.vodnik_id = admin.id
-            admin.odred_id = odred.id
-            admin.vod_id = vod.id
+        admin_user = User.query.filter_by(role="admin").first()
+        if not admin_user.odred_id:
+            admin_user.odred_id = Odred.query.first().id
+            admin_user.vod_id = Vod.query.first().id
+
+            db.session.commit()
+
+        savez_admin_user = User.query.filter_by(role="admin").first()
+        if not savez_admin_user.odred_id:
+            savez_admin_user.odred_id = Odred.query.first().id
+            savez_admin_user.vod_id = Vod.query.first().id
+
+            db.session.commit()
+
+        vod = Vod.query.first()
+        if not vod.ceta_id:
+            vod.ceta_id = Ceta.query.first().id
+            vod.vodnik_id = User.query.first().id
+
+            db.session.commit()
+        
+        ceta = Ceta.query.first()
+        if not ceta.vodja_id:
+            ceta.vodja_id = User.query.first().id
+            ceta.odred_id = Odred.query.first().id
+
+            db.session.commit()
+
+        odred = Odred.query.first()
+        if not odred.nacelnik_id:
+            odred.nacelnik_id = User.query.first().id
+            odred.staresina_id = User.query.first().id
 
             db.session.commit()
 

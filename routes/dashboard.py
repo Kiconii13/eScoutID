@@ -25,7 +25,7 @@ def changePassword():
             return redirect(url_for("dashboard.changePassword"))
         # Provera da li se nova lozinka poklapa sa potvrdom
         if request.form["new_password"] != request.form["new_password_check"]:
-            flash("Nova lozinka i potvrda nove lozinke se ne poklapaju!", "greška")
+            flash("Nova lozinka i potvrda nove lozinke se ne poklapaju!", "Greška")
             return redirect(url_for("dashboard.changePassword"))
         # Uspešna promena
         current_user.set_password(request.form["new_password"])
