@@ -1,6 +1,7 @@
 import os
 
 from flask import Flask
+from flask_migrate import Migrate
 from flask_login import LoginManager
 from models import db, User, Odred, Ceta, Vod
 from routes import register_blueprints
@@ -9,12 +10,13 @@ from config import Config
 
 
 def create_app(config_class=Config):
-
     app = Flask(__name__)
 
     app.config.from_object(config_class)
 
     db.init_app(app)
+    migrate = Migrate(app, db)
+
     os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
     login_manager = LoginManager()
