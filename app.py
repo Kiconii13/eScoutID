@@ -32,55 +32,56 @@ def create_app(config_class=Config):
     register_blueprints(app)
 
     with app.app_context():
-        db.create_all()
+        if not User.query.first():
+            db.create_all()
 
-        if len(Odred.query.all()) == 0:
-            odred = Odred()
-            odred.name = "Genericki odred"
-            odred.city = "Genericki grad"
-            odred.address = "Genericka adresa"
-            odred.nacelnik_id = 1
-            odred.staresina_id = 1
-            db.session.add(odred)
-            db.session.commit()
+            if len(Odred.query.all()) == 0:
+                odred = Odred()
+                odred.name = "Genericki odred"
+                odred.city = "Genericki grad"
+                odred.address = "Genericka adresa"
+                odred.nacelnik_id = 1
+                odred.staresina_id = 1
+                db.session.add(odred)
+                db.session.commit()
 
-        if len(Ceta.query.all()) == 0:
-            ceta = Ceta()
-            ceta.name = "Generička četa"
-            ceta.vodja_id = 1
-            ceta.odred_id = 1
-            db.session.add(ceta)
-            db.session.commit()
+            if len(Ceta.query.all()) == 0:
+                ceta = Ceta()
+                ceta.name = "Generička četa"
+                ceta.vodja_id = 1
+                ceta.odred_id = 1
+                db.session.add(ceta)
+                db.session.commit()
 
-        if len(Vod.query.all()) == 0:
-            vod = Vod()
-            vod.name = "Generički vod"
-            vod.ceta_id = 1
-            vod.vodnik_id = 1
-            db.session.add(vod)
+            if len(Vod.query.all()) == 0:
+                vod = Vod()
+                vod.name = "Generički vod"
+                vod.ceta_id = 1
+                vod.vodnik_id = 1
+                db.session.add(vod)
 
-        if len(User.query.all()) == 0:
-            admin = User(username="savez_admin")
-            admin.set_password("")
+            if len(User.query.all()) == 0:
+                admin = User(username="savez_admin")
+                admin.set_password("")
 
-            admin.odred_id = 1
-            admin.vod_id = 1
-            admin.role = "savez_admin"
+                admin.odred_id = 1
+                admin.vod_id = 1
+                admin.role = "savez_admin"
 
-            db.session.add(admin)
+                db.session.add(admin)
 
-            admin = User(username="admin")
-            admin.set_password("")
+                admin = User(username="admin")
+                admin.set_password("")
 
-            admin.odred_id = 1
-            admin.vod_id = 1
-            admin.role = "admin"
+                admin.odred_id = 1
+                admin.vod_id = 1
+                admin.role = "admin"
 
-            db.session.add(admin)
+                db.session.add(admin)
 
-            db.session.commit()
+                db.session.commit()
 
-    return app
+        return app
 
 
 if __name__ == '__main__':
