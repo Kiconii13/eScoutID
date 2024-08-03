@@ -101,7 +101,7 @@ def create_app(config_class=Config):
 
             db.session.commit()
 
-        return app
+    return app
 
 
 if __name__ == '__main__':
