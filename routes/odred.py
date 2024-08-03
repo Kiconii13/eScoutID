@@ -64,7 +64,7 @@ def addClan():
 def editClan(id):
     action = "edit"
     user = User.query.get(id)
-    cetas = Ceta.query.filter_by(odred_id=current_user.odred_id).all()
+    cetas = Ceta.query.filter_by(odred_id=user.odred_id).all()
     ceta_ids = [ceta.id for ceta in cetas]
     vods = Vod.query.filter(Vod.ceta_id.in_(ceta_ids)).all()
     if request.method == "POST":
@@ -74,7 +74,7 @@ def editClan(id):
                                    odred=Odred.query.filter_by(id=user.odred_id).first().name, vods=vods)
         user = User.defUser(user)
         db.session.commit()
-        return redirect(url_for("odred.odredDashboard", id=current_user.odred.id))
+        return redirect(url_for("odred.odredDashboard", id=user.odred.id))
     else:
         # Mogu da pristupe samo admini
         if current_user.role != "admin" and current_user.role != "savez_admin":
