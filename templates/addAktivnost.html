@@ -87,10 +87,12 @@ Upravljanje aktivnostima
             {% endfor %}
         </select>
     </label>
-    <label style="margin: auto;">
+    {% if qrimg %}
+    <label>
         <img src="{{qrimg}}"><br>
-        <a href="{{qrimg}}" download="QRcode.png" ><i>Click to download</i></a>
+        <a href="{{qrimg}}" download="QRcode.png" ><i>Preuzmi QR kod</i></a>
     </label>
+    {% endif %}
     <input type="submit" value="Generiši QR kod" class="btn">
 </form>
 
