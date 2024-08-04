@@ -78,5 +78,24 @@ Upravljanje aktivnostima
 
 <hr>
 
+<form action="{{ url_for('aktivnosti.generateQR') }}" method="POST" style="text-align: center;">
+    <label>
+        Naziv aktivnosti i organizator:
+        <select name="activity">
+            {% for activity in activities %}
+            <option value="{{ activity.id }}">{{ activity.name }} - {{ activity.organizer_name }}</option>
+            {% endfor %}
+        </select>
+    </label>
+    <label style="margin: auto;">
+        <img src="{{qrimg}}"><br>
+        <a href="{{qrimg}}" download="QRcode.png" ><i>Click to download</i></a>
+    </label>
+    <input type="submit" value="Generiši QR kod" class="btn">
+</form>
+
+
+<hr>
+
 <input type="button" value="Nazad" class="btn" onclick="window.location.href = `{{ url_for('dashboard.dashboard') }}`">
 {% endblock %}
