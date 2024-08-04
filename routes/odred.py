@@ -68,7 +68,7 @@ def editClan(id):
     ceta_ids = [ceta.id for ceta in cetas]
     vods = Vod.query.filter(Vod.ceta_id.in_(ceta_ids)).all()
     if request.method == "POST":
-        if user.vod.vodnik_id == user.id and request.form["vod"] != user.vod.name:
+        if user.vod.vodnik_id == user.id and user.vod.id != int(request.form["vod"]):
             flash("Clan je vodnik svog voda! Prvo postavi drugog vodnika.", "error")
             return render_template("addClan.html", h1="Izmeni člana", action=action, clan=user,
                                    odred=Odred.query.filter_by(id=user.odred_id).first().name, vods=vods)

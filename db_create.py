@@ -13,16 +13,19 @@ with app.app_context():
         odred.address = "Genericka adresa"
 
         db.session.add(odred)
+        db.session.commit()
 
         ceta = Ceta()
         ceta.name = "Generička četa"
 
         db.session.add(ceta)
+        db.session.commit()
 
         vod = Vod()
         vod.name = "Generički vod"
 
         db.session.add(vod)
+        db.session.commit()
 
         savez_admin = User(username="savez_admin")
         savez_admin.set_password("")
@@ -31,6 +34,7 @@ with app.app_context():
         savez_admin.vod_id = vod.id
 
         db.session.add(savez_admin)
+        db.session.commit()
 
         admin = User(username="admin")
         admin.set_password("")

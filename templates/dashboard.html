@@ -90,6 +90,9 @@ Dashboard
             <a href="{{ url_for('dashboard.changePassword') }}">
                 <input type="button" value="Promena lozinke" class="btn" />
             </a>
+            <a href="{{ url_for('dashboard.changeUsername') }}">
+                <input type="button" value="Promena korisničkog imena" class="btn" />
+            </a>
             {% if current_user.role != 'clan' %}
             <a href="{{ url_for('aktivnosti.addAktivnost') }}">
                 <input type="button" value="Upravljaj aktivnostima" class="btn" />
