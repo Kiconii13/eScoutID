@@ -1,7 +1,7 @@
 from flask import Blueprint, redirect, url_for, render_template, flash, request, make_response
 from flask_login import login_required, current_user
 
-from models import User, db, Odred, Ceta, Vod
+from models import User, db, Odred, Ceta, Vod, Skill
 
 odred_bp = Blueprint("odred", __name__)
 
@@ -92,8 +92,11 @@ def deleteClan(id):
         return redirect(url_for("dashboard.dashboard"))
 
     user = User.query.get(id)
+    skills = Skill.query.filter_by(user_id = id).all()
     if user:
         if user.odred.staresina_id != user.id and user.odred.nacelnik_id != user.id and user.vod.vodnik_id != user.id and user.vod.ceta.vodja_id != user.id:
+            for skill in skills:
+                db.session.delete(skill)
             db.session.delete(user)
             db.session.commit()
             flash("Član je uspešno obrisan.", "Info")
