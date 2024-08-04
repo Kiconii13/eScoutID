@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Promena korisničkog imena
+{% endblock %}
+
+{% block content %}
+    <h1>Promenite svoje korisničko ime</h1>
+    <hr>
+    <form method="post">
+    <label>Trenutno korisničko ime
+        <input type="text" id="current_username" name="current_username">
+    </label>
+    <label>Novo korisničko ime
+        <input type="text" id="new_username" name="new_username">
+    </label>
+    <label>
+        Potvrdite novo korisničko ime
+        <input type="text" id="new_username_check" name="new_username_check">
+    </label>
+    <input type="submit" value="Promeni korisničko ime" class="btn">
+    <a href="{{ url_for('dashboard.dashboard') }}" class="btn btn-link">
+        Nazad
+    </a>
+    </form>
+{% endblock %}

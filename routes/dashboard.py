@@ -34,3 +34,24 @@ def changePassword():
         return redirect(url_for("dashboard.dashboard"))
     else:
         return render_template("changePassword.html")
+
+@dashboard_bp.route('/dashboard/changeUsername', methods=["POST", "GET"])
+@login_required
+def changeUsername():
+    if request.method == "POST":
+        if current_user.username != request.form["current_username"]:
+            flash("Netačno trenutno korisničko ime!", "error")
+            return redirect(url_for("dashboard.changeUsername"))
+        if request.form["new_username"] != request.form["new_username_check"]:
+            flash("Novo korisničko ime i potvrda novog korisničkog imena se ne poklapaju!", "error")
+            return redirect(url_for("dashboard.changeUsername"))
+        check_user = User.query.filter_by(username = request.form["new_username"]).first()
+        if check_user:
+            flash("Korisničko ime je već zauzeto", "error")
+            return redirect(url_for("dashboard.changeUsername"))
+        current_user.username = request.form["new_username"]
+        db.session.commit()
+        flash("Uspešno ste promenili korisničko ime!", "info")
+        return redirect(url_for("dashboard.dashboard"))
+    else:
+        return render_template("changeUsername.html")
