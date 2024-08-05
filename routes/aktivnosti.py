@@ -82,7 +82,7 @@ def generateQR():
     aktivnostID = request.form["activity"]
 
     memory = BytesIO()
-    link = url_for("aktivnosti.qr_log_aktivnost", _external=True, activityID = aktivnostID)
+    link = url_for("aktivnosti.qr_log_aktivnost", _external=True, _scheme='https', activityID = aktivnostID)
     img = qrcode.make(link,border=2)
     img.save(memory)
     memory.seek(0)
