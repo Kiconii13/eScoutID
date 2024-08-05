@@ -169,7 +169,7 @@ input, select {
   display: flex;
   flex-direction: column;
 }
-
+@media (min-width:1024px )
 .data-col table{
   overflow: hidden;
 }
