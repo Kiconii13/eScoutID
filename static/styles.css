@@ -170,6 +170,10 @@ input, select {
   flex-direction: column;
 }
 
+.data-col table{
+  overflow: hidden;
+}
+
 .dash .data-col .columns {
   display: flex;
   flex-wrap: wrap;
