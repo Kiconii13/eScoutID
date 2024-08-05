@@ -18,8 +18,10 @@ def savezDashboard():
         return redirect(url_for("dashboard.dashboard"))
 
     odredi = Odred.query.all()
-    Broj_Clanova = db.session.query(func.count(User.id).label('member_count')).outerjoin(Odred.members).group_by(
-        Odred.id).all()
+    Broj_Clanova = []
+    for odred in odredi:
+        broj = User.query.filter_by(odred_id = odred.id).count()
+        Broj_Clanova.append(broj)
     return render_template("savezDashboard.html", odredi=zip(odredi, Broj_Clanova))
 
 
