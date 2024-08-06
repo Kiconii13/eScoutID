@@ -12,7 +12,8 @@ odred_bp = Blueprint("odred", __name__)
 def odred():
     try:
         Broj_Clanova = User.query.filter_by(odred_id=current_user.odred_id).count()
-        return render_template("odred.html", broj_clanova=Broj_Clanova)
+        Broj_clanarina = User.query.filter_by(odred_id=current_user.odred.id, has_paid=True).count()
+        return render_template("odred.html", broj_clanova=Broj_Clanova, broj_clanarina=Broj_clanarina)
     except:
         flash("Morate biti član odreda!", "Greška")
         return redirect(url_for("dashboard.dashboard"))

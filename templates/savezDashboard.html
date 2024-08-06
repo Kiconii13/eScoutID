@@ -18,11 +18,12 @@ Savez Dashboard
                 <th>Starešina</th>
                 <th>Načelnik</th>
                 <th>Broj članova</th>
+                <th>Broj plaćenih članarina</th>
                 <th>Status</th>
             </tr>
         </thead>
         <tbody>
-        {% for (odred,broj) in odredi %}
+        {% for (odred,broj,clanarine) in odredi %}
             {% if odred.id != 1 %}
             <tr>
                 <td><a href="/editOdred/{{ odred.id }}">{{ odred.name }}</a></td>
@@ -32,6 +33,11 @@ Savez Dashboard
                 <td>{{ odred.staresina.first_name }} {{ odred.staresina.last_name }}</td>
                 <td>{{ odred.nacelnik.first_name }} {{ odred.nacelnik.last_name }}</td>
                 <td><a href="odredDashboard/{{ odred.id }}">{{ broj }}</a></td>
+                {% if clanarine >= 40 %}
+                    <td><span class="good">{{ clanarine }}</span></td>
+                {% else %}
+                    <td><span class="bad">{{ clanarine }}</span></td>
+                {% endif %}
                 <td>{{ odred.status }}</td>
             </tr>
             {% endif %}
