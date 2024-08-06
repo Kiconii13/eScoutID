@@ -19,10 +19,13 @@ def savezDashboard():
 
     odredi = Odred.query.all()
     Broj_Clanova = []
+    Broj_Clanarina = []
     for odred in odredi:
-        broj = User.query.filter_by(odred_id = odred.id).count()
-        Broj_Clanova.append(broj)
-    return render_template("savezDashboard.html", odredi=zip(odredi, Broj_Clanova))
+        broj_clanova = User.query.filter_by(odred_id = odred.id).count()
+        Broj_Clanova.append(broj_clanova)
+        broj_clanarina = User.query.filter_by(odred_id= odred.id, has_paid=True).count()
+        Broj_Clanarina.append(broj_clanarina)
+    return render_template("savezDashboard.html", odredi=zip(odredi, Broj_Clanova, Broj_Clanarina))
 
 
 #  Dodavanje novog odreda u bazu
