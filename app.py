@@ -15,7 +15,8 @@ def create_app(config_class=Config):
     if not os.path.exists("logs/"):
         os.mkdir("logs/")
 
-    fileNameString = f"{Config.LOG_BASE_PATH}/{datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}.log"
+    # fileNameString = f"{Config.LOG_BASE_PATH}/{datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}.log"
+    fileNameString = f"{Config.LOG_BASE_PATH}/latest.log"
 
     app = Flask(__name__)
 
