@@ -90,9 +90,17 @@ def generateQR():
     aktivnostID = request.form["activity"]
 
     memory = BytesIO()
-    link = url_for("aktivnosti.qr_log_aktivnost", _external=True, _scheme='https', activityID = aktivnostID)
-    img = qrcode.make(link,border=2)
-    img.save(memory)
+    url = url_for("aktivnosti.qr_log_aktivnost", _external=True, _scheme='https', activityID = activityID)
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=40,
+        border=2
+    )
+    qr.add_data(url)
+    qr.make(fit=True)
+    qrimg = qr.make_image()
+    qrimg.save(memory)
     memory.seek(0)
 
     base64_img = "data:image/png;base64," + b64encode(memory.getvalue()).decode('ascii')
@@ -104,7 +112,7 @@ def generateQR():
         # savez_admin dodaje aktivnosti koje organizuje savez ili neka od internacionalnih organinzacija
         activities = Activity.query.filter(Activity.organizer_type != OrganizerLevel(1))
     
-    return render_template("addAktivnost.html",qrimg = base64_img,activities = activities)
+    return render_template("addAktivnost.html", qrimg = base64_img, activities = activities)
 
 # Dodeljivanje aktivnosti clanovima preko QR koda
 @aktivnosti_bp.route("/aktivnosti/log/<int:activityID>", methods=["GET"])

@@ -408,3 +408,8 @@ table caption {
 select[readonly] option {
     display: none;
 }
+
+.qrcode_img{
+  height: 330px;
+  width: 330px;
+}
