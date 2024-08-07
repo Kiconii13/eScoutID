@@ -30,9 +30,12 @@ def login():
         if user and user.check_password(password):
             user.authenticated = True
             login_user(user)
+            print(f"Korisnik {user.first_name} {user.last_name} (id: {user.id}) uspešno ulogovan sa IP adrese {request.remote_addr}")
+            current_app.logger.info(f"Korisnik {user.first_name} {user.last_name} (id: {user.id}) uspešno ulogovan sa IP adrese {request.remote_addr}")
             return redirect(url_for("dashboard.dashboard"))
         # If False show index
         else:
+            current_app.logger.warn(f"Neuspešan pokušaj logovanja korisnika sa username-om {request.form['username']} sa IP adrese {request.remote_addr}")
             flash('Nepostojeća kombinacija korisničkog imena i lozinke!', 'Greška')
     return render_template("index.html")
 

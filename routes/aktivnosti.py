@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from flask import Blueprint, render_template, flash, redirect, url_for, request
+from flask import Blueprint, render_template, flash, redirect, url_for, request, current_app
 from flask_login import login_required, current_user
 
 from models import User, db
@@ -57,6 +57,7 @@ def new_aktivnost():
     db.session.commit()
 
     flash("Aktivnost uspešno kreirana", "Info")
+    current_app.logger.log(25, f"{current_user.role} odreda {current_user.odred.name}, {current_user.first_name} {current_user.last_name}, je dodao aktivnost \"{aktivnost.name}\" (id: {aktivnost.id})")
     return redirect(url_for("aktivnosti.addAktivnost"))
 
 
@@ -72,13 +73,20 @@ def log_aktivnost():
     db.session.add(participation)
     db.session.commit()
 
+    activity = Activity.query.filter_by(id=participation.activity_id).first().name
+    clan = User.query.filter_by(id=participation.user_id).first()
+
     flash("Učešće uspešno zabeleženo", "Info")
+    current_app.logger.log(25, f"{current_user.role} odreda {current_user.odred.name}, {current_user.first_name} {current_user.last_name}, je zabeležio učešče člana \"{clan.first_name} {clan.last_name}\" (id: {participation.user_id}) na aktivnosti \"{activity}\" (id: {participation.activity_id})")
     return redirect(url_for("aktivnosti.addAktivnost"))
 
 # Kreiranje QR koda za izabranu aktivnost
 @aktivnosti_bp.route("/aktivnosti/qr", methods=["POST"])
 @login_required
 def generateQR():
+    if current_user.role == "clan":
+        return redirect(url_for("dashboard.dashboard"))
+
     aktivnostID = request.form["activity"]
 
     memory = BytesIO()
@@ -87,7 +95,7 @@ def generateQR():
     img.save(memory)
     memory.seek(0)
 
-    base64_img = "data:image/ong;base64," + b64encode(memory.getvalue()).decode('ascii')
+    base64_img = "data:image/png;base64," + b64encode(memory.getvalue()).decode('ascii')
 
     if current_user.role == "admin":
         # admin odreda dodaje samo aktivnosti koje organizuje njegov odred
@@ -95,9 +103,6 @@ def generateQR():
     elif current_user.role == "savez_admin":
         # savez_admin dodaje aktivnosti koje organizuje savez ili neka od internacionalnih organinzacija
         activities = Activity.query.filter(Activity.organizer_type != OrganizerLevel(1))
-    else:
-        # Mogu da pristupe samo admini
-        return redirect(url_for("dashboard.dashboard"))
     
     return render_template("addAktivnost.html",qrimg = base64_img,activities = activities)
 
@@ -113,5 +118,9 @@ def qr_log_aktivnost(activityID):
     db.session.add(participation)
     db.session.commit()
 
+    activity = Activity.query.filter_by(id=participation.activity_id).first().name
+    clan = User.query.filter_by(id=participation.user_id).first()
+
     flash("Učešće uspešno zabeleženo", "Info")
+    current_app.logger.log(25, f"Na aktivnost {activity} se prijavio član {clan.first_name} {clan.last_name} pomoću QR koda (ili direktnog linka)")
     return redirect(url_for("aktivnosti.aktivnosti"))
