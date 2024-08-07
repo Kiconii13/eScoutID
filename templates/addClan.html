@@ -23,25 +23,13 @@
     </label>
     <label>
         Status:
-        {% if clan.role == "admin" and current_user.id == clan.id %}
-        <select id="role" name="role" data-selected="{{clan.role}}" readonly>
-            <option value="clan">Član</option>
-            {% if clan.role == "admin" %}
-                <option value="admin" selected>Administrator</option>
-            {% else %}
-                <option value="admin">Administrator</option>
-            {% endif %}
-        </select>
-        {% else %}
-        <select id="role" name="role" data-selected="{{clan.role}}">
-            <option value="clan">Član</option>
-            {% if clan.role == "admin" %}
-                <option value="admin" selected>Administrator</option>
-            {% else %}
-                <option value="admin">Administrator</option>
-            {% endif %}
-        </select>
-        {% endif %}
+<select id="role" name="role" data-selected="{{ clan.role }}" {% if clan.role in ["admin", "savez_admin"] and current_user.id != clan.id %} readonly {% endif %}>
+    <option value="clan" {% if clan.role == "clan" %}selected{% endif %}>Član</option>
+    <option value="admin" {% if clan.role == "admin" %}selected{% endif %}>Administrator</option>
+    {% if current_user.role == "savez_admin" %}
+        <option value="savez_admin" {% if clan.role == "savez_admin" %}selected{% endif %}>Administrator saveza</option>
+    {% endif %}
+</select>
     </label>
     <label>
         Datum rođenja: 
