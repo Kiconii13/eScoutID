@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from flask import Blueprint, redirect, url_for, render_template, request, flash, make_response
+from flask import Blueprint, redirect, url_for, render_template, request, flash, make_response, current_app
 from flask_login import current_user, login_required
 from sqlalchemy import func
 
@@ -81,6 +81,7 @@ def addOdred():
         first_ceta.vodja_id = first_user.id
         db.session.commit()
 
+        current_app.logger.log(25, f"Korisnik {current_user.first_name} {current_user.last_name} (id: {current_user.id}) kreirao je novi odred {new_odred.name} (id: {new_odred.id})")
         return redirect(url_for("savez.savezDashboard"))
     else:
         # Moze da pristupi samo savez_admin
@@ -122,15 +123,15 @@ def editOdred(id):
         
         staresina = User.query.filter_by(username=request.form.get("staresina_username")).first()
         
-        if (not staresina) or staresina.odred_id != odred.id:
-            flash("Nepostoji član odreda sa tim usernameom (starešina)")
+        if (not staresina) or (staresina.odred_id != odred.id):
+            flash("Ne postoji član odreda sa tim usernameom (starešina)", "Greška")
             return redirect(url_for("savez.editOdred", id=odred.id))
         
         odred.staresina_id = staresina.id
         nacelnik = User.query.filter_by(username=request.form.get("nacelnik_username")).first()
         
         if (not nacelnik) or nacelnik.odred_id != odred.id:
-            flash("Nepostoji član odreda sa tim usernameom (načelnik)")
+            flash("Ne postoji član odreda sa tim usernameom (načelnik)", "Greška")
             return redirect(url_for("savez.editOdred", id=odred.id))
         
         odred.nacelnik_id = nacelnik.id
@@ -140,7 +141,7 @@ def editOdred(id):
             odred.avatar = request.form["image"]
         
         db.session.commit()
-
+        current_app.logger.log(25, f"Korisnik {current_user.first_name} {current_user.last_name} (id: {current_user.id}) je izmenio odred {odred.name} (id: {odred.id})")
         return redirect(url_for("savez.savezDashboard"))
     else:
         # Moze da pristupi samo savez_admin
@@ -160,8 +161,12 @@ def deleteOdred(id):
 
     odred = Odred.query.get(id)
     if odred:
+        on = f"{odred.name} (id: {odred.id})"
+
         db.session.delete(odred)
         db.session.commit()
+
+        current_app.logger.log(25, f"Korisnik {current_user.first_name} {current_user.last_name} (id: {current_user.id}) obrisao je odred {on}")
         flash("Odred je uspešno obrisan.", "Info")
     else:
         flash("Odred nije pronađen.", "Greška")

@@ -43,23 +43,25 @@ def select_user():
     return render_template('addProgram.html', users=users, selected_user=selected_user, skills=skills)
 
 
-# Prikupljaju se rednosti upisane u formi za nivoe položenog programa člana
-# Prikupljaju se trenutne informacije o nivoima položenog programa za odabranog člana
-# Unose se izmene i osvežava se stranica
 @program_bp.route('/update_levels', methods=['POST'])
 @login_required
 def update_levels():
+    # Prikupljaju se vrednosti upisane u formi za nivoe položenog programa člana
     user_id = request.form['user']
     let_level = request.form['let_level']
     zvezda_level = request.form['zvezda_level']
     krin_level = request.form['krin_level']
 
+    # Ažuriraju se trenutne informacije o nivoima položenog programa za odabranog člana
     selected_user = User.query.get(user_id)
     selected_user.let_level = let_level
     selected_user.zvezda_level = zvezda_level
     selected_user.krin_level = krin_level
+
+    # Unose se izmene i osvežava se stranica
     db.session.commit()
 
+    current_app.logger.log(25, f"Korisnik {current_user.first_name} {current_user.last_name} (id: {current_user.id}) ažurirao je podatke o nivoima člana {selected_user.first_name} {selected_user.last_name} (id: {selected_user.id})")
     return redirect(url_for('program.add_program'))
 
 
@@ -68,14 +70,19 @@ def update_levels():
 @login_required
 def add_skill():
     user_id = request.form['user_id']
+
+    user = User.query.get(user_id)
+
     name = request.form['name']
     level = request.form['level']
     date_got = datetime.strptime(request.form['date_got'], '%Y-%m-%d')
 
     new_skill = Skill(user_id=user_id, name=name, level=level, date_got=date_got)
+    
     db.session.add(new_skill)
     db.session.commit()
 
+    current_app.logger.log(25, f"Korisnik {current_user.first_name} {current_user.last_name} (id: {current_user.id}) zabeležio je novu veštinu {new_skill.name} {new_skill.level} za korisnika {user.first_name} {user.last_name} (id: {user.id})")
     return redirect(url_for('program.add_program', user_id=user_id))
 
 @program_bp.route('/delete_skill/<int:id>', methods=['POST', 'GET'])
@@ -85,8 +92,16 @@ def delete_skill(id):
         return redirect(url_for("dashboard.dashboard"))
     
     skill = Skill.query.get(id)
+
+    sn = f"{skill.name} {skill.level}"
+
     user_id = skill.user_id
+
     db.session.delete(skill)
     db.session.commit()
+
+    user = User.query.get(user_id)
+
     flash("Uspešno obrisan posebni program", "info")
+    current_app.logger.log(25, f"Korisnik {current_user.first_name} {current_user.last_name} (id: {current_user.id}) obrisao je veštinu {sn} korisnika {user.first_name} {user.last_name} (id: {user.id})")
     return redirect(url_for('program.add_program', user_id=user_id))
