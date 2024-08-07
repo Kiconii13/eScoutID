@@ -45,7 +45,7 @@
         </thead>
         <tbody>
             {% for skill in skills %}
-            <tr>
+            <tr onclick="if (confirm('Da li ste sigurni da želite da obrišete posebni program {{ skill.name }} za izabranog člana?')) { window.location.href = '/delete_skill/{{ skill.id }}'; }">
                 <td>{{ skill.name }}</td>
                 <td>{{ skill.level }}</td>
                 <td>{{ skill.date_got.strftime('%d.%m.%Y') }}</td>

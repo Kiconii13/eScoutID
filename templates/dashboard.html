@@ -5,14 +5,19 @@ Dashboard
 {% endblock %}
 
 {% block content %}
-
 <div class="dash">
-    <div class="img-col">
+<div class="img-col">
+    <div class="img-container">
         <img src="" alt="Fotografija" id="output">
-        <h2 class="ime-prezime">
-            {{ current_user.first_name }} {{ current_user.last_name }}
-        </h2>
+        <div class="overlay">
+            <span class="camera-icon">📸</span>
+        </div>
     </div>
+    <h2 class="ime-prezime">
+        {{ current_user.first_name }} {{ current_user.last_name }}
+    </h2>
+</div>
+    <input type="file" id="fileInput" style="display: none;">
     <div class="data-col">
         <div class="columns">
             <div class="left-col">
@@ -150,6 +155,47 @@ Dashboard
                 }
             });
     };
-</script>
 
+    document.querySelector('.img-col').addEventListener('click', function() {
+        document.getElementById('fileInput').click();
+    });
+
+    document.getElementById('fileInput').addEventListener('change', async function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+
+            reader.onload = async function(e) {
+                const arrayBuffer = e.target.result;
+                const compressedArrayBuffer = await compressData(arrayBuffer);
+                const base64Encoded = btoa(String.fromCharCode(...new Uint8Array(compressedArrayBuffer)));
+
+                // Slanje podataka serveru
+                fetch('{{ url_for("odred.updatePfp", id=current_user.id) }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ image: base64Encoded })
+                }).then(response => {
+                    if (response.ok) {
+                        location.reload(); // Osvežavanje stranice nakon uspešnog upload-a
+                    }
+                });
+            }
+
+            reader.readAsArrayBuffer(file);
+        }
+    });
+
+    async function compressData(arrayBuffer) {
+        const stream = new CompressionStream('gzip');
+        const writer = stream.writable.getWriter();
+        writer.write(new Uint8Array(arrayBuffer));
+        writer.close();
+
+        const compressedArrayBuffer = await streamToArrayBuffer(stream.readable);
+        return compressedArrayBuffer;
+    }
+</script>
 {% endblock %}

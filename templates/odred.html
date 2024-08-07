@@ -8,7 +8,9 @@ Odred
 
 <div class="dash">
     <div class="img-col">
+        <div class="img-container">
         <img src="" alt="Fotografija" id="output">
+        </div>
         <h2 class="ime-prezime">
             Odred Izviđača "{{ current_user.odred.name }}"
         </h2>
@@ -60,6 +62,16 @@ Odred
                         <td>Broj članova:</td>
                         <td>{{ broj_clanova }}</td>
                     </tr>
+                    {% if current_user.role == "admin" %}
+                    <tr>
+                        <td>Broj Plaćenih članarina:</td>
+                        {% if broj_clanarina >= 40 %}
+                            <td><span class="good">{{ broj_clanarina }}</span></td>
+                        {% else %}
+                            <td><span class="bad">{{ broj_clanarina }}</span></td>
+                        {% endif %}
+                    </tr>
+                    {% endif %}
                 </table>
             </div>
         </div>

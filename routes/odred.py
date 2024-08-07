@@ -1,4 +1,4 @@
-from flask import Blueprint, redirect, url_for, render_template, flash, request, make_response
+from flask import Blueprint, redirect, url_for, render_template, flash, request, make_response, jsonify
 from flask_login import login_required, current_user
 
 from models import User, db, Odred, Ceta, Vod, Skill
@@ -12,7 +12,8 @@ odred_bp = Blueprint("odred", __name__)
 def odred():
     try:
         Broj_Clanova = User.query.filter_by(odred_id=current_user.odred_id).count()
-        return render_template("odred.html", broj_clanova=Broj_Clanova)
+        Broj_clanarina = User.query.filter_by(odred_id=current_user.odred.id, has_paid=True).count()
+        return render_template("odred.html", broj_clanova=Broj_Clanova, broj_clanarina=Broj_clanarina)
     except:
         flash("Morate biti član odreda!", "Greška")
         return redirect(url_for("dashboard.dashboard"))
@@ -92,7 +93,7 @@ def deleteClan(id):
         return redirect(url_for("dashboard.dashboard"))
 
     user = User.query.get(id)
-    skills = Skill.query.filter_by(user_id = id).all()
+    skills = Skill.query.filter_by(user_id=id).all()
     if user:
         if user.odred.staresina_id != user.id and user.odred.nacelnik_id != user.id and user.vod.vodnik_id != user.id and user.vod.ceta.vodja_id != user.id:
             for skill in skills:
@@ -122,6 +123,22 @@ def getPfp(id):
         response = make_response("default", 200)
     response.mimetype = "text/plain"
     return response
+
+
+@odred_bp.route("/clan/avatar/update/<int:id>", methods=['POST'])
+@login_required
+def updatePfp(id):
+    user = User.query.get_or_404(id)
+    if user.id != current_user.id:
+        return jsonify({"error": "Unauthorized"}), 403
+
+    data = request.get_json()
+    if data['image'] != "nochange":
+        user.avatar = data['image']
+        db.session.commit()
+        return jsonify({"success": True}), 200
+    else:
+        return jsonify({"error": "No image provided"}), 400
 
 
 @odred_bp.route("/cv/add", methods=["GET", "POST"])
@@ -251,7 +268,7 @@ def vodInfo(id):
         return redirect(url_for("dashboard.dashboard"))
 
 
-@odred_bp.route("/editVod/<int:id>", methods = ["POST"])
+@odred_bp.route("/editVod/<int:id>", methods=["POST"])
 @login_required
 def editVod(id):
     if current_user.role == "admin":
