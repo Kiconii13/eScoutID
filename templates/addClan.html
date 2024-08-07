@@ -53,21 +53,13 @@
     </label>
     <label style="display: flex;">
         Plaćena članarina:
-        {% if clan.has_paid %}
-            <input type="checkbox" id="has_paid" name="has_paid" checked>
-        {% else %}
-            <input type="checkbox" id="has_paid" name="has_paid">
-        {% endif %}
+        <input type="checkbox" id="has_paid" name="has_paid" {% if clan.has_paid %} checked {% endif %}>
     </label>
     <label>
         Vod:
         <select name="vod">
             {% for vod in vods %}
-            {% if clan.vod_id == vod.id %}
-            <option value="{{ vod.id }}" selected>{{ vod.name }}</option>
-            {% else %}
-            <option value="{{ vod.id }}">{{ vod.name }}</option>
-            {% endif %}
+            <option value="{{ vod.id }}" {% if clan.vod_id == vod.id %} selected {% endif %}>{{ vod.name }}</option>
             {% endfor %}
         </select>
     </label>
