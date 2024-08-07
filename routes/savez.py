@@ -20,11 +20,13 @@ def savezDashboard():
     odredi = Odred.query.all()
     Broj_Clanova = []
     Broj_Clanarina = []
+    
     for odred in odredi:
         broj_clanova = User.query.filter_by(odred_id = odred.id).count()
         Broj_Clanova.append(broj_clanova)
         broj_clanarina = User.query.filter_by(odred_id= odred.id, has_paid=True).count()
         Broj_Clanarina.append(broj_clanarina)
+    
     return render_template("savezDashboard.html", odredi=zip(odredi, Broj_Clanova, Broj_Clanarina))
 
 
@@ -40,6 +42,7 @@ def addOdred():
         new_odred.email = request.form["email"]
         new_odred.founded_at = datetime.fromisoformat(request.form["founded_at"]).date()
         new_odred.status = request.form.get('status')
+
         if request.form["image"] != "nochange":
             new_odred.avatar = request.form["image"]
 
@@ -83,6 +86,7 @@ def addOdred():
         # Moze da pristupi samo savez_admin
         if current_user.role != "savez_admin":
             return redirect(url_for("dashboard.dashboard"))
+        
         return render_template("addOdred.html", h1="Dodaj odred", odred=Odred(), staresina="", nacelnik="")
 
 
@@ -94,11 +98,13 @@ def getPfp(id):
         return redirect(url_for("dashboard.dashboard"))
 
     odred = Odred.query.filter_by(id=id).first()
+    
     if odred.avatar:
         response = make_response(odred.avatar, 200)
     else:
         response = make_response("default", 200)
     response.mimetype = "text/plain"
+
     return response
 
 
@@ -113,27 +119,35 @@ def editOdred(id):
         odred.address = request.form["address"]
         odred.email = request.form["email"]
         odred.founded_at = datetime.fromisoformat(request.form["founded_at"]).date()
+        
         staresina = User.query.filter_by(username=request.form.get("staresina_username")).first()
+        
         if (not staresina) or staresina.odred_id != odred.id:
             flash("Nepostoji član odreda sa tim usernameom (starešina)")
             return redirect(url_for("savez.editOdred", id=odred.id))
+        
         odred.staresina_id = staresina.id
         nacelnik = User.query.filter_by(username=request.form.get("nacelnik_username")).first()
+        
         if (not nacelnik) or nacelnik.odred_id != odred.id:
             flash("Nepostoji član odreda sa tim usernameom (načelnik)")
             return redirect(url_for("savez.editOdred", id=odred.id))
+        
         odred.nacelnik_id = nacelnik.id
         odred.status = request.form.get('status')
+        
         if request.form["image"] != "nochange":
             odred.avatar = request.form["image"]
+        
         db.session.commit()
+
         return redirect(url_for("savez.savezDashboard"))
     else:
         # Moze da pristupi samo savez_admin
         if current_user.role != "savez_admin":
             return redirect(url_for("dashboard.dashboard"))
-        return render_template("addOdred.html", h1="Izmeni odred", odred=odred,
-                               clanovi=User.query.filter_by(odred_id=odred.id).order_by(User.dob.asc()))
+        
+        return render_template("addOdred.html", h1="Izmeni odred", odred=odred, clanovi=User.query.filter_by(odred_id=odred.id).order_by(User.dob.asc()))
 
 
 # Brisanje odreda iz baze
@@ -148,7 +162,8 @@ def deleteOdred(id):
     if odred:
         db.session.delete(odred)
         db.session.commit()
-        flash("Odred je uspešno obrisan.", "success")
+        flash("Odred je uspešno obrisan.", "Info")
     else:
-        flash("Odred nije pronađen.", "error")
+        flash("Odred nije pronađen.", "Greška")
+    
     return redirect(url_for("savez.savezDashboard"))

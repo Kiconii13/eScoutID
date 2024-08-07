@@ -82,11 +82,11 @@ def add_skill():
 @login_required
 def delete_skill(id):
     if current_user.role == "admin":
-        skill = Skill.query.get(id)
-        user_id = skill.user_id
-        db.session.delete(skill)
-        db.session.commit()
-        flash("Uspešno obrisan posebni program", "info")
-        return redirect(url_for('program.add_program', user_id=user_id))
-    else:
         return redirect(url_for("dashboard.dashboard"))
+    
+    skill = Skill.query.get(id)
+    user_id = skill.user_id
+    db.session.delete(skill)
+    db.session.commit()
+    flash("Uspešno obrisan posebni program", "info")
+    return redirect(url_for('program.add_program', user_id=user_id))

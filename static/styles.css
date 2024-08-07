@@ -34,9 +34,9 @@ body {
     background-position: var(--bg-pos-x, 0) var(--bg-pos-y, 0);
 }
 
-@media (min-width: 1024px) {
+/* @media (min-width: 1024px) {
     overflow-x: hidden;
-}
+} */
 
 @keyframes moveBackground {
     from {
@@ -173,8 +173,10 @@ input, select {
     flex-direction: column;
 }
 
-@media (min-width:1024px) .data-col table {
-    overflow: hidden;
+@media (min-width:1024px) {
+    .data-col table {
+        overflow: hidden;
+    }
 }
 
 .dash .data-col .columns {
