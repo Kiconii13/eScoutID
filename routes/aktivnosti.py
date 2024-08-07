@@ -79,12 +79,20 @@ def log_aktivnost():
 @aktivnosti_bp.route("/aktivnosti/qr", methods=["POST"])
 @login_required
 def generateQR():
-    aktivnostID = request.form["activity"]
+    activityID = request.form["activity"]
 
     memory = BytesIO()
-    link = url_for("aktivnosti.qr_log_aktivnost", _external=True, _scheme='https', activityID = aktivnostID)
-    img = qrcode.make(link,border=2)
-    img.save(memory)
+    url = url_for("aktivnosti.qr_log_aktivnost", _external=True, _scheme='https', activityID = activityID)
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=40,
+        border=2
+    )
+    qr.add_data(url)
+    qr.make(fit=True)
+    qrimg = qr.make_image()
+    qrimg.save(memory)
     memory.seek(0)
 
     base64_img = "data:image/ong;base64," + b64encode(memory.getvalue()).decode('ascii')
@@ -99,7 +107,7 @@ def generateQR():
         # Mogu da pristupe samo admini
         return redirect(url_for("dashboard.dashboard"))
     
-    return render_template("addAktivnost.html",qrimg = base64_img,activities = activities)
+    return render_template("addAktivnost.html", qrimg = base64_img, activities = activities)
 
 # Dodeljivanje aktivnosti clanovima preko QR koda
 @aktivnosti_bp.route("/aktivnosti/log/<int:activityID>", methods=["GET"])
