@@ -1,4 +1,6 @@
 import os
+import logging
+from datetime import datetime
 
 from flask import Flask, redirect, url_for
 # from flask_migrate import Migrate
@@ -10,9 +12,26 @@ from config import Config
 
 
 def create_app(config_class=Config):
+    # logger = logging.getLogger(__name__)
+    
+    if not os.path.exists("logs/"):
+        os.mkdir("logs/")
+    
+
+    fileNameString = f"{Config.LOG_BASE_PATH}/{datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}.log"
+
+    # logging.basicConfig(filename=fileNameString, level=logging.INFO)
+
     app = Flask(__name__)
 
     app.config.from_object(config_class)
+
+    app.logger.setLevel(logging.INFO)
+    handler = logging.FileHandler(fileNameString)
+    handler.setFormatter(logging.Formatter(f'%(asctime)s|%(levelname)s|%(name)s|msg=%(message)s'))
+    # TODO: napraviti i handlera za mejl
+    #       ref: https://flask.palletsprojects.com/en/2.3.x/logging/#email-errors-to-admins
+    app.logger.addHandler(handler)
 
     db.init_app(app)
     # migrate = Migrate(app, db)

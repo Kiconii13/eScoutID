@@ -10,3 +10,4 @@ class Config:
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     UPLOAD_FOLDER = "uploads/"
+    LOG_BASE_PATH = "logs/"
