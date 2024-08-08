@@ -67,11 +67,7 @@ Vod: {{vod.name}}
         Četa
         <select name="ceta" id="ceta" required>
             {% for ceta in cete %}
-            {% if vod.ceta_id == ceta.id %}
-                <option value="{{ ceta.id }}" selected>{{ ceta.name }}</option>
-            {% else %}
-                <option value="{{ ceta.id }}">{{ ceta.name }}</option>
-            {% endif %}
+                <option value="{{ ceta.id }}" {% if vod.ceta_id == ceta.id %}selected{% endif %}>{{ ceta.name }}</option>
             {% endfor %}
         </select>
     </label>
