@@ -23,9 +23,9 @@
     </label>
     <label>
         Status:
-<select id="role" name="role" data-selected="{{ clan.role }}" {% if clan.role in ["admin", "savez_admin"] and current_user.id != clan.id %} readonly {% endif %}>
-    <option value="clan" {% if clan.role == "clan" %}selected{% endif %}>Član</option>
-    <option value="admin" {% if clan.role == "admin" %}selected{% endif %}>Administrator</option>
+        <select id="role" name="role" data-selected="{{ clan.role }}" {% if clan.role in ["admin", "savez_admin"] and current_user.id != clan.id %} readonly {% endif %}>
+        <option value="clan" {% if clan.role == "clan" %}selected{% endif %}>Član</option>
+        <option value="admin" {% if clan.role == "admin" %}selected{% endif %}>Administrator</option>
     {% if current_user.role == "savez_admin" %}
         <option value="savez_admin" {% if clan.role == "savez_admin" %}selected{% endif %}>Administrator saveza</option>
     {% endif %}
