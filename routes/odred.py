@@ -58,7 +58,7 @@ def addClan():
         
         db.session.commit()
 
-        current_app.logger.log(25, f"Administrator {current_user.first_name} {current_user.last_name} (id: {current_user.id}) dodao je novog korisnika {new_user.fist_name} {new_user.last_name} (id: {new_user.id})")
+        current_app.logger.log(25, f"Administrator {current_user.first_name} {current_user.last_name} (id: {current_user.id}) dodao je novog korisnika {new_user.first_name} {new_user.last_name} (id: {new_user.id})")
         return redirect(url_for("odred.odredDashboard", id=current_user.odred.id))
     else:
         cetas = Ceta.query.filter_by(odred_id=current_user.odred_id).all()
@@ -91,7 +91,7 @@ def editClan(id):
         user = User.defUser(user)
         db.session.commit()
 
-        current_app.logger.log(25, f"Administrator {current_user.first_name} {current_user.last_name} (id: {current_user.id}) izmenio je korisnika {user.fist_name} {user.last_name} (id: {user.id})")
+        current_app.logger.log(25, f"Administrator {current_user.first_name} {current_user.last_name} (id: {current_user.id}) izmenio je korisnika {user.first_name} {user.last_name} (id: {user.id})")
         return redirect(url_for("odred.odredDashboard", id=user.odred.id))
     else:
         return render_template("addClan.html", h1="Izmeni člana", action=action, clan=user, odred=Odred.query.filter_by(id=user.odred_id).first().name, vods=vods)
