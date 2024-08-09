@@ -40,6 +40,9 @@ def addClan():
     action = "add"
     new_user = User()
     if request.method == "POST":
+        if (request.form["role"] == "savez_admin" and current_user.role != "savez_admin"):
+            flash("Nedozvoljena radnja!", "error")
+            return redirect(url_for("odred.odredDashboard", id=current_user.odred.id))
         new_user = User.defUser(new_user)
         new_user.set_password(new_user.username)
         db.session.add(new_user)
@@ -69,6 +72,9 @@ def editClan(id):
     ceta_ids = [ceta.id for ceta in cetas]
     vods = Vod.query.filter(Vod.ceta_id.in_(ceta_ids)).all()
     if request.method == "POST":
+        if (request.form["role"] == "savez_admin" and current_user.role != "savez_admin"):
+            flash("Nedozvoljena radnja!", "error")
+            return redirect(url_for("odred.odredDashboard", id=current_user.odred.id))
         if user.vod.vodnik_id == user.id and user.vod.id != int(request.form["vod"]):
             flash("Clan je vodnik svog voda! Prvo postavi drugog vodnika.", "error")
             return render_template("addClan.html", h1="Izmeni člana", action=action, clan=user,
