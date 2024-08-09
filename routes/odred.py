@@ -71,8 +71,7 @@ def editClan(id):
     if request.method == "POST":
         if user.vod.vodnik_id == user.id and user.vod.id != int(request.form["vod"]):
             flash("Clan je vodnik svog voda! Prvo postavi drugog vodnika.", "error")
-            return render_template("addClan.html", h1="Izmeni člana", action=action, clan=user,
-                                   odred=Odred.query.filter_by(id=user.odred_id).first().name, vods=vods)
+            return render_template("addClan.html", h1="Izmeni člana", action=action, clan=user, odred=Odred.query.filter_by(id=user.odred_id).first().name, vods=vods)
         user = User.defUser(user)
         db.session.commit()
         return redirect(url_for("odred.odredDashboard", id=user.odred.id))
@@ -80,8 +79,7 @@ def editClan(id):
         # Mogu da pristupe samo admini
         if current_user.role != "admin" and current_user.role != "savez_admin":
             return redirect(url_for("dashboard.dashboard"))
-        return render_template("addClan.html", h1="Izmeni člana", action=action, clan=user,
-                               odred=Odred.query.filter_by(id=user.odred_id).first().name, vods=vods)
+        return render_template("addClan.html", h1="Izmeni člana", action=action, clan=user, odred=Odred.query.filter_by(id=user.odred_id).first().name, vods=vods)
 
 
 # Uklanjanje clana iz odreda
