@@ -74,10 +74,8 @@ def editClan(id):
         db.session.commit()
         return redirect(url_for("odred.odredDashboard", id=user.odred.id))
     else:
-        # Mogu da pristupe samo admini
-        if current_user.role != "admin" and current_user.role != "savez_admin":
-            return redirect(url_for("dashboard.dashboard"))
-        return render_template("addClan.html", h1="Izmeni člana", action=action, clan=user, odred=Odred.query.filter_by(id=user.odred_id).first().name, vods=vods)
+        return render_template("addClan.html", h1="Izmeni člana", action=action, clan=user,
+                               odred=Odred.query.filter_by(id=user.odred_id).first().name, vods=vods)
 
 
 # Uklanjanje clana iz odreda
