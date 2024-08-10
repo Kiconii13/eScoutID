@@ -5,6 +5,7 @@ from flask_login import current_user, login_required
 from sqlalchemy import func
 
 from models import db, Odred, User, Ceta, Vod
+from permissions import role_required
 
 savez_bp = Blueprint('savez', __name__)
 
@@ -12,11 +13,8 @@ savez_bp = Blueprint('savez', __name__)
 # Prikaz tabele sa svim odredima
 @savez_bp.route("/savezDashboard")
 @login_required
+@role_required("savez_admin")
 def savezDashboard():
-    # Moze da pristupi samo savez_admin
-    if current_user.role != "savez_admin":
-        return redirect(url_for("dashboard.dashboard"))
-
     odredi = Odred.query.all()
     Broj_Clanova = []
     Broj_Clanarina = []
@@ -31,6 +29,7 @@ def savezDashboard():
 #  Dodavanje novog odreda u bazu
 @savez_bp.route("/addOdred", methods=["POST", "GET"])
 @login_required
+@role_required("savez_admin")
 def addOdred():
     if request.method == "POST":
         new_odred = Odred()
@@ -80,19 +79,13 @@ def addOdred():
 
         return redirect(url_for("savez.savezDashboard"))
     else:
-        # Moze da pristupi samo savez_admin
-        if current_user.role != "savez_admin":
-            return redirect(url_for("dashboard.dashboard"))
         return render_template("addOdred.html", h1="Dodaj odred", odred=Odred(), staresina="", nacelnik="")
 
 
 @savez_bp.route("/odred/avatar/<int:id>")
 @login_required
+@role_required("admin","savez_admin")
 def getPfp(id):
-    # Mogu da pristupe samo admini
-    if current_user.role != "admin" and current_user.role != "savez_admin":
-        return redirect(url_for("dashboard.dashboard"))
-
     odred = Odred.query.filter_by(id=id).first()
     if odred.avatar:
         response = make_response(odred.avatar, 200)
@@ -105,6 +98,7 @@ def getPfp(id):
 # Izmena podataka postojeceg odreda
 @savez_bp.route("/editOdred/<int:id>", methods=["POST", "GET"])
 @login_required
+@role_required("savez_admin")
 def editOdred(id):
     odred = Odred.query.get(id)
     if request.method == "POST":
@@ -129,9 +123,6 @@ def editOdred(id):
         db.session.commit()
         return redirect(url_for("savez.savezDashboard"))
     else:
-        # Moze da pristupi samo savez_admin
-        if current_user.role != "savez_admin":
-            return redirect(url_for("dashboard.dashboard"))
         return render_template("addOdred.html", h1="Izmeni odred", odred=odred,
                                clanovi=User.query.filter_by(odred_id=odred.id).order_by(User.dob.asc()))
 
@@ -139,11 +130,8 @@ def editOdred(id):
 # Brisanje odreda iz baze
 @savez_bp.route("/deleteOdred/<int:id>", methods=["GET", "POST"])
 @login_required
+@role_required("savez_admin")
 def deleteOdred(id):
-    # Moze da pristupi samo savez_admin
-    if current_user.role != "savez_admin":
-        return redirect(url_for("dashboard.dashboard"))
-
     odred = Odred.query.get(id)
     if odred:
         db.session.delete(odred)
