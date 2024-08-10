@@ -40,6 +40,12 @@ def addClan():
     action = "add"
     new_user = User()
     if request.method == "POST":
+        if request.form["role"] == "savez_admin" and current_user.role != "savez_admin":
+            flash("Nedozvoljena radnja!","error")
+            return redirect(url_for("dashboard.dashboard"))
+        if request.form["role"] not in ["clan", "admin", "savez_admin"]:
+            flash("Nedozvoljena radnja!","error")
+            return redirect(url_for("dashboard.dashboard"))
         new_user = User.defUser(new_user)
         new_user.set_password(new_user.username)
         db.session.add(new_user)
@@ -70,6 +76,9 @@ def editClan(id):
         if user.vod.vodnik_id == user.id and user.vod.id != int(request.form["vod"]):
             flash("Clan je vodnik svog voda! Prvo postavi drugog vodnika.", "error")
             return render_template("addClan.html", h1="Izmeni člana", action=action, clan=user, odred=Odred.query.filter_by(id=user.odred_id).first().name, vods=vods)
+        if (request.form["role"] == "savez_admin" and current_user.role != "savez_admin") or (request.form["role"] not in ["clan","admin","savez_admin"]):
+            flash("Nedozvoljena radnja!","error")
+            return redirect(url_for("dashboard.dashboard"))
         user = User.defUser(user)
         db.session.commit()
         return redirect(url_for("odred.odredDashboard", id=user.odred.id))
