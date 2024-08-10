@@ -2,6 +2,7 @@ from flask import Blueprint, redirect, url_for, render_template, flash, request,
 from flask_login import login_required, current_user
 
 from models import User, db, Odred, Ceta, Vod, Skill
+from permissions import role_required
 
 odred_bp = Blueprint("odred", __name__)
 
@@ -22,10 +23,8 @@ def odred():
 # Prikaz tabele sa svim clanovima; Prikazuju se samo clanovi odreda ciji je admin trenutno ulogovani korisnik.
 @odred_bp.route("/odredDashboard/<int:id>")
 @login_required
+@role_required("admin","savez_admin")
 def odredDashboard(id):
-    # Mogu da pristupe samo admini
-    if current_user.role == "clan":
-        return redirect(url_for("dashboard.dashboard"))
     cetas = Ceta.query.filter_by(odred_id=current_user.odred_id).all()
     ceta_ids = [ceta.id for ceta in cetas]
     vods = Vod.query.filter(Vod.ceta_id.in_(ceta_ids)).order_by(Vod.ceta_id).all()
@@ -36,6 +35,7 @@ def odredDashboard(id):
 # Dodavanje novog clana u odred
 @odred_bp.route("/clan/add", methods=["POST", "GET"])
 @login_required
+@role_required("admin","savez_admin")
 def addClan():
     action = "add"
     new_user = User()
@@ -50,9 +50,6 @@ def addClan():
         db.session.commit()
         return redirect(url_for("odred.odredDashboard", id=current_user.odred.id))
     else:
-        # Mogu da pristupe samo admini
-        if current_user.role != "admin" and current_user.role != "savez_admin":
-            return redirect(url_for("dashboard.dashboard"))
         cetas = Ceta.query.filter_by(odred_id=current_user.odred_id).all()
         ceta_ids = [ceta.id for ceta in cetas]
         vods = Vod.query.filter(Vod.ceta_id.in_(ceta_ids)).all()
@@ -62,6 +59,7 @@ def addClan():
 # Izmene podataka vec postojeceg clana odreda
 @odred_bp.route("/clan/edit/<int:id>", methods=["POST", "GET"])
 @login_required
+@role_required("admin","savez_admin")
 def editClan(id):
     action = "edit"
     user = User.query.get(id)
@@ -85,11 +83,8 @@ def editClan(id):
 # Uklanjanje clana iz odreda
 @odred_bp.route("/clan/delete/<int:id>", methods=["GET", "POST"])
 @login_required
+@role_required("admin","savez_admin")
 def deleteClan(id):
-    # Mogu da pristupe samo admini
-    if current_user.role != "admin" and current_user.role != "savez_admin":
-        return redirect(url_for("dashboard.dashboard"))
-
     user = User.query.get(id)
     skills = Skill.query.filter_by(user_id=id).all()
     if user:
@@ -109,11 +104,8 @@ def deleteClan(id):
 # Pretraga avatara korisnika
 @odred_bp.route("/clan/avatar/<int:id>")
 @login_required
+@role_required("admin","savez_admin")
 def getPfp(id):
-    # Mogu da pristupe samo admini
-    if current_user.role != "admin" and current_user.role != "savez_admin":
-        return redirect(url_for("dashboard.dashboard"))
-
     user = User.query.filter_by(id=id).first()
     if user.avatar:
         response = make_response(user.avatar, 200)
@@ -141,156 +133,135 @@ def updatePfp(id):
 
 @odred_bp.route("/cv/add", methods=["GET", "POST"])
 @login_required
+@role_required("admin")
 def addCetaVod():
-    if current_user.role == "admin":
-        return render_template("addCetaVod.html", users=User.query.filter_by(odred_id=current_user.odred_id).all(),
+    return render_template("addCetaVod.html", users=User.query.filter_by(odred_id=current_user.odred_id).all(),
                                cetas=Ceta.query.filter_by(odred_id=current_user.odred_id).all())
-    else:
-        return redirect(url_for("dashboard.dashboard"))
 
 
 @odred_bp.route("/ceta/new", methods=["POST"])
 @login_required
+@role_required("admin")
 def newCeta():
-    if current_user.role == "admin":
-        ceta = Ceta()
+    ceta = Ceta()
 
-        ceta.name = request.form["name"]
-        cete = Ceta.query.filter_by(odred_id=current_user.odred.id).all()
-        if any(existing_ceta.name == ceta.name for existing_ceta in cete):
-            flash("Četa sa tim imenom već postoji u odredu!", "Greška")
-            return redirect(url_for("odred.addCetaVod"))
-        ceta.odred_id = current_user.odred.id
-        db.session.add(ceta)
-        db.session.commit()
-
-        flash("Četa uspešno dodata!", "Info")
+    ceta.name = request.form["name"]
+    cete = Ceta.query.filter_by(odred_id=current_user.odred.id).all()
+    if any(existing_ceta.name == ceta.name for existing_ceta in cete):
+        flash("Četa sa tim imenom već postoji u odredu!", "Greška")
         return redirect(url_for("odred.addCetaVod"))
-    else:
-        return redirect(url_for("dashboard.dashboard"))
+    ceta.odred_id = current_user.odred.id
+    db.session.add(ceta)
+    db.session.commit()
+
+    flash("Četa uspešno dodata!", "Info")
+    return redirect(url_for("odred.addCetaVod"))
 
 
 @odred_bp.route("/vod/new", methods=["POST"])
 @login_required
+@role_required("admin")
 def newVod():
-    if current_user.role == "admin":
-        vod = Vod()
+    vod = Vod()
 
-        vod.name = request.form["name"]
-        vod.vodnik_id = request.form["vodnik"]
-        vod.ceta_id = request.form["ceta"]
+    vod.name = request.form["name"]
+    vod.vodnik_id = request.form["vodnik"]
+    vod.ceta_id = request.form["ceta"]
 
-        db.session.add(vod)
-        db.session.commit()
+    db.session.add(vod)
+    db.session.commit()
 
-        vod.vodnik.vod_id = vod.id
-        db.session.commit()
+    vod.vodnik.vod_id = vod.id
+    db.session.commit()
 
-        flash("Vod uspešno dodat!", "Info")
-        return redirect(url_for("odred.addCetaVod"))
-    else:
-        return redirect(url_for("dashboard.dashboard"))
+    flash("Vod uspešno dodat!", "Info")
+    return redirect(url_for("odred.addCetaVod"))
 
 
 @odred_bp.route("/edit/roles")
 @login_required
+@role_required("admin")
 def editRoles():
-    if current_user.role == "admin":
-        cetas = Ceta.query.filter_by(odred_id=current_user.odred_id).all()
-        ceta_ids = [ceta.id for ceta in cetas]
-        vods = Vod.query.filter(Vod.ceta_id.in_(ceta_ids)).all()
-        users = User.query.filter_by(odred_id=current_user.odred_id).order_by(User.dob.asc()).all()
+    cetas = Ceta.query.filter_by(odred_id=current_user.odred_id).all()
+    ceta_ids = [ceta.id for ceta in cetas]
+    vods = Vod.query.filter(Vod.ceta_id.in_(ceta_ids)).all()
+    users = User.query.filter_by(odred_id=current_user.odred_id).order_by(User.dob.asc()).all()
 
-        return render_template("editRoles.html", vods=vods, users=users, cetas=cetas,
-                               current_staresina=current_user.odred.staresina.id,
-                               current_nacelnik=current_user.odred.nacelnik.id)
-    else:
-        return redirect(url_for("dashboard.dashboard"))
+    return render_template("editRoles.html", vods=vods, users=users, cetas=cetas,
+                           current_staresina=current_user.odred.staresina.id,
+                           current_nacelnik=current_user.odred.nacelnik.id)
 
 
 @odred_bp.route("/edit/roles/vodnik", methods=["POST"])
 @login_required
+@role_required("admin")
 def editVodnik():
-    if current_user.role == "admin":
-        vod = Vod.query.filter_by(id=request.form["vod"]).first()
+    vod = Vod.query.filter_by(id=request.form["vod"]).first()
 
-        vod.vodnik_id = request.form["vodnik"]
+    vod.vodnik_id = request.form["vodnik"]
 
-        db.session.commit()
+    db.session.commit()
 
-        flash("Novi vodnik postavljen", "Info")
-        return redirect(url_for("odred.editRoles"))
-    else:
-        return redirect(url_for("dashboard.dashboard"))
+    flash("Novi vodnik postavljen", "Info")
+    return redirect(url_for("odred.editRoles"))
 
 
 @odred_bp.route("/edit/roles/vodjacete", methods=["POST"])
 @login_required
+@role_required("admin")
 def editVodjacete():
-    if current_user.role == "admin":
-        ceta = Ceta.query.filter_by(id=request.form["ceta"]).first()
+    ceta = Ceta.query.filter_by(id=request.form["ceta"]).first()
 
-        ceta.vodja_id = request.form["vodjacete"]
+    ceta.vodja_id = request.form["vodjacete"]
 
-        db.session.commit()
+    db.session.commit()
 
-        flash("Novi vođa čete postavljen", "Info")
-        return redirect(url_for("odred.editRoles"))
-    else:
-        return redirect(url_for("dashboard.dashboard"))
+    flash("Novi vođa čete postavljen", "Info")
+    return redirect(url_for("odred.editRoles"))
 
 
 @odred_bp.route("/edit/nacelnik", methods=["POST"])
 @login_required
+@role_required("admin")
 def editNacelnikStaresina():
-    if current_user.role == "admin":
-        current_user.odred.staresina_id = request.form["staresina"]
-        current_user.odred.nacelnik_id = request.form["nacelnik"]
+    current_user.odred.staresina_id = request.form["staresina"]
+    current_user.odred.nacelnik_id = request.form["nacelnik"]
 
-        db.session.commit()
+    db.session.commit()
 
-        flash("Načelnik i starešina uspešno ažurirani", "Info")
-        return redirect(url_for("odred.editRoles"))
-    else:
-        return redirect(url_for("dashboard.dashboard"))
+    flash("Načelnik i starešina uspešno ažurirani", "Info")
+    return redirect(url_for("odred.editRoles"))
 
 
 @odred_bp.route("/vodInfo/<int:id>")
 @login_required
+@role_required("admin")
 def vodInfo(id):
-    if current_user.role == "admin":
-        return render_template("editVod.html", vod=Vod.query.get(id),
-                               users=User.query.filter_by(vod_id=id),
-                               cete=Ceta.query.filter_by(odred_id=current_user.odred.id).all())
-    else:
-        return redirect(url_for("dashboard.dashboard"))
+    return render_template("editVod.html", vod=Vod.query.get(id),
+                           users=User.query.filter_by(vod_id=id),
+                           cete=Ceta.query.filter_by(odred_id=current_user.odred.id).all())
 
 
 @odred_bp.route("/editVod/<int:id>", methods=["POST"])
 @login_required
+@role_required("admin")
 def editVod(id):
-    if current_user.role == "admin":
-        vod = Vod.query.get(id)
-        vod.name = request.form.get("vod_name")
-        vod.ceta_id = request.form.get("ceta")
-        db.session.commit()
-        return redirect(url_for("odred.vodInfo", id=id))
-    else:
-        return redirect("dashboard.dashboard")
-
+    vod = Vod.query.get(id)
+    vod.name = request.form.get("vod_name")
+    vod.ceta_id = request.form.get("ceta")
+    db.session.commit()
+    return redirect(url_for("odred.vodInfo", id=id))
 
 @odred_bp.route("/deleteVod/<int:id>")
 @login_required
+@role_required("admin")
 def deleteVod(id):
-    if current_user.role == "admin":
-        if len(User.query.filter_by(vod_id=id).all()) == 0:
-            vod = Vod.query.get(id)
-            db.session.delete(vod)
-            db.session.commit()
-            flash("Vod je uspešno obrisan", "info")
-            return redirect(url_for("odred.odredDashboard", id=current_user.odred_id))
-        else:
-            flash("Vod ne sme imati članove koji mu pripadaju ukoliko želite da ga obrišete", "error")
-            return redirect(url_for("odred.vodInfo", id=id))
+    if len(User.query.filter_by(vod_id=id).all()) == 0:
+        vod = Vod.query.get(id)
+        db.session.delete(vod)
+        db.session.commit()
+        flash("Vod je uspešno obrisan", "info")
+        return redirect(url_for("odred.odredDashboard", id=current_user.odred_id))
     else:
-        return redirect(url_for("dashboard.dashboard"))
+        flash("Vod ne sme imati članove koji mu pripadaju ukoliko želite da ga obrišete", "error")
+        return redirect(url_for("odred.vodInfo", id=id))

@@ -4,6 +4,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user
 
 from models import User, db, Skill
+from permissions import role_required
 
 program_bp = Blueprint('program', __name__)
 
@@ -29,6 +30,7 @@ def get_users_and_selected_user(user_id=None):
 # Priakaz stranice
 @program_bp.route('/addProgram', methods=['GET'])
 @login_required
+@role_required("admin")
 def add_program():
     users, selected_user, skills = get_users_and_selected_user()
     return render_template('addProgram.html', users=users, selected_user=selected_user, skills=skills)
@@ -37,6 +39,7 @@ def add_program():
 # Ruta za prikaz člana izabranog u select-u
 @program_bp.route('/select_user', methods=['POST'])
 @login_required
+@role_required("admin")
 def select_user():
     user_id = request.form['user']
     users, selected_user, skills = get_users_and_selected_user(user_id)
@@ -48,6 +51,7 @@ def select_user():
 # Unose se izmene i osvežava se stranica
 @program_bp.route('/update_levels', methods=['POST'])
 @login_required
+@role_required("admin")
 def update_levels():
     user_id = request.form['user']
     let_level = request.form['let_level']
@@ -66,6 +70,7 @@ def update_levels():
 # Sličan princip kao za rutu iznad
 @program_bp.route('/add_skill', methods=['POST'])
 @login_required
+@role_required("admin")
 def add_skill():
     user_id = request.form['user_id']
     name = request.form['name']
@@ -80,13 +85,11 @@ def add_skill():
 
 @program_bp.route('/delete_skill/<int:id>', methods=['POST', 'GET'])
 @login_required
+@role_required("admin")
 def delete_skill(id):
-    if current_user.role == "admin":
-        skill = Skill.query.get(id)
-        user_id = skill.user_id
-        db.session.delete(skill)
-        db.session.commit()
-        flash("Uspešno obrisan posebni program", "info")
-        return redirect(url_for('program.add_program', user_id=user_id))
-    else:
-        return redirect(url_for("dashboard.dashboard"))
+    skill = Skill.query.get(id)
+    user_id = skill.user_id
+    db.session.delete(skill)
+    db.session.commit()
+    flash("Uspešno obrisan posebni program", "info")
+    return redirect(url_for('program.add_program', user_id=user_id))
