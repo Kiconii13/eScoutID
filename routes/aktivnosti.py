@@ -118,7 +118,7 @@ def generateQR():
 # Dodeljivanje aktivnosti clanovima preko QR koda
 @aktivnosti_bp.route("/aktivnosti/log/<int:activityID>", methods=["GET"])
 @login_required
-@role_required("admin","savez_admin")
+@role_required("clan","admin","savez_admin")
 def qr_log_aktivnost(activityID):
     participation = Participation()
 

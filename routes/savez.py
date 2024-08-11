@@ -15,7 +15,7 @@ savez_bp = Blueprint('savez', __name__)
 @login_required
 @role_required("savez_admin")
 def savezDashboard():
-    odredi = Odred.query.all()
+    odredi = Odred.query.order_by(Odred.id).all()
     Broj_Clanova = []
     Broj_Clanarina = []
     for odred in odredi:
