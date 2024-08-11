@@ -17,11 +17,11 @@ class Odred(db.Model):
 
     staresina_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     staresina = db.relationship('User', foreign_keys=[staresina_id])
-    
+
     nacelnik_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     nacelnik = db.relationship('User', foreign_keys=[nacelnik_id])
 
-    members = db.relationship('User', back_populates='odred', foreign_keys=[User.odred_id])
+    members = db.relationship('User', back_populates='odred',foreign_keys=[User.odred_id])
 
     def __init__(self, name="", city="", address="", email="", founded_at=datetime.today().date(), staresina_id=None,
                  nacelnik_id=None, status="Pridružen"):

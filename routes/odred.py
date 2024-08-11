@@ -25,6 +25,8 @@ def odred():
 @login_required
 @role_required("admin","savez_admin")
 def odredDashboard(id):
+    if current_user.odred.id != id and current_user.role != "savez_admin":
+        return redirect(url_for("odred.odred"))
     cetas = Ceta.query.filter_by(odred_id=current_user.odred_id).all()
     ceta_ids = [ceta.id for ceta in cetas]
     vods = Vod.query.filter(Vod.ceta_id.in_(ceta_ids)).order_by(Vod.ceta_id).all()
@@ -69,6 +71,8 @@ def addClan():
 def editClan(id):
     action = "edit"
     user = User.query.get(id)
+    if user.odred.id != current_user.odred.id and current_user.role != "savez_admin":
+        return redirect(url_for("odred.odred"))
     cetas = Ceta.query.filter_by(odred_id=user.odred_id).all()
     ceta_ids = [ceta.id for ceta in cetas]
     vods = Vod.query.filter(Vod.ceta_id.in_(ceta_ids)).all()
@@ -93,11 +97,10 @@ def editClan(id):
 @role_required("admin","savez_admin")
 def deleteClan(id):
     user = User.query.get(id)
-    skills = Skill.query.filter_by(user_id=id).all()
     if user:
-        if user.odred.staresina_id != user.id and user.odred.nacelnik_id != user.id and user.vod.vodnik_id != user.id and user.vod.ceta.vodja_id != user.id:
-            for skill in skills:
-                db.session.delete(skill)
+        if user.id not in [user.odred.staresina_id,user.odred.nacelnik_id,user.vod.vodnik_id,user.vod.ceta.vodja_id]:
+            if user.odred.id != current_user.odred.id and current_user.role != "savez_admin":
+                return redirect(url_for("odred.odred"))
             db.session.delete(user)
             db.session.commit()
             flash("Član je uspešno obrisan.", "Info")
@@ -254,6 +257,8 @@ def vodInfo(id):
 @role_required("admin")
 def editVod(id):
     vod = Vod.query.get(id)
+    if vod.ceta.odred_id != current_user.odred_id:
+        return redirect(url_for("odred.odred"))
     vod.name = request.form.get("vod_name")
     vod.ceta_id = request.form.get("ceta")
     db.session.commit()
@@ -265,6 +270,8 @@ def editVod(id):
 def deleteVod(id):
     if len(User.query.filter_by(vod_id=id).all()) == 0:
         vod = Vod.query.get(id)
+        if vod.ceta.odred_id != current_user.odred_id:
+            return redirect(url_for("odred.odred"))
         db.session.delete(vod)
         db.session.commit()
         flash("Vod je uspešno obrisan", "info")
