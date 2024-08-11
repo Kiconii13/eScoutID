@@ -11,8 +11,8 @@ class Ceta(db.Model):
     vodja_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     odred_id = db.Column(db.Integer, db.ForeignKey("odred.id"))
 
-    vodja = db.relationship('User',foreign_keys=[vodja_id])
-    
+    vodja = db.relationship('User', foreign_keys=[vodja_id])
+
     def __str__(self):
         return self.name
 

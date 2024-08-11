@@ -89,6 +89,9 @@ def add_skill():
 def delete_skill(id):
     skill = Skill.query.get(id)
     user_id = skill.user_id
+    user = User.query.get(user_id)
+    if user.odred.id != current_user.odred.id:
+        return redirect(url_for("odred.odred"))
     db.session.delete(skill)
     db.session.commit()
     flash("Uspešno obrisan posebni program", "info")

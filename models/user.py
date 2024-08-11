@@ -39,24 +39,6 @@ class User(db.Model, UserMixin):
     vod_id = db.Column(db.Integer, db.ForeignKey("vod.id"))
     vod = db.relationship('Vod', back_populates='members', foreign_keys=[vod_id])
 
-    # konstruktor za default vrednosti da ne budu None
-    def __init__(self, username="", role="clan", first_name="", last_name="", dob=datetime.today().date(),
-                 join_date=datetime.today().date(), phone_number="", email="", adress="", has_paid=False, jedinica=""):
-        self.username = username
-        self.role = role
-        self.first_name = first_name
-        self.last_name = last_name
-        self.dob = dob
-        self.join_date = join_date
-        self.phone_number = phone_number
-        self.email = email
-        self.address = adress
-        self.has_paid = has_paid
-        self.jedinica = jedinica
-        self.let_level = 0
-        self.zvezda_level = 0
-        self.krin_level = 0
-
     activities = db.relationship('Activity', secondary='participations', back_populates='participants')
 
     def defUser(user):
@@ -80,8 +62,6 @@ class User(db.Model, UserMixin):
         self.password_hash = generate_password_hash(password)
 
     def check_password(self, password):
-        print(self.password_hash, check_password_hash(self.password_hash, password))
-
         return check_password_hash(self.password_hash, password)
 
     def get_id(self):
@@ -89,12 +69,11 @@ class User(db.Model, UserMixin):
 
     @property
     def is_active(self):
-        # Optional: Implement if you have an activation process for users
         return True
 
     @property
     def is_authenticated(self):
-        return True  # Assuming all users are authenticated
+        return True
 
     @property
     def is_anonymous(self):

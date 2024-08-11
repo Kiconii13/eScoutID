@@ -35,8 +35,6 @@ class Activity(db.Model):
 
     participants = db.relationship('User', secondary='participations', back_populates='activities')
 
-    # participations = db.relationship('Participation', back_populates='activity')
-
     def __repr__(self):
         return f"<Activity {self.id}>"
 
@@ -45,11 +43,8 @@ class Participation(db.Model):
     __tablename__ = "participations"
 
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
-    activity_id = db.Column(db.Integer, db.ForeignKey("activities.id"))
-
-    # user = db.relationship('User', back_populates='participations')
-    # activity = db.relationship('Activity', back_populates='participations')
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id", ondelete="CASCADE"))
+    activity_id = db.Column(db.Integer, db.ForeignKey("activities.id", ondelete="CASCADE"))
 
     def __repr__(self):
         return f"<Participation {self.id}>"
