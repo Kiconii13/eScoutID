@@ -71,10 +71,16 @@ def log_aktivnost():
     participation.activity_id = request.form["activity"]
     participation.user_id = User.query.filter_by(username=request.form["user"]).first().id
 
-    db.session.add(participation)
-    db.session.commit()
-
-    flash("Učešće uspešno zabeleženo", "Info")
+    #Provera da li je clanu vec zabelezeno ucesce na izabranoj aktivnosti
+    activities = Participation.query.filter_by(user_id=participation.user_id).all()
+    activity_ids = [str(activity.activity_id) for activity in activities]
+    if participation.activity_id in activity_ids:
+        flash("Ova aktivnost je već zabeležena za izabranog korisnika","Greška")
+    else:
+        db.session.add(participation)
+        db.session.commit()
+        flash("Učešće uspešno zabeleženo", "Info")
+    
     return redirect(url_for("aktivnosti.addAktivnost"))
 
 # Kreiranje QR koda za izabranu aktivnost
@@ -118,9 +124,15 @@ def qr_log_aktivnost(activityID):
 
     participation.activity_id = activityID
     participation.user_id = current_user.id
-
-    db.session.add(participation)
-    db.session.commit()
-
-    flash("Učešće uspešno zabeleženo", "Info")
+    
+    #Provera da li je clanu vec zabelezeno ucesce na izabranoj aktivnosti
+    activities = Participation.query.filter_by(user_id=participation.user_id).all()
+    activity_ids = [activity.activity_id for activity in activities]
+    if participation.activity_id in activity_ids:
+        flash("Ova aktivnost je već zabeležena za izabranog korisnika","Greška")
+    else:
+        db.session.add(participation)
+        db.session.commit()
+        flash("Učešće uspešno zabeleženo", "Info")
+    
     return redirect(url_for("aktivnosti.aktivnosti"))
