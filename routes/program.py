@@ -95,5 +95,5 @@ def delete_skill(id):
         return redirect(url_for("odred.odred"))
     db.session.delete(skill)
     db.session.commit()
-    flash("Uspešno obrisan posebni program", "info")
+    flash("Uspešno obrisan posebni program", "Info")
     return redirect(url_for('program.add_program', user_id=user_id))

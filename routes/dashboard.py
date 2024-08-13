@@ -43,7 +43,7 @@ def changeUsername():
             return redirect(url_for("dashboard.changeUsername"))
         current_user.username = request.form["new_username"]
         db.session.commit()
-        flash("Uspešno ste promenili korisničko ime!", "info")
+        flash("Uspešno ste promenili korisničko ime!", "Info")
         return redirect(url_for("dashboard.dashboard"))
     else:
         return render_template("changeUsername.html")

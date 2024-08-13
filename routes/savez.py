@@ -136,5 +136,5 @@ def deleteOdred(id):
         db.session.commit()
         flash("Odred je uspešno obrisan.", "success")
     else:
-        flash("Odred nije pronađen.", "error")
+        flash("Odred nije pronađen.", "Greška")
     return redirect(url_for("savez.savezDashboard"))

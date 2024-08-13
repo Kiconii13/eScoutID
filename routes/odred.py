@@ -43,10 +43,10 @@ def addClan():
     new_user = User()
     if request.method == "POST":
         if request.form["role"] == "savez_admin" and current_user.role != "savez_admin":
-            flash("Nedozvoljena radnja!", "error")
+            flash("Nedozvoljena radnja!", "Greška")
             return redirect(url_for("dashboard.dashboard"))
         if request.form["role"] not in ["clan", "admin", "savez_admin"]:
-            flash("Nedozvoljena radnja!", "error")
+            flash("Nedozvoljena radnja!", "Greška")
             return redirect(url_for("dashboard.dashboard"))
         new_user = User.defUser(new_user)
         new_user.set_password(new_user.username)
@@ -78,12 +78,12 @@ def editClan(id):
     vods = Vod.query.filter(Vod.ceta_id.in_(ceta_ids)).all()
     if request.method == "POST":
         if user.vod.vodnik_id == user.id and user.vod.id != int(request.form["vod"]):
-            flash("Clan je vodnik svog voda! Prvo postavi drugog vodnika.", "error")
+            flash("Clan je vodnik svog voda! Prvo postavi drugog vodnika.", "Greška")
             return render_template("addClan.html", h1="Izmeni člana", action=action, clan=user,
                                    odred=Odred.query.filter_by(id=user.odred_id).first().name, vods=vods)
         if (request.form["role"] == "savez_admin" and current_user.role != "savez_admin") or (
                 request.form["role"] not in ["clan", "admin", "savez_admin"]):
-            flash("Nedozvoljena radnja!", "error")
+            flash("Nedozvoljena radnja!", "Greška")
             return redirect(url_for("dashboard.dashboard"))
         user = User.defUser(user)
         db.session.commit()
@@ -107,7 +107,7 @@ def deleteClan(id):
             db.session.commit()
             flash("Član je uspešno obrisan.", "Info")
         else:
-            flash("Član vrši dužnost u odredu! Možeš obrisati samo članove koji su razrešeni dužnosti", "error")
+            flash("Član vrši dužnost u odredu! Možeš obrisati samo članove koji su razrešeni dužnosti", "Greška")
     else:
         flash("Član nije pronađen.", "Greška")
     return redirect(url_for("odred.odredDashboard", id=current_user.odred.id))
@@ -146,8 +146,7 @@ def updatePfp(id):
 @login_required
 @role_required("admin")
 def addCetaVod():
-    return render_template("addCetaVod.html", users=User.query.filter_by(odred_id=current_user.odred_id).all(),
-                           cetas=Ceta.query.filter_by(odred_id=current_user.odred_id).all())
+    return render_template("addCetaVod.html", users=User.query.filter_by(odred_id=current_user.odred_id).order_by(User.id).all(), cetas=Ceta.query.filter_by(odred_id=current_user.odred_id).order_by(Ceta.id).all())
 
 
 @odred_bp.route("/ceta/new", methods=["POST"])
@@ -249,7 +248,7 @@ def editNacelnikStaresina():
 @role_required("admin")
 def vodInfo(id):
     return render_template("editVod.html", vod=Vod.query.get(id),
-                           users=User.query.filter_by(vod_id=id),
+                           users=User.query.filter_by(vod_id=id).all(),
                            cete=Ceta.query.filter_by(odred_id=current_user.odred.id).all())
 
 
@@ -276,8 +275,8 @@ def deleteVod(id):
             return redirect(url_for("odred.odred"))
         db.session.delete(vod)
         db.session.commit()
-        flash("Vod je uspešno obrisan", "info")
+        flash("Vod je uspešno obrisan", "Info")
         return redirect(url_for("odred.odredDashboard", id=current_user.odred_id))
     else:
-        flash("Vod ne sme imati članove koji mu pripadaju ukoliko želite da ga obrišete", "error")
+        flash("Vod ne sme imati članove koji mu pripadaju ukoliko želite da ga obrišete", "Greška")
         return redirect(url_for("odred.vodInfo", id=id))
