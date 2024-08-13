@@ -19,7 +19,7 @@ aktivnosti_bp = Blueprint('aktivnosti', __name__)
 @aktivnosti_bp.route("/aktivnosti")
 @login_required
 def aktivnosti():
-    activities = Activity.query.all()
+    activities = Activity.query.order_by(Activity.id).all()
 
     return render_template("aktivnosti.html", activities=activities)
 

@@ -15,19 +15,19 @@ program_bp = Blueprint('program', __name__)
 @program_bp.route("/program")
 @login_required
 def program():
-    skills = Skill.query.filter_by(user_id=current_user.id).all()
+    skills = Skill.query.filter_by(user_id=current_user.id).order_by(Skill.id).all()
     return render_template("program.html", skills=skills)
 
 
 # Pomoćna funkcija za prikupljanje informacija za prikaz stranice za upravljanje programom
 def get_users_and_selected_user(user_id=None):
-    users = User.query.filter_by(odred_id=current_user.odred.id).all()
+    users = User.query.filter_by(odred_id=current_user.odred.id).order_by(User.id).all()
     selected_user = User.query.get(user_id) if user_id else (users[0] if users else None)
-    skills = Skill.query.filter_by(user_id=selected_user.id).all() if selected_user else []
+    skills = Skill.query.filter_by(user_id=selected_user.id).order_by(Skill.id).all() if selected_user else []
     return users, selected_user, skills
 
 
-# Priakaz stranice
+# Prikaz stranice
 @program_bp.route('/addProgram', methods=['GET'])
 @login_required
 @role_required("admin")
