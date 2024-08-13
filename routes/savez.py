@@ -84,7 +84,6 @@ def addOdred():
 
 @savez_bp.route("/odred/avatar/<int:id>")
 @login_required
-@role_required("admin","savez_admin")
 def getPfp(id):
     odred = Odred.query.filter_by(id=id).first()
     if odred.avatar:

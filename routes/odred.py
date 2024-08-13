@@ -114,7 +114,6 @@ def deleteClan(id):
 # Pretraga avatara korisnika
 @odred_bp.route("/clan/avatar/<int:id>")
 @login_required
-@role_required("admin","savez_admin")
 def getPfp(id):
     user = User.query.filter_by(id=id).first()
     if user.avatar:

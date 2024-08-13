@@ -99,29 +99,28 @@
     const form = document.querySelector('form');
 
     async function streamToArrayBuffer(stream) {
-      const reader = stream.getReader();
-      let result = new Uint8Array();
-      let done, value;
-      while ({ done, value } = await reader.read(), !done) {
-        const newResult = new Uint8Array(result.length + value.length);
-        newResult.set(result);
-        newResult.set(value, result.length);
-        result = newResult;
-      }
-      return result.buffer;
+        const reader = stream.getReader();
+        let result = new Uint8Array();
+        let done, value;
+        while ({ done, value } = await reader.read(), !done) {
+            const newResult = new Uint8Array(result.length + value.length);
+            newResult.set(result);
+            newResult.set(value, result.length);
+            result = newResult;
+        }
+        return result.buffer;
     }
-
 
     async function compressData(arrayBuffer) {
-      const stream = new CompressionStream('gzip');
-      const writer = stream.writable.getWriter();
-      writer.write(new Uint8Array(arrayBuffer));
-      writer.close();
-      
-      const compressedArrayBuffer = await streamToArrayBuffer(stream.readable);
-      return compressedArrayBuffer;
+        const stream = new CompressionStream('gzip');
+        const writer = stream.writable.getWriter();
+        writer.write(new Uint8Array(arrayBuffer));
+        writer.close();
+
+        const compressedArrayBuffer = await streamToArrayBuffer(stream.readable);
+        return compressedArrayBuffer;
     }
-    
+
     form.addEventListener('submit', async (event) => {
         event.preventDefault();
 
@@ -133,17 +132,35 @@
             event.target.submit();
             return;
         }
-        
+
+        // Provera MIME tipa da bi se osiguralo da je fajl slika
+        const validImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+        const validFileExtensions = ['jpg', 'jpeg', 'png'];
+        const fileExtension = file.name.split('.').pop().toLowerCase();
+
+        if (!validImageTypes.includes(file.type) || !validFileExtensions.includes(fileExtension)) {
+            alert("Samo slike su dozvoljene za upload.");
+            return;
+        }
+
+        // Provera veličine fajla (maksimalno 1 MB)
+        const maxSizeInBytes = 1024 * 1024; // 1 MB u bajtovima
+        if (file.size > maxSizeInBytes) {
+            alert("Slika ne sme biti veća od 1 MB.");
+            return;
+        }
+
+
         reader.onload = async () => {
             const arrayBuffer = reader.result;
-            
+
             const compressedArrayBuffer = await compressData(arrayBuffer);
             const base64Encoded = btoa(String.fromCharCode(...new Uint8Array(compressedArrayBuffer)));
-            
+
             document.getElementById("b64_img").value = base64Encoded;
         }
         reader.readAsArrayBuffer(file);
-        
+
         reader.onloadend = () => {
             event.target.submit();
         }

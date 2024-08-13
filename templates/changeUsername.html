@@ -7,20 +7,35 @@ Promena korisničkog imena
 {% block content %}
     <h1>Promenite svoje korisničko ime</h1>
     <hr>
-    <form method="post">
+    <form method="post" onsubmit="return validateUsername()">
     <label>Trenutno korisničko ime
-        <input type="text" id="current_username" name="current_username">
+        <input type="text" id="current_username" maxlength="25" name="current_username">
     </label>
     <label>Novo korisničko ime
-        <input type="text" id="new_username" name="new_username">
+        <input type="text" id="new_username" maxlength="25" name="new_username">
     </label>
     <label>
         Potvrdite novo korisničko ime
-        <input type="text" id="new_username_check" name="new_username_check">
+        <input type="text" id="new_username_check" maxlength="25" name="new_username_check">
     </label>
     <input type="submit" value="Promeni korisničko ime" class="btn">
     <a href="{{ url_for('dashboard.dashboard') }}" class="btn btn-link">
         Nazad
     </a>
     </form>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function validateUsername() {
+    const newUsername = document.getElementById('new_username').value;
+    const confirmUsername = document.getElementById('new_username_check').value;
+
+    if (newUsername !== confirmUsername) {
+        alert("Novo korisničko ime i potvrda novog korisničkog imena se ne poklapaju!");
+        return false; // Ukoliko je false, neće se poslati na backend
+    }
+    return true;
+}
+</script>
 {% endblock %}

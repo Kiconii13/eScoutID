@@ -17,20 +17,14 @@ def dashboard():
 @login_required
 def changePassword():
     if request.method == "POST":
-        check_user = User()
-        check_user.set_password(request.form["current_password"])
         # Provera da li se unesena lozinka poklapa sa trenutnom lozinkom
         if not current_user.check_password(request.form["current_password"]):
-            flash("Niste uneli tačnu trenutnu lozinku!", "greška")
-            return redirect(url_for("dashboard.changePassword"))
-        # Provera da li se nova lozinka poklapa sa potvrdom
-        if request.form["new_password"] != request.form["new_password_check"]:
-            flash("Nova lozinka i potvrda nove lozinke se ne poklapaju!", "Greška")
+            flash("Niste uneli tačnu trenutnu lozinku!", "Greška")
             return redirect(url_for("dashboard.changePassword"))
         # Uspešna promena
         current_user.set_password(request.form["new_password"])
         db.session.commit()
-        flash("Uspešno ste promenili lozinku!", "info")
+        flash("Uspešno ste promenili lozinku!", "Info")
         return redirect(url_for("dashboard.dashboard"))
     else:
         return render_template("changePassword.html")
@@ -41,9 +35,6 @@ def changeUsername():
     if request.method == "POST":
         if current_user.username != request.form["current_username"]:
             flash("Netačno trenutno korisničko ime!", "error")
-            return redirect(url_for("dashboard.changeUsername"))
-        if request.form["new_username"] != request.form["new_username_check"]:
-            flash("Novo korisničko ime i potvrda novog korisničkog imena se ne poklapaju!", "error")
             return redirect(url_for("dashboard.changeUsername"))
         check_user = User.query.filter_by(username = request.form["new_username"]).first()
         if check_user:
