@@ -31,7 +31,7 @@ def odredDashboard(id):
     ceta_ids = [ceta.id for ceta in cetas]
     vods = Vod.query.filter(Vod.ceta_id.in_(ceta_ids)).order_by(Vod.ceta_id).all()
     return render_template("OdredDashboard.html", odred_name=Odred.query.filter_by(id=id).first(),
-                           users=User.query.filter_by(odred_id=id).all(), vods=vods)
+                           users=User.query.filter_by(odred_id=id).order_by(User.id).all(), vods=vods)
 
 
 # Dodavanje novog clana u odred

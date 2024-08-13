@@ -35,11 +35,11 @@ def changePassword():
 def changeUsername():
     if request.method == "POST":
         if current_user.username != request.form["current_username"]:
-            flash("Netačno trenutno korisničko ime!", "error")
+            flash("Netačno trenutno korisničko ime!", "Greška")
             return redirect(url_for("dashboard.changeUsername"))
         check_user = User.query.filter_by(username=request.form["new_username"]).first()
         if check_user:
-            flash("Korisničko ime je već zauzeto", "error")
+            flash("Korisničko ime je već zauzeto", "Greška")
             return redirect(url_for("dashboard.changeUsername"))
         current_user.username = request.form["new_username"]
         db.session.commit()
