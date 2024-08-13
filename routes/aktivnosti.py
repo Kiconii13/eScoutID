@@ -14,6 +14,7 @@ from permissions import role_required
 
 aktivnosti_bp = Blueprint('aktivnosti', __name__)
 
+
 # Prikaz svih aktivnosti u kojima je ucestvovao ulogovani clan
 @aktivnosti_bp.route("/aktivnosti")
 @login_required
@@ -26,7 +27,7 @@ def aktivnosti():
 # Prikaz stranice za dodavanje i dodeljivanje aktivnosti
 @aktivnosti_bp.route("/addAktivnost")
 @login_required
-@role_required("admin","savez_admin")
+@role_required("admin", "savez_admin")
 def addAktivnost():
     if current_user.role == "admin":
         # admin odreda dodaje samo aktivnosti koje organizuje njegov odred
@@ -41,7 +42,7 @@ def addAktivnost():
 # Dodavanje nove aktivnosti u bazu
 @aktivnosti_bp.route("/aktivnosti/new", methods=["POST"])
 @login_required
-@role_required("admin","savez_admin")
+@role_required("admin", "savez_admin")
 def new_aktivnost():
     aktivnost = Activity()
     aktivnost.name = request.form["name"]
@@ -64,7 +65,7 @@ def new_aktivnost():
 # Dodeljivanje aktivnosti clanovima
 @aktivnosti_bp.route("/aktivnosti/log", methods=["POST"])
 @login_required
-@role_required("admin","savez_admin")
+@role_required("admin", "savez_admin")
 def log_aktivnost():
     participation = Participation()
 
@@ -83,15 +84,16 @@ def log_aktivnost():
     
     return redirect(url_for("aktivnosti.addAktivnost"))
 
+
 # Kreiranje QR koda za izabranu aktivnost
 @aktivnosti_bp.route("/aktivnosti/qr", methods=["POST"])
 @login_required
-@role_required("admin","savez_admin")
+@role_required("admin", "savez_admin")
 def generateQR():
     activityID = request.form["activity"]
 
     memory = BytesIO()
-    url = url_for("aktivnosti.qr_log_aktivnost", _external=True, _scheme='https', activityID = activityID)
+    url = url_for("aktivnosti.qr_log_aktivnost", _external=True, _scheme='https', activityID=activityID)
     qr = qrcode.QRCode(
         version=1,
         error_correction=qrcode.constants.ERROR_CORRECT_L,
@@ -112,13 +114,13 @@ def generateQR():
     elif current_user.role == "savez_admin":
         # savez_admin dodaje aktivnosti koje organizuje savez ili neka od internacionalnih organinzacija
         activities = Activity.query.filter(Activity.organizer_type != OrganizerLevel(1))
-    
-    return render_template("addAktivnost.html", qrimg = base64_img, activities = activities)
+
+    return render_template("addAktivnost.html", qrimg=base64_img, activities=activities)
+
 
 # Dodeljivanje aktivnosti clanovima preko QR koda
 @aktivnosti_bp.route("/aktivnosti/log/<int:activityID>", methods=["GET"])
 @login_required
-@role_required("clan","admin","savez_admin")
 def qr_log_aktivnost(activityID):
     participation = Participation()
 

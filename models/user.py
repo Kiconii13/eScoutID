@@ -21,7 +21,7 @@ class User(db.Model, UserMixin):
     last_name = db.Column(db.String(50), default="")
     dob = db.Column(db.Date, default=datetime.today().date())
     join_date = db.Column(db.Date, default=datetime.today().date())
-    phone_number = db.Column(db.String(12), default="")
+    phone_number = db.Column(db.String(13), default="")
     email = db.Column(db.String(100), default="")
     address = db.Column(db.String(100), default="")
     avatar = db.Column(db.Text, default="")
@@ -40,6 +40,7 @@ class User(db.Model, UserMixin):
     vod = db.relationship('Vod', back_populates='members', foreign_keys=[vod_id])
 
     activities = db.relationship('Activity', secondary='participations', back_populates='participants')
+    skills = db.relationship("Skill", back_populates="user", cascade="all, delete-orphan")
 
     def defUser(user):
         user.first_name = request.form["first_name"]

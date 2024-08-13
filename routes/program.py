@@ -83,6 +83,7 @@ def add_skill():
 
     return redirect(url_for('program.add_program', user_id=user_id))
 
+
 @program_bp.route('/delete_skill/<int:id>', methods=['POST', 'GET'])
 @login_required
 @role_required("admin")

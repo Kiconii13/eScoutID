@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-Dashboard
+Moj nalog
 {% endblock %}
 
 {% block content %}
@@ -149,8 +149,7 @@ Dashboard
             .then(text => {
                 if (text !== "default") {
                     showImage(text);
-                }
-                else {
+                } else {
                     document.getElementById('output').src = "/static/default_pfp.png";
                 }
             });
@@ -163,6 +162,23 @@ Dashboard
     document.getElementById('fileInput').addEventListener('change', async function(event) {
         const file = event.target.files[0];
         if (file) {
+            // Provera MIME tipa da bi se osiguralo da je fajl slika
+            const validImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+            const validFileExtensions = ['jpg', 'jpeg', 'png'];
+            const fileExtension = file.name.split('.').pop().toLowerCase();
+
+            if (!validImageTypes.includes(file.type) || !validFileExtensions.includes(fileExtension)) {
+                alert("Samo slike u formatima .png i .jpeg su dozvoljene za upload.");
+                return;
+            }
+
+            // Provera veličine fajla (maksimalno 1 MB)
+            const maxSizeInBytes = 1024 * 1024; // 1 MB u bajtovima
+            if (file.size > maxSizeInBytes) {
+                alert("Slika ne sme biti veća od 1 MB.");
+                return;
+            }
+
             const reader = new FileReader();
 
             reader.onload = async function(e) {
@@ -198,4 +214,6 @@ Dashboard
         return compressedArrayBuffer;
     }
 </script>
+
+
 {% endblock %}
