@@ -23,7 +23,7 @@ def odred():
 # Prikaz tabele sa svim clanovima; Prikazuju se samo clanovi odreda ciji je admin trenutno ulogovani korisnik.
 @odred_bp.route("/odredDashboard/<int:id>")
 @login_required
-@role_required("admin","savez_admin")
+@role_required("admin", "savez_admin")
 def odredDashboard(id):
     if current_user.odred.id != id and current_user.role != "savez_admin":
         return redirect(url_for("odred.odred"))
@@ -37,16 +37,16 @@ def odredDashboard(id):
 # Dodavanje novog clana u odred
 @odred_bp.route("/clan/add", methods=["POST", "GET"])
 @login_required
-@role_required("admin","savez_admin")
+@role_required("admin", "savez_admin")
 def addClan():
     action = "add"
     new_user = User()
     if request.method == "POST":
         if request.form["role"] == "savez_admin" and current_user.role != "savez_admin":
-            flash("Nedozvoljena radnja!","error")
+            flash("Nedozvoljena radnja!", "error")
             return redirect(url_for("dashboard.dashboard"))
         if request.form["role"] not in ["clan", "admin", "savez_admin"]:
-            flash("Nedozvoljena radnja!","error")
+            flash("Nedozvoljena radnja!", "error")
             return redirect(url_for("dashboard.dashboard"))
         new_user = User.defUser(new_user)
         new_user.set_password(new_user.username)
@@ -67,7 +67,7 @@ def addClan():
 # Izmene podataka vec postojeceg clana odreda
 @odred_bp.route("/clan/edit/<int:id>", methods=["POST", "GET"])
 @login_required
-@role_required("admin","savez_admin")
+@role_required("admin", "savez_admin")
 def editClan(id):
     action = "edit"
     user = User.query.get(id)
@@ -79,9 +79,11 @@ def editClan(id):
     if request.method == "POST":
         if user.vod.vodnik_id == user.id and user.vod.id != int(request.form["vod"]):
             flash("Clan je vodnik svog voda! Prvo postavi drugog vodnika.", "error")
-            return render_template("addClan.html", h1="Izmeni člana", action=action, clan=user, odred=Odred.query.filter_by(id=user.odred_id).first().name, vods=vods)
-        if (request.form["role"] == "savez_admin" and current_user.role != "savez_admin") or (request.form["role"] not in ["clan","admin","savez_admin"]):
-            flash("Nedozvoljena radnja!","error")
+            return render_template("addClan.html", h1="Izmeni člana", action=action, clan=user,
+                                   odred=Odred.query.filter_by(id=user.odred_id).first().name, vods=vods)
+        if (request.form["role"] == "savez_admin" and current_user.role != "savez_admin") or (
+                request.form["role"] not in ["clan", "admin", "savez_admin"]):
+            flash("Nedozvoljena radnja!", "error")
             return redirect(url_for("dashboard.dashboard"))
         user = User.defUser(user)
         db.session.commit()
@@ -94,11 +96,11 @@ def editClan(id):
 # Uklanjanje clana iz odreda
 @odred_bp.route("/clan/delete/<int:id>", methods=["GET", "POST"])
 @login_required
-@role_required("admin","savez_admin")
+@role_required("admin", "savez_admin")
 def deleteClan(id):
     user = User.query.get(id)
     if user:
-        if user.id not in [user.odred.staresina_id,user.odred.nacelnik_id,user.vod.vodnik_id,user.vod.ceta.vodja_id]:
+        if user.id not in [user.odred.staresina_id, user.odred.nacelnik_id, user.vod.vodnik_id, user.vod.ceta.vodja_id]:
             if user.odred.id != current_user.odred.id and current_user.role != "savez_admin":
                 return redirect(url_for("odred.odred"))
             db.session.delete(user)
@@ -145,7 +147,7 @@ def updatePfp(id):
 @role_required("admin")
 def addCetaVod():
     return render_template("addCetaVod.html", users=User.query.filter_by(odred_id=current_user.odred_id).all(),
-                               cetas=Ceta.query.filter_by(odred_id=current_user.odred_id).all())
+                           cetas=Ceta.query.filter_by(odred_id=current_user.odred_id).all())
 
 
 @odred_bp.route("/ceta/new", methods=["POST"])
@@ -262,6 +264,7 @@ def editVod(id):
     vod.ceta_id = request.form.get("ceta")
     db.session.commit()
     return redirect(url_for("odred.vodInfo", id=id))
+
 
 @odred_bp.route("/deleteVod/<int:id>")
 @login_required

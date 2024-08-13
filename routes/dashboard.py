@@ -29,6 +29,7 @@ def changePassword():
     else:
         return render_template("changePassword.html")
 
+
 @dashboard_bp.route('/dashboard/changeUsername', methods=["POST", "GET"])
 @login_required
 def changeUsername():
@@ -36,7 +37,7 @@ def changeUsername():
         if current_user.username != request.form["current_username"]:
             flash("Netačno trenutno korisničko ime!", "error")
             return redirect(url_for("dashboard.changeUsername"))
-        check_user = User.query.filter_by(username = request.form["new_username"]).first()
+        check_user = User.query.filter_by(username=request.form["new_username"]).first()
         if check_user:
             flash("Korisničko ime je već zauzeto", "error")
             return redirect(url_for("dashboard.changeUsername"))

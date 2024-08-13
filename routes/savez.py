@@ -1,8 +1,7 @@
 from datetime import datetime
 
 from flask import Blueprint, redirect, url_for, render_template, request, flash, make_response
-from flask_login import current_user, login_required
-from sqlalchemy import func
+from flask_login import login_required
 
 from models import db, Odred, User, Ceta, Vod
 from permissions import role_required
@@ -19,9 +18,9 @@ def savezDashboard():
     Broj_Clanova = []
     Broj_Clanarina = []
     for odred in odredi:
-        broj_clanova = User.query.filter_by(odred_id = odred.id).count()
+        broj_clanova = User.query.filter_by(odred_id=odred.id).count()
         Broj_Clanova.append(broj_clanova)
-        broj_clanarina = User.query.filter_by(odred_id= odred.id, has_paid=True).count()
+        broj_clanarina = User.query.filter_by(odred_id=odred.id, has_paid=True).count()
         Broj_Clanarina.append(broj_clanarina)
     return render_template("savezDashboard.html", odredi=zip(odredi, Broj_Clanova, Broj_Clanarina))
 
