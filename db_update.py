@@ -11,7 +11,7 @@ def upgrade():
                 FROM information_schema.columns 
                 WHERE table_name = 'users'
             """))
-            existing_columns = {row['column_name'] for row in result}
+            existing_columns = {row[0] for row in result}  # Koristite indeks 0 za pristup
 
             if 'jmbg' not in existing_columns:
                 connection.execute(text('ALTER TABLE users ADD COLUMN jmbg VARCHAR(13);'))
