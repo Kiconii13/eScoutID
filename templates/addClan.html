@@ -32,12 +32,16 @@
         </select>
     </label>
     <label>
-        Datum rođenja: 
-        <input type="date" id="dob" name="dob" value = "{{clan.dob}}">
+        JMBG:
+        <input type="text" id="jmbg" name="jmbg" placeholder="0101007500006" required minlength="13" maxlength="13" pattern="^(0[1-9]|[12][0-9]|3[01])(0[1-9]|1[0-2])[0-9]{3}[0-9]{2}[0-9]{3}[0-9]$" value="{{ clan.jmbg }}">
     </label>
     <label>
         Datum učlanjivanja: 
         <input type="date" id="join_date" name="join_date" value = "{{clan.join_date}}">
+    </label>
+    <label>
+        Broj izviđačke knjižice:
+        <input type="number" id="scout_id_number" name="scout_id_number">
     </label>
     <label>
         Broj telefona (u formatu <strong>pozivni broj-broj</strong> npr. +381612345678):
