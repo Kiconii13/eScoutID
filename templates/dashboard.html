@@ -61,6 +61,18 @@ Moj nalog
                         <td>{{ current_user.join_date.day }}.{{ current_user.join_date.month }}.{{ current_user.join_date.year }}.</td>
                     </tr>
                     <tr>
+                        <td>Kategorija:</td>
+                        <td>
+                        {% set dob = current_user.dob %}
+                        {% set age = now.year - dob.year - ((now.month, now.day) < (dob.month, dob.day)) %}
+                       {% if current_user.gender == 'M' %}
+                        {% if age <= 11 %}Poletarac{% elif age <= 15 %}Mladji izviđač{% elif age <= 19 %}Stariji izviđač{% elif age <= 25 %}Rover{% else %}Brdjanin{% endif %}
+                        {% elif current_user.gender == "Z" %}
+                        {% if age <= 11 %}Pčelica{% elif age <= 15 %}Mlađa planinka{% elif age <= 19 %}Starija planinka{% elif age <= 25 %}Roverka{% else %}Brđanka{% endif %}
+                        {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
                         <td>Vod:</td>
                         <td>{{ current_user.vod }}</td>
                     </tr>
