@@ -58,7 +58,7 @@ Vod: {{vod.name}}
         {% endfor %}
     </tbody>
 </table>
-
+{% if current_user.role != "clan" %}
     <form action="{{ url_for('odred.editVod', id=vod.id) }}" method="POST">
     <label> Naziv voda
         <input type="text" name="vod_name" id="vod_name" value="{{ vod.name }}" required>
@@ -74,6 +74,10 @@ Vod: {{vod.name}}
     <input type="submit" value="Ažuriraj vod" class="btn">
             <input type="button" value="Obriši vod" class="btn" onclick="window.location.href = `{{ url_for('odred.deleteVod', id=vod.id) }}`">
 </form>
+{% endif %}
+    {% if current_user.role != "clan" %}
     <input type="button" value="Nazad" class="btn" onclick="window.location.href = `{{ url_for('odred.odredDashboard', id=vod.ceta.odred_id) }}`">
-
+    {% else %}
+    <input type="button" value="Nazad" class="btn" onclick="window.location.href = `{{ url_for('dashboard.dashboard') }}`">
+    {% endif %}
 {% endblock %}

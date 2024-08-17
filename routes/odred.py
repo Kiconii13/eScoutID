@@ -248,8 +248,9 @@ def editNacelnikStaresina():
 
 @odred_bp.route("/vodInfo/<int:id>")
 @login_required
-@role_required("admin")
 def vodInfo(id):
+    if current_user.role == "clan" and current_user.vod.id != id:
+        return redirect(url_for("dashboard.dashboard"))
     return render_template("editVod.html", vod=Vod.query.get(id),
                            users=User.query.filter_by(vod_id=id).all(),
                            cete=Ceta.query.filter_by(odred_id=current_user.odred.id).all())

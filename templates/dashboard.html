@@ -72,7 +72,7 @@ Moj nalog
                         {% endif %}
                         </td>
                     </tr>
-                    <tr>
+                    <tr class = "user-row" onclick='window.location.href=`{{ url_for("odred.vodInfo", id=current_user.vod.id) }}`'>
                         <td>Vod:</td>
                         <td>{{ current_user.vod }}</td>
                     </tr>
