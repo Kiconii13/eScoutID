@@ -19,11 +19,16 @@ class User(db.Model, UserMixin):
 
     first_name = db.Column(db.String(50), default="")
     last_name = db.Column(db.String(50), default="")
+    jmbg = db.Column(db.String(13), unique=True, nullable=True)
     dob = db.Column(db.Date, default=datetime.today().date())
     join_date = db.Column(db.Date, default=datetime.today().date())
     phone_number = db.Column(db.String(13), default="")
     email = db.Column(db.String(100), default="")
     address = db.Column(db.String(100), default="")
+    scout_id_number = db.Column(db.String(20), unique=True, nullable=True)
+    account_creation_date = db.Column(db.DateTime, default=datetime.utcnow)
+    gender = db.Column(db.String(10), nullable=True)
+    last_login_date = db.Column(db.DateTime, nullable=True)
     avatar = db.Column(db.Text, default="")
 
     has_paid = db.Column(db.Boolean(), default=False)
@@ -42,13 +47,44 @@ class User(db.Model, UserMixin):
     activities = db.relationship('Activity', secondary='participations', back_populates='participants')
     skills = db.relationship("Skill", back_populates="user", cascade="all, delete-orphan")
 
+    def calculate_gender(self):
+        # Ekstraktovanje cifara od 10. do 12. iz JMBG-a
+        pol_cifre = int(self.jmbg[9:12])
+
+        # Određivanje pola
+        if pol_cifre < 500:
+            self.gender = "M"
+        else:
+            self.gender = "Z"
+
+    def extract_birth_date(self):
+        # Prve dve cifre su dan rođenja
+        day = int(self.jmbg[0:2])
+        # Sledeće dve cifre su mesec rođenja
+        month = int(self.jmbg[2:4])
+        # Sledeće tri cifre su godina rođenja
+        year = int(self.jmbg[4:7])
+
+        # Godina rođenja: 0xx za 2000-te, 1xx za 1000-te, 9xx za 1900-te
+        if year < 100:
+            year += 2000
+        else:
+            year += 1000
+
+        # Kreiramo datum rođenja
+        self.dob = datetime(year, month, day)
+
+
     def defUser(user):
         user.first_name = request.form["first_name"]
         user.last_name = request.form["last_name"]
+        user.jmbg = request.form["jmbg"]
         user.role = request.form.get("role")
-        user.dob = datetime.fromisoformat(request.form["dob"]).date()
+        user.extract_birth_date()
+        user.calculate_gender()
         user.join_date = datetime.fromisoformat(request.form["join_date"]).date()
         user.phone_number = request.form["phone_number"]
+        user.scout_id_number = request.form["scout_id_number"]
         user.email = request.form["email"]
         user.address = request.form["address"]
         user.has_paid = 1 if request.form.get('has_paid') else 0
@@ -57,6 +93,7 @@ class User(db.Model, UserMixin):
             user.avatar = request.form["image"]
         if not user.username:
             user.username = f"{user.last_name[0].lower()}{user.first_name[0].lower()}.{randint(1000, 9999)}"
+
         return user
 
     def set_password(self, password):

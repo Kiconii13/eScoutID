@@ -1,3 +1,5 @@
+import datetime
+
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_user, logout_user, current_user, login_required
 
@@ -30,6 +32,7 @@ def login():
         if user and user.check_password(password):
             user.authenticated = True
             login_user(user)
+            user.last_login_date = datetime.datetime.now()
             return redirect(url_for("dashboard.dashboard"))
         # If False show index
         else:

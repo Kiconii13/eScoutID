@@ -29,6 +29,7 @@ with app.app_context():
 
         savez_admin = User(username="savez_admin")
         savez_admin.set_password("")
+        savez_admin.jmbg="0101007500006"
         savez_admin.role = "savez_admin"
         savez_admin.odred_id = odred.id
         savez_admin.vod_id = vod.id
@@ -37,6 +38,7 @@ with app.app_context():
         db.session.commit()
 
         admin = User(username="admin")
+        savez_admin.jmbg="0101007500007"
         admin.set_password("")
         admin.role = "admin"
 

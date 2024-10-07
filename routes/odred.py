@@ -1,3 +1,5 @@
+import datetime
+
 from flask import Blueprint, redirect, url_for, render_template, flash, request, make_response, jsonify
 from flask_login import login_required, current_user
 
@@ -30,8 +32,9 @@ def odredDashboard(id):
     cetas = Ceta.query.filter_by(odred_id=current_user.odred_id).all()
     ceta_ids = [ceta.id for ceta in cetas]
     vods = Vod.query.filter(Vod.ceta_id.in_(ceta_ids)).order_by(Vod.ceta_id).all()
+    now = datetime.date.today()
     return render_template("OdredDashboard.html", odred_name=Odred.query.filter_by(id=id).first(),
-                           users=User.query.filter_by(odred_id=id).order_by(User.id).all(), vods=vods)
+                           users=User.query.filter_by(odred_id=id).order_by(User.id).all(), vods=vods, now = now)
 
 
 # Dodavanje novog clana u odred
@@ -245,8 +248,9 @@ def editNacelnikStaresina():
 
 @odred_bp.route("/vodInfo/<int:id>")
 @login_required
-@role_required("admin")
 def vodInfo(id):
+    if current_user.role == "clan" and current_user.vod.id != id:
+        return redirect(url_for("dashboard.dashboard"))
     return render_template("editVod.html", vod=Vod.query.get(id),
                            users=User.query.filter_by(vod_id=id).all(),
                            cete=Ceta.query.filter_by(odred_id=current_user.odred.id).all())
