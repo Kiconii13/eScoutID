@@ -9,6 +9,8 @@ from models.activity import Activity, Participation, OrganizerLevel
 import qrcode
 from io import BytesIO
 from base64 import b64encode
+import string
+import random
 
 from permissions import role_required
 
@@ -90,10 +92,13 @@ def log_aktivnost():
 @login_required
 @role_required("admin", "savez_admin")
 def generateQR():
-    activityID = request.form["activity"]
+    activity = Activity.query.filter_by(id = request.form["activity"]).first()
+    if activity.key is None:
+        activity.key = ''.join(random.choices(string.ascii_letters,k=32))
+        db.session.commit()
+    url = url_for("aktivnosti.qr_log_aktivnost", _external=True,key=activity.key)
 
     memory = BytesIO()
-    url = url_for("aktivnosti.qr_log_aktivnost", _external=True, _scheme='https', activityID=activityID)
     qr = qrcode.QRCode(
         version=1,
         error_correction=qrcode.constants.ERROR_CORRECT_L,
@@ -119,12 +124,15 @@ def generateQR():
 
 
 # Dodeljivanje aktivnosti clanovima preko QR koda
-@aktivnosti_bp.route("/aktivnosti/log/<int:activityID>", methods=["GET"])
+@aktivnosti_bp.route("/aktivnosti/log/<key>", methods=["GET"])
 @login_required
-def qr_log_aktivnost(activityID):
+def qr_log_aktivnost(key):
     participation = Participation()
-
-    participation.activity_id = activityID
+    activity = Activity.query.filter_by(key=key).first()
+    if activity is None:
+        flash("Aktivnost ne postoji", "Greška")
+        return redirect(url_for("aktivnosti.aktivnosti"))
+    participation.activity_id = activity.id
     participation.user_id = current_user.id
     
     #Provera da li je clanu vec zabelezeno ucesce na izabranoj aktivnosti

@@ -32,7 +32,7 @@ class Activity(db.Model):
     type = db.Column(Enum(ActivityType), default=ActivityType.Aktivnost)
     organizer_type = db.Column(Enum(OrganizerLevel), default=OrganizerLevel.Odred)
     organizer_name = db.Column(db.String(50))
-
+    key = db.Column(db.String(50))
     participants = db.relationship('User', secondary='participations', back_populates='activities')
 
     def __repr__(self):
