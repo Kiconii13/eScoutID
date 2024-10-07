@@ -1,7 +1,6 @@
 from app import db, create_app
 from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
-import os
 
 def upgrade():
     try:
@@ -11,8 +10,6 @@ def upgrade():
             db.session.execute(text('ALTER TABLE activities ADD COLUMN IF NOT EXISTS key VARCHAR(50);'))
 
         db.session.commit()  # Obavezno sačuvaj promene
-        a = os.environ.get("NEW_DATABASE_URL")
-        print(a)
         print("Database successfully updated!")
 
     except SQLAlchemyError as e:
