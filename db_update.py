@@ -6,7 +6,7 @@ def upgrade():
     try:
         with db.engine.connect() as connection:
             # Dodajte kolone ako ne postoje
-            connection.execute(text('ALTER TABLE activity ADD COLUMN IF NOT EXISTS key VARCHAR(50);'))
+            connection.execute(text('ALTER TABLE activities ADD COLUMN IF NOT EXISTS key VARCHAR(50);'))
 
         print("Database successfully updated!")
 
