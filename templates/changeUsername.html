@@ -31,10 +31,19 @@ function validateUsername() {
     const newUsername = document.getElementById('new_username').value;
     const confirmUsername = document.getElementById('new_username_check').value;
 
+    // Regex koji dozvoljava samo slova, brojeve, podvlaku (_) i tačku (.)
+    const usernamePattern = /^[a-zA-Z0-9_.]+$/;
+
     if (newUsername !== confirmUsername) {
         alert("Novo korisničko ime i potvrda novog korisničkog imena se ne poklapaju!");
-        return false; // Ukoliko je false, neće se poslati na backend
+        return false;
     }
+
+    if (!usernamePattern.test(newUsername)) {
+        alert("Korisničko ime može sadržati samo slova engleskog alfabeta, brojeve, podvlaku (_) i tačku (.)!");
+        return false;
+    }
+
     return true;
 }
 </script>

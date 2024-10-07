@@ -37,8 +37,8 @@ Vod: {{vod.name}}
             <td>{{ user.dob.day }}.{{ user.dob.month }}.{{ user.dob.year }}.</td>
             <td>{{ user.join_date.day }}.{{ user.join_date.month }}.{{ user.join_date.year }}.</td>
             <td>
-                <a href="tel:+{{ user.phone_number }}">
-                    +{{ user.phone_number }}
+                <a href="tel:{{ user.phone_number }}">
+                    {{ user.phone_number }}
                 </a>
             </td>
             <td>
