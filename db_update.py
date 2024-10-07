@@ -11,7 +11,8 @@ def upgrade():
             db.session.execute(text('ALTER TABLE activities ADD COLUMN IF NOT EXISTS key VARCHAR(50);'))
 
         db.session.commit()  # Obavezno sačuvaj promene
-        print(os.environ.get("NEW_DATABASE_URL"))
+        a = os.environ.get("NEW_DATABASE_URL")
+        print(a)
         print("Database successfully updated!")
 
     except SQLAlchemyError as e:
