@@ -95,8 +95,18 @@ Upravljanje aktivnostima
     {% endif %}
     <input type="submit" value="Generiši QR kod" class="btn">
 </form>
-
-
+<hr>
+<form action="{{ url_for('aktivnosti.deleteAktivnost') }}" method="POST" style="text-align: center;">
+    <label>
+        Naziv aktivnosti i organizator:
+        <select name="activity">
+            {% for activity in activities %}
+            <option value="{{ activity.id }}">{{ activity.name }} - {{ activity.organizer_name }}</option>
+            {% endfor %}
+        </select>
+    </label>
+    <input type="submit" value="Izbriši aktivnost" class="btn" onclick="return confirm('Da li ste sigurni da želite da obrišete ovu aktivnost?');">
+</form>
 <hr>
 
 <input type="button" value="Nazad" class="btn" onclick="window.location.href = `{{ url_for('dashboard.dashboard') }}`">

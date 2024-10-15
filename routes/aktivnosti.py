@@ -93,6 +93,7 @@ def log_aktivnost():
 @role_required("admin", "savez_admin")
 def generateQR():
     activity = Activity.query.filter_by(id = request.form["activity"]).first()
+    #Generisanje i dodeljivanje jedinstvenog stringa izabranoj aktivosti
     if activity.key is None:
         activity.key = ''.join(random.choices(string.ascii_letters,k=32))
         db.session.commit()
@@ -146,3 +147,11 @@ def qr_log_aktivnost(key):
         flash("Učešće uspešno zabeleženo", "Info")
     
     return redirect(url_for("aktivnosti.aktivnosti"))
+
+@aktivnosti_bp.route("/aktivnosti/delete", methods=["POST"])
+@login_required
+def deleteAktivnost():
+    activity = Activity.query.filter_by(id=request.form["activity"]).first()
+    db.session.delete(activity)
+    db.session.commit()
+    return redirect(url_for("aktivnosti.addAktivnost"))
