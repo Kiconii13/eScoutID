@@ -2,15 +2,16 @@ from app import db, create_app
 from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
 
-def upgrade():
+
+def clear_activities():
     try:
         # Pokrećemo novu transakciju
         with db.session.begin():
-            # Dodajte kolonu ako ne postoji
-            db.session.execute(text('ALTER TABLE activities ADD COLUMN IF NOT EXISTS key VARCHAR(50);'))
+            # Brisanje svih podataka iz tabele activities
+            db.session.execute(text('DELETE FROM activities;'))
 
         db.session.commit()  # Obavezno sačuvaj promene
-        print("Database successfully updated!")
+        print("All records from 'activities' table have been successfully deleted!")
 
     except SQLAlchemyError as e:
         db.session.rollback()  # Ako dođe do greške, vrati sve promene unazad
@@ -20,7 +21,4 @@ def upgrade():
 if __name__ == "__main__":
     app = create_app()
     with app.app_context():
-        upgrade()
-
-
-# KADA SE POKRECE NA HEROKU, OBAVEZNO NAPISATI EXIT NA KRAJU RADA SA BASHOM
+        clear_activities()
