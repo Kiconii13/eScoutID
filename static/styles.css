@@ -34,19 +34,6 @@ body {
     background-position: var(--bg-pos-x, 0) var(--bg-pos-y, 0);
 }
 
-/* @media (min-width: 1024px) {
-    overflow-x: hidden;
-} */
-
-@keyframes moveBackground {
-    from {
-        background-position: var(--bg-pos-x, 0) var(--bg-pos-y, 0);
-    }
-    to {
-        background-position: calc(var(--bg-pos-x, 0) + 100%) calc(var(--bg-pos-y, 0) + 100%);
-    }
-}
-
 @media (min-width: 426px) {
     body {
         animation: moveBackground 1000s linear infinite;
@@ -311,6 +298,7 @@ h2, caption {
     text-decoration: underline;
 }
 
+/* Updated table styles for both tables */
 table {
     border-collapse: collapse;
     margin-top: 40px;
@@ -369,6 +357,7 @@ table td:nth-last-child(n+2), th:nth-last-child(n+2) {
 table caption {
     font-size: 20pt;
     margin-bottom: 10px;
+    text-align: center;
 }
 
 .skills {
@@ -409,7 +398,7 @@ select[readonly] option {
     display: none;
 }
 
-.qrcode_img{
-  height: 330px;
-  width: 330px;
+.qrcode_img {
+    height: 330px;
+    width: 330px;
 }
