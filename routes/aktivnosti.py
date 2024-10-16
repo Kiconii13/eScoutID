@@ -2,6 +2,7 @@ from datetime import datetime
 
 from flask import Blueprint, render_template, flash, redirect, url_for, request
 from flask_login import login_required, current_user
+from sqlalchemy.testing.suite.test_reflection import users
 
 from models import User, db
 from models.activity import Activity, Participation, OrganizerLevel
@@ -155,3 +156,69 @@ def deleteAktivnost():
     db.session.delete(activity)
     db.session.commit()
     return redirect(url_for("aktivnosti.addAktivnost"))
+
+@aktivnosti_bp.route("/aktivnost/info/<int:id>")
+@login_required
+@role_required("admin", "savez_admin")
+def info(id):
+    activity = Activity.query.filter_by(id=id).first()
+    participants_ids = Participation.query.filter_by(activity_id=id).all()
+    participants = []
+    for participation in participants_ids:
+        user = User.query.filter_by(id=participation.user_id).first()
+        if user:
+            participants.append(user)
+    return render_template("viewAktivnost.html", activity=activity, participants=participants)
+
+@aktivnosti_bp.route("/handle_action", methods=["POST"])
+@login_required
+@role_required("admin", "savez_admin")
+def handle_action():
+    action_type = request.form.get('action_type')
+    activity_id = request.form.get('activity')
+    user_username = request.form.get('user')
+
+    # Proveri da li je izabrana aktivnost
+    if not activity_id:
+        flash('Molimo vas da izaberete aktivnost.', 'Greška')
+        return redirect(url_for('aktivnosti.addAktivnost'))
+
+    # Pronađi aktivnost
+    activity = Activity.query.get(activity_id)
+
+    # Akcija za beleženje učešća
+    if action_type == 'log_aktivnost':
+        if not user_username:
+            flash('Molimo vas da unesete username člana.', 'Greška')
+            return redirect(url_for('aktivnosti.addAktivnost'))
+
+        user = User.query.filter_by(username=user_username).first()
+        if user:
+            participation = Participation.query.filter_by(activity_id=activity_id, user_id=user.id).first()
+            if participation:
+                flash('Ova aktivnost je već zabeležena za ovog korisnika.', 'Greška')
+            else:
+                new_participation = Participation(activity_id=activity_id, user_id=user.id)
+                db.session.add(new_participation)
+                db.session.commit()
+                flash('Učešće uspešno zabeleženo.', 'Info')
+        else:
+            flash('Korisnik nije pronađen.', 'Greška')
+
+        # Preusmeravanje na već postojeći 'log_aktivnost' route
+        return redirect(url_for("aktivnosti.addAktivnost"))
+
+    # Akcija za generisanje QR koda
+    elif action_type == 'generate_qr':
+        return redirect(url_for("aktivnosti.generateQR", activity=activity_id))
+
+    # Akcija za brisanje aktivnosti
+    elif action_type == 'delete_aktivnost':
+        return redirect(url_for("aktivnosti.deleteAktivnost", activity=activity_id))
+
+    # Akcija za prikaz informacija aktivnosti (novo)
+    elif action_type == 'info_aktivnost':
+        return redirect(url_for("aktivnosti.info", id=activity_id))
+
+    return redirect(url_for("aktivnosti.addAktivnost"))
+
