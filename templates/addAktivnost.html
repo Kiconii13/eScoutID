@@ -85,10 +85,10 @@ Upravljanje aktivnostima
 
     <!-- Dugmad za različite akcije -->
     <input type="hidden" name="action_type" value="">
-    <input type="submit" value="Zabeleži učešće" class="btn" onclick="this.form.action_type.value='log_aktivnost';">
-    <input type="submit" value="Generiši QR kod" class="btn" onclick="this.form.action_type.value='generate_qr';">
-    <input type="submit" value="Informacije o aktivnosti" class="btn" onclick="this.form.action_type.value='info_aktivnost';">
-    <input type="submit" value="Izbriši aktivnost" class="btn" onclick="this.form.action_type.value='delete_aktivnost'; return confirm('Da li ste sigurni da želite da obrišete ovu aktivnost?');">
+    <input type="submit" value="Zabeleži učešće" name="add_button" class="btn" onclick="this.form.action_type.value='log_aktivnost';">
+    <input type="submit" value="Generiši QR kod" name="qr_button" class="btn" onclick="this.form.action_type.value='generate_qr';">
+    <input type="submit" value="Informacije o aktivnosti" name="info_button" class="btn" onclick="this.form.action_type.value='info_aktivnost';">
+    <input type="submit" value="Izbriši aktivnost" name="delete_button" class="btn" onclick="this.form.action_type.value='delete_aktivnost'; return confirm('Da li ste sigurni da želite da obrišete ovu aktivnost?');">
 </form>
 
 
@@ -96,4 +96,22 @@ Upravljanje aktivnostima
 
 <!-- Dugme za povratak na dashboard -->
 <input type="button" value="Nazad" class="btn" onclick="window.location.href = `{{ url_for('dashboard.dashboard') }}`">
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        let selectElement = document.querySelector('select[name="activity"]');
+        let qrButton = document.querySelector('input[name="qr_button"]');
+        let infoButton = document.querySelector('input[name="info_button"]');
+        let deleteButton = document.querySelector('input[name="delete_button"]');
+        let addButton = document.querySelector('input[name="add_button"]');
+
+        function toggleQRButton() {
+            qrButton.disabled = infoButton.disabled = deleteButton.disabled = addButton.disabled = !selectElement.value;
+        }
+
+        toggleQRButton();
+
+        selectElement.addEventListener('change', toggleQRButton);
+    </script>
 {% endblock %}
