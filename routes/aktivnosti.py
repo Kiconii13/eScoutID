@@ -2,7 +2,7 @@ from datetime import datetime
 
 from flask import Blueprint, render_template, flash, redirect, url_for, request
 from flask_login import login_required, current_user
-from sqlalchemy.testing.suite.test_reflection import users
+
 
 from models import User, db
 from models.activity import Activity, Participation, OrganizerLevel
@@ -89,11 +89,10 @@ def log_aktivnost():
 
 
 # Kreiranje QR koda za izabranu aktivnost
-@aktivnosti_bp.route("/aktivnosti/qr", methods=["POST"])
+@aktivnosti_bp.route("/aktivnosti/qr", methods=["POST","GET"])
 @login_required
 @role_required("admin", "savez_admin")
-def generateQR():
-    activity = Activity.query.filter_by(id = request.form["activity"]).first()
+def generateQR(activity):
     #Generisanje i dodeljivanje jedinstvenog stringa izabranoj aktivosti
     if activity.key is None:
         activity.key = ''.join(random.choices(string.ascii_letters,k=32))
@@ -149,20 +148,18 @@ def qr_log_aktivnost(key):
     
     return redirect(url_for("aktivnosti.aktivnosti"))
 
-@aktivnosti_bp.route("/aktivnosti/delete", methods=["POST"])
+@aktivnosti_bp.route("/aktivnosti/delete", methods=["POST","GET"])
 @login_required
-def deleteAktivnost():
-    activity = Activity.query.filter_by(id=request.form["activity"]).first()
+def deleteAktivnost(activity):
     db.session.delete(activity)
     db.session.commit()
     return redirect(url_for("aktivnosti.addAktivnost"))
 
-@aktivnosti_bp.route("/aktivnost/info/<int:id>")
+@aktivnosti_bp.route("/aktivnost/info")
 @login_required
 @role_required("admin", "savez_admin")
-def info(id):
-    activity = Activity.query.filter_by(id=id).first()
-    participants_ids = Participation.query.filter_by(activity_id=id).all()
+def info(activity):
+    participants_ids = Participation.query.filter_by(activity_id=activity.id).all()
     participants = []
     for participation in participants_ids:
         user = User.query.filter_by(id=participation.user_id).first()
@@ -170,7 +167,7 @@ def info(id):
             participants.append(user)
     return render_template("viewAktivnost.html", activity=activity, participants=participants)
 
-@aktivnosti_bp.route("/handle_action", methods=["POST"])
+@aktivnosti_bp.route("/handle_action", methods=["POST","GET"])
 @login_required
 @role_required("admin", "savez_admin")
 def handle_action():
@@ -210,15 +207,15 @@ def handle_action():
 
     # Akcija za generisanje QR koda
     elif action_type == 'generate_qr':
-        return redirect(url_for("aktivnosti.generateQR", activity=activity_id))
+        return generateQR(activity)
 
     # Akcija za brisanje aktivnosti
     elif action_type == 'delete_aktivnost':
-        return redirect(url_for("aktivnosti.deleteAktivnost", activity=activity_id))
+        return deleteAktivnost(activity)
 
-    # Akcija za prikaz informacija aktivnosti (novo)
+    # Akcija za prikaz informacija aktivnosti
     elif action_type == 'info_aktivnost':
-        return redirect(url_for("aktivnosti.info", id=activity_id))
+        return info(activity)
 
     return redirect(url_for("aktivnosti.addAktivnost"))
 

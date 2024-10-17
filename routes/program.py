@@ -54,14 +54,11 @@ def select_user():
 @role_required("admin")
 def update_levels():
     user_id = request.form['user']
-    let_level = request.form['let_level']
-    zvezda_level = request.form['zvezda_level']
-    krin_level = request.form['krin_level']
 
     selected_user = User.query.get(user_id)
-    selected_user.let_level = let_level
-    selected_user.zvezda_level = zvezda_level
-    selected_user.krin_level = krin_level
+    selected_user.let_level = request.form['let_level']
+    selected_user.zvezda_level = request.form['zvezda_level']
+    selected_user.krin_level = request.form['krin_level']
     db.session.commit()
 
     return redirect(url_for('program.add_program'))
@@ -72,16 +69,11 @@ def update_levels():
 @login_required
 @role_required("admin")
 def add_skill():
-    user_id = request.form['user_id']
-    name = request.form['name']
-    level = request.form['level']
-    date_got = datetime.strptime(request.form['date_got'], '%Y-%m-%d')
-
-    new_skill = Skill(user_id=user_id, name=name, level=level, date_got=date_got)
+    new_skill = Skill(user_id=request.form['user_id'], name=request.form['name'], level=request.form['level'], date_got=datetime.strptime(request.form['date_got'], '%Y-%m-%d'))
     db.session.add(new_skill)
     db.session.commit()
 
-    return redirect(url_for('program.add_program', user_id=user_id))
+    return redirect(url_for('program.add_program', user_id=request.form['user_id']))
 
 
 @program_bp.route('/delete_skill/<int:id>', methods=['POST', 'GET'])
