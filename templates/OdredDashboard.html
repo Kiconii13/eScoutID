@@ -31,10 +31,13 @@ Odred Izviđača "{{ odred_name }}"
             <td>{{ user.first_name }} {{ user.last_name }}</td>
             <td>{{ user.username }}</td>
             <td>
+            {# Provera starosne kategorije članova u odnosu na današnji dan.#}
+            {# dob - Date Of Birth #}
+            {# age - trenutne godine #}
             {% set dob = user.dob %}
             {% set age = now.year - dob.year - ((now.month, now.day) < (dob.month, dob.day)) %}
            {% if user.gender == 'M' %}
-            {% if age <= 11 %}Poletarac{% elif age <= 15 %}Mladji izviđač{% elif age <= 19 %}Stariji izviđač{% elif age <= 25 %}Rover{% else %}Brdjanin{% endif %}
+            {% if age <= 11 %}Poletarac{% elif age <= 15 %}Mlađi izviđač{% elif age <= 19 %}Stariji izviđač{% elif age <= 25 %}Rover{% else %}Brđanin{% endif %}
             {% elif user.gender == "Z" %}
             {% if age <= 11 %}Pčelica{% elif age <= 15 %}Mlađa planinka{% elif age <= 19 %}Starija planinka{% elif age <= 25 %}Roverka{% else %}Brđanka{% endif %}
             {% endif %}
