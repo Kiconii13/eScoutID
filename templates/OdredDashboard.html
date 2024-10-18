@@ -33,9 +33,9 @@ Odred Izviđača "{{ odred_name }}"
             <td>
             {% set dob = user.dob %}
             {% set age = now.year - dob.year - ((now.month, now.day) < (dob.month, dob.day)) %}
-           {% if current_user.gender == 'M' %}
+           {% if user.gender == 'M' %}
             {% if age <= 11 %}Poletarac{% elif age <= 15 %}Mladji izviđač{% elif age <= 19 %}Stariji izviđač{% elif age <= 25 %}Rover{% else %}Brdjanin{% endif %}
-            {% elif current_user.gender == "Z" %}
+            {% elif user.gender == "Z" %}
             {% if age <= 11 %}Pčelica{% elif age <= 15 %}Mlađa planinka{% elif age <= 19 %}Starija planinka{% elif age <= 25 %}Roverka{% else %}Brđanka{% endif %}
             {% endif %}
             </td>
