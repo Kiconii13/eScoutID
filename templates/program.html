@@ -4,92 +4,61 @@
 Moj Program
 {% endblock %}
 
-{% block content %}
-    <h1>Položeni program</h1>
-    <hr/>
-    <div class="achivements" id="achivements">
-        <h3>Letovi</h3>
-        <div class = "program-col">
-            {% if current_user.let_level > 0 %}
-            <div id="let_vrapca">
-                <img src="/static/let_vrapca_n.png" alt="let_vrapca">
-            </div>
-            {% endif %}
-            {% if current_user.let_level > 1 %}
-            <div id="let_laste">
-                <img src="/static/let_laste_n.png" alt="let_laste">
-            </div>
-            {% endif %}
-            {% if current_user.let_level > 2 %}
-            <div id="let_orla">
-                <img src="/static/let_orla_n.png" alt="let_orla">
-            </div>
-            {% endif %}
-    </div>
-        <hr/>
-        <h3>Zvezde</h3>
-        <div class="program-col">
-            {% if current_user.zvezda_level > 0 %}
-            <div id ="prva_zvezda">
-                <img src="/static/prva_zvezda_n.png" alt="prva_zvezda">
-            </div>
-            {% endif %}
-            {% if current_user.zvezda_level > 1 %}
-            <div id="druga_zvezda">
-                <img src="/static/druga_zvezda_n.png" alt="druga_zvezda">
-            </div>
-            {% endif %}
-            {% if current_user.zvezda_level > 2 %}
-            <div id="treca_zvezda">
-                <img src="/static/treca_zvezda_n.png" alt="treca_zvezda">
-            </div>
-            {% endif %}
-        </div>
-    <hr/>
-    <h3>Krinovi</h3>
-    <div class="program-col">
-        {% if current_user.krin_level > 0 %}
-            <div id ="prvi_krin">
-                <img src="/static/prvi_krin_n.png" alt="prvi_krin">
-            </div>
-        {% endif %}
-        {% if current_user.krin_level > 1 %}
-            <div id="drugi_krin">
-                <img src="/static/drugi_krin_n.png" alt="drugi_krin">
-            </div>
-        {% endif %}
-        {% if current_user.krin_level > 2 %}
-            <div id="treci_krin">
-                <img src="/static/treci_krin_n.png" alt="treci_krin">
-            </div>
-        {% endif %}
-        </div>
-    <hr/>
-    </div>
-    <div class="skills">
-        <table id="skills_table">
-            <caption>Veštine - Veštarstva - Specijalnosti</caption>
-            <thead>
-                <tr>
-                    <th>Naziv</th>
-                    <th>Nivo</th>
-                    <th>Datum priznanja</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for skill in skills %}
-                <tr>
-                    <td>{{ skill.name }}</td>
-                    <td>{{ skill.level }}</td>
-                    <td>{{ skill.date_got.strftime('%d.%m.%Y') }}</td>
-                {% endfor %}
-                </tr>
-            </tbody>
-        </table>
-    </div>
+{% block style %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='program-style.css') }}" />
+{% endblock %}
 
-    <a href="{{ url_for('dashboard.dashboard') }}" class="btn btn-link">
-        Nazad
-    </a>
+{% block content %}
+<div class="icon-wrapper">
+  <a href="/dashboard"><img src="/static/logo_green.png" alt="Ikona" class="icon-small" /></a>
+</div>
+
+<div class="program-columns">
+  <!-- Položeni program -->
+  <div class="column awards">
+    <h2>Položeni program</h2>
+
+    <section>
+      <h3>Letovi</h3>
+      <div class="icons-row">
+          <div class="icon"><img src="/static/let_vrapca_n.png" alt="let_vrapca" {% if current_user.let_level < 1 %} style="filter: grayscale(1.0)" {% endif %}></div>
+          <div class="icon"><img src="/static/let_laste_n.png" alt="let_laste" {% if current_user.let_level < 2 %} style="filter: grayscale(1.0)" {% endif %}></div>
+          <div class="icon"><img src="/static/let_orla_n.png" alt="let_orla" {% if current_user.let_level < 3 %} style="filter: grayscale(1.0)" {% endif %}></div>
+      </div>
+    </section>
+
+    <section>
+      <h3>Zvezde</h3>
+      <div class="icons-row">
+          <div class="icon"><img src="/static/prva_zvezda_n.png" alt="prva_zvezda" {% if current_user.zvezda_level < 1 %} style="filter: grayscale(1.0)" {% endif %}></div>
+          <div class="icon"><img src="/static/druga_zvezda_n.png" alt="druga_zvezda" {% if current_user.zvezda_level < 2 %} style="filter: grayscale(1.0)" {% endif %}></div>
+          <div class="icon" ><img src="/static/treca_zvezda_n.png" alt="treca_zvezda" {% if current_user.zvezda_level < 3 %} style="filter: grayscale(1.0)" {% endif %}></div>
+      </div>
+    </section>
+
+    <section>
+      <h3>Krinovi</h3>
+      <div class="icons-row">
+          <div class="icon"><img src="/static/prvi_krin_n.png" alt="prvi_krin" {% if current_user.krin_level < 1 %} style="filter: grayscale(1.0)" {% endif %}></div>
+          <div class="icon"><img src="/static/drugi_krin_n.png" alt="drugi_krin" {% if current_user.krin_level < 2 %} style="filter: grayscale(1.0)" {% endif %}></div>
+          <div class="icon"><img src="/static/treci_krin_n.png" alt="treci_krin" {% if current_user.krin_level < 3 %} style="filter: grayscale(1.0)" {% endif %}></div>
+      </div>
+    </section>
+  </div>
+
+  <div class="column skills">
+    <h2>Poseban program</h2>
+    <div class="cards-container">
+      {% for skill in skills %}
+        <div class="card">
+          <div class="card-title">{% if skill.level == 1 %}Veština {% endif %} {% if skill.level == 2 %} Veštarstvo {% endif %} {% if skill.level == 3 %} Specijalnost {% endif %}{{ skill.name }}</div>
+          <div class="card-date">{{ skill.date_got.strftime('%d.%m.%Y') }}</div>
+        </div>
+      {% else %}
+        <p>Nema položenih specijalnih programa.</p>
+      {% endfor %}
+    </div>
+  </div>
+</div>
 
 {% endblock %}

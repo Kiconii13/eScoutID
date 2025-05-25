@@ -98,8 +98,8 @@ main::-webkit-scrollbar-thumb {
 }
 
 .admin-button {
-  border: 3px dashed var(--moss);
-  color: var(--moss);
+  border: 3px dashed var(--lime);
+  color: var(--lime);
   background-color: transparent;
   padding: 8px 16px;
   font-size: 16px;
@@ -113,13 +113,33 @@ main::-webkit-scrollbar-thumb {
   color: var(--white);
 }
 
-/* end base css */
+.icon-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
 
-/* login page start */
+.icon-small {
+  width: 6vh;
+  height: 6vh;
+  object-fit: contain;
+}
 
+a {
+    color: #336699;
+    text-decoration: none;
+}
 
-/* end login page */
+a:hover {
+    text-decoration: underline;
+}
 
-/* start dashboard page */
+.good {
+    color: green;
+    font-weight: bold;
+}
 
-/* end dashboard page*/
+.bad {
+    color: red;
+    font-weight: bold;
+}

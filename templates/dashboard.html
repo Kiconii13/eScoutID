@@ -26,10 +26,10 @@ Moj nalog
         {% if current_user.role != 'clan' %}
                 <div class="admin-console">
                     {% if current_user.role == 'admin' %}
-                        <input type="button" value="Odredska admin tabla" class="admin-button"/>
+                        <input type="button" value="Upravljaj odredom" class="admin-button"/>
                     {% endif %}
                     {% if current_user.role == "savez_admin" %}
-                        <input type="button" value="Savezna admin tabla" class="admin-button"/>
+                        <input type="button" value="Upravljaj savezom" class="admin-button"/>
                     {% endif %}
                 </div>
         {% endif %}
@@ -37,11 +37,11 @@ Moj nalog
     <div class="column right-column">
         <div class="options">
             <input type="button" value="Lične informacije" class="interactive"/>
-            <input type="button" value="Odredske informacije" class="interactive"/>
-            <input type="button" value="Moj program" class="interactive"/>
+            <input type="button" value="Odredske informacije" class="interactive" onclick="window.location.href = `{{url_for('odred.odred')}}`"/>
+            <input type="button" value="Moj program" class="interactive" onclick="window.location.href = `{{url_for('program.program')}}`"/>
             <input type="button" value="Moje aktivnosti" class="interactive"/>
             <input type="button" value="Korisnički nalog" class="interactive"/>
-            <input type="button" value="Izloguj se" class="interactive" onclick="window.location.href = `{{url_for('auth.logout')}}`">
+            <input type="button" value="Odjavi se" class="interactive" onclick="window.location.href = `{{url_for('auth.logout')}}`">
         </div>
     </div>
   </div>
