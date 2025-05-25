@@ -3,22 +3,28 @@
 {% block title %}
 Login
 {% endblock %}
+{% block style %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='login-style.css') }}" />
+{% endblock %}
 
 {% block content %}
 
 
 <div class="login-container">
-        <img src="/static/logo_color_NoStar.png" alt="Large logo">
-        <h1>Dobrodošli na eScoutID sistem</h1>
-        <form id = "auth-form" action="{{ url_for('auth.login') }}" method="post">
-            <label>Korisničko ime:
-                <input type="text" name="username" placeholder="Korisničko ime" class="input-fieled" autofocus />
+
+        <h1 class="login-title">eScoutID</h1>
+        <h2 class="login-subtitle">Izviđačke knjižice</h2>
+
+        <img src="/static/logo_green.png" class="login-logo" alt="Large logo">
+        <form id="auth-form" class="login-form" action="{{ url_for('auth.login') }}" method="post">
+            <label><span class="login-label">Korisničko ime:</span>
+                <input type="text" name="username" placeholder="Korisničko ime" class="login-input" autofocus />
             </label>
-            <label>Lozinka:
-                <input type="password" name="password" placeholder="Lozinka" class="input-fieled" />
+            <label><span class="login-label">Lozinka:</span>
+                <input type="password" name="password" placeholder="Lozinka" class="login-input" />
             </label>
 
-            <input type="submit" value="Prijavi se" class="btn btn-login" onClick="setActionForm('login')" />
+            <input type="submit" value="Prijavi se" class="login-button" onClick="setActionForm('login')" />
         </form>
     </div>
 
