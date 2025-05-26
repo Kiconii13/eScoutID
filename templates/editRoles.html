@@ -1,82 +1,90 @@
 {% extends "base.html" %}
 
 {% block title %}
-Upravlj pozicijama
+Upravljaj pozicijama
+{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='editRoles-style.css') }}">
 {% endblock %}
 
 {% block content %}
+<div class="icon-wrapper">
+    <a href="/dashboard"><img src="/static/logo_green.png" alt="Ikona" class="icon-small" /></a>
+</div>
 
-<h1>Upravljaj pozicijama</h1>
+<div class="dashboard-grid">
+    <div class="left-col">
+        <form action="{{ url_for('odred.editVodnik') }}" method="post" class="styled-form">
+            <h2>Imenuj vodnika</h2>
+            <div class="form-group">
+                <label for="vod">Vod</label>
+                <select name="vod" id="vod" class="form-control" required>
+                    {% for vod in vods %}
+                    <option value="{{ vod.id }}">{{ vod.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="vodnik">Vodnik</label>
+                <select name="vodnik" id="vodnik" class="form-control" required>
+                    {% for vodnik in users %}
+                    <option value="{{ vodnik.id }}">{{ vodnik.first_name }} {{ vodnik.last_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <input type="submit" value="Imenuj" class="interactive">
+        </form>
 
-<hr>
+        <form action="{{ url_for('odred.editVodjacete') }}" method="post" class="styled-form">
+            <h2>Imenuj vođu čete</h2>
+            <div class="form-group">
+                <label for="ceta">Četa</label>
+                <select name="ceta" id="ceta" class="form-control" required>
+                    {% for ceta in cetas %}
+                    <option value="{{ ceta.id }}">{{ ceta.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="vodjacete">Vođa čete</label>
+                <select name="vodjacete" id="vodjacete" class="form-control" required>
+                    {% for vodjacete in users %}
+                    <option value="{{ vodjacete.id }}">{{ vodjacete.first_name }} {{ vodjacete.last_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <input type="submit" value="Imenuj" class="interactive">
+        </form>
+    </div>
 
-<h2>Imenuj vodnika</h2>
-<form action="{{ url_for('odred.editVodnik') }}" method="post">
-    <label>
-        Vod:
-        <select name="vod">
-            {% for vod in vods %}
-            <option value="{{vod.id}}">{{ vod.name }}</option>
-            {% endfor %}
-        </select>
-    </label>
-    <label>
-        Vodnik
-        <select name="vodnik">
-            {% for vodnik in users %}
-            <option value="{{vodnik.id}}">{{vodnik.first_name}} {{vodnik.last_name}}</option>
-            {% endfor %}
-        </select>
-    </label>
-    <input type="submit" value="Imenuj" class="btn">
-</form>
+    <div class="right-col">
+        <form action="{{ url_for('odred.editNacelnikStaresina') }}" method="post" class="styled-form">
+            <h2>Načelnik i starešina</h2>
+            <div class="form-group">
+                <label for="staresina">Starešina</label>
+                <select name="staresina" id="staresina" class="form-control" required>
+                    {% for staresina in users %}
+                    <option value="{{ staresina.id }}" {% if staresina.id == current_staresina %}selected{% endif %}>
+                        {{ staresina.first_name }} {{ staresina.last_name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="nacelnik">Načelnik</label>
+                <select name="nacelnik" id="nacelnik" class="form-control" required>
+                    {% for nacelnik in users %}
+                    <option value="{{ nacelnik.id }}" {% if nacelnik.id == current_nacelnik %}selected{% endif %}>
+                        {{ nacelnik.first_name }} {{ nacelnik.last_name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <input type="submit" value="Imenuj" class="interactive">
+        </form>
 
-<hr>
-
-<h2>Imenuj vođu čete</h2>
-<form action="{{ url_for('odred.editVodjacete') }}" method="post">
-    <label>
-        Četa:
-        <select name="ceta">
-            {% for ceta in cetas %}
-            <option value="{{ceta.id}}">{{ ceta.name }}</option>
-            {% endfor %}
-        </select>
-    </label>
-    <label>
-        Vođa čete:
-        <select name="vodjacete">
-            {% for vodjacete in users %}
-            <option value="{{vodjacete.id}}">{{vodjacete.first_name}} {{vodjacete.last_name}}</option>
-            {% endfor %}
-        </select>
-    </label>
-    <input type="submit" value="Imenuj" class="btn">
-</form>
-
-<hr>
-
-<h2>Imenuj novog načelnika i starešinu odreda</h2>
-<form action="{{ url_for('odred.editNacelnikStaresina') }}" method="post">
-    <label>
-        Starešina
-        <select name="staresina">
-            {% for staresina in users %}
-                <option value="{{staresina.id}}" {% if staresina.id == current_staresina %}selected{% endif %}>{{staresina.first_name}} {{staresina.last_name}}</option>
-            {% endfor %}
-        </select>
-    </label>
-    <label>
-        Načelnik
-        <select name="nacelnik">
-            {% for nacelnik in users %}
-                <option value="{{nacelnik.id}}" {% if nacelnik.id == current_nacelnik %} selected {% endif %}>{{nacelnik.first_name}} {{nacelnik.last_name}}</option>
-            {% endfor %}
-        </select>
-    </label>
-    <input type="submit" value="Imenuj" class="btn">
-</form>
-
-<input type="button" value="Nazad" class="btn" onclick="window.location.replace(`{{ url_for('odred.odredDashboard', id=current_user.odred.id) }}`)">
-
+        <a href="javascript:history.back()" class="interactive">Nazad</a>
+    </div>
+</div>
 {% endblock %}

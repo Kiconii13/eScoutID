@@ -1,79 +1,106 @@
 {% extends 'base.html' %}
+
+{% block title %}Položeni program{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='addProgram-style.css') }}">
+{% endblock %}
+
 {% block content %}
-<h1>Položeni program</h1>
+<div class="dashboard-grid">
+    <div class="left-col">
+        <form method="POST" action="{{ url_for('program.select_user') }}" class="styled-form">
+            <h2>Izaberi člana</h2>
+            <div class="form-group">
+                <label for="user">Član</label>
+                <select name="user" id="user" class="form-control" onchange="this.form.submit()">
+                    {% for user in users %}
+                        <option value="{{ user.id }}" {% if selected_user and selected_user.id == user.id %}selected{% endif %}>
+                            {{ user.first_name }} {{ user.last_name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <input type="hidden" name="select_user">
+        </form>
 
+        {% if selected_user %}
+        <form method="POST" action="{{ url_for('program.update_levels') }}" class="styled-form">
+            <h2>Nivoi osnovnog programa</h2>
+            <input type="hidden" name="user" value="{{ selected_user.id }}">
 
-    {# Odabir usera pomocu selecta, na svaku promenu se dinamicki bira novi user #}
-<form method="POST" action="{{ url_for("program.select_user") }}">
-    <label for="user">Član:</label>
-    <select name="user" id="user" onchange="this.form.submit()">
-        {% for user in users %}
-        <option value="{{ user.id }}" {% if selected_user and selected_user.id == user.id %}selected{% endif %}>{{ user.first_name }} {{ user.last_name }}</option>
-        {% endfor %}
-    </select>
-    <input type="hidden" name="select_user">
-</form>
+            <div class="form-group">
+                <label for="let_level">Nivo Leta</label>
+                <input type="number" name="let_level" id="let_level" min="0" max="3"
+                       value="{{ selected_user.let_level }}" class="form-control" required>
+            </div>
 
+            <div class="form-group">
+                <label for="zvezda_level">Nivo Zvezde</label>
+                <input type="number" name="zvezda_level" id="zvezda_level" min="0" max="3"
+                       value="{{ selected_user.zvezda_level }}" class="form-control" required>
+            </div>
 
-    {# Promena nivoa polozenog stepena programa (0 = nema polozenog stepena) #}
-{% if selected_user %}
-<form method="POST" action = {{ url_for("program.update_levels") }}>
-    <input type="hidden" name="user" value="{{ selected_user.id }}">
-    <label for="let_level">Nivo leta:</label>
-    <input type="number" name="let_level" id="let_level" min="0" max="3" value="{{ selected_user.let_level }}" required>
-    <br>
-    <label for="zvezda_level">Nivo zvezde:</label>
-    <input type="number" name="zvezda_level" id="zvezda_level" min="0" max="3" value="{{ selected_user.zvezda_level }}" required>
-    <br>
-    <label for="krin_level">Nivo krina:</label>
-    <input type="number" name="krin_level" id="krin_level" min="0" max="3" value="{{ selected_user.krin_level }}" required>
-    <br>
-    <button class="btn" type="submit" name="update_levels">Ažuriraj</button>
-</form>
+            <div class="form-group">
+                <label for="krin_level">Nivo Krina</label>
+                <input type="number" name="krin_level" id="krin_level" min="0" max="3"
+                       value="{{ selected_user.krin_level }}" class="form-control" required>
+            </div>
 
+            <button class="interactive" type="submit" name="update_levels">Ažuriraj</button>
+        </form>
+    </div>
 
-    {# Prikaz posebnog programa, nivo 1 = vestina, nivo 2 = vestarstvo, nivo 3 = specijalnost #}
-<div class="skills">
-    <h2>Veštine - Veštarstva - Specijalnosti</h2>
-    <table id="skills_table" style="margin-left: auto; margin-right: auto; overflow-y: auto; display: table; margin-bottom: 40px;">
-        <thead>
-            <tr>
-                <th>Naziv</th>
-                <th>Nivo</th>
-                <th>Datum polaganja</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for skill in skills %}
-            <tr onclick="if (confirm('Da li ste sigurni da želite da obrišete posebni program {{ skill.name }} za izabranog člana?')) { window.location.href = '/delete_skill/{{ skill.id }}'; }">
-                <td>{{ skill.name }}</td>
-                <td>{{ skill.level }}</td>
-                <td>{{ skill.date_got.strftime('%d.%m.%Y') }}</td>
-            </tr>
-            {% endfor %}
-            {% if skills|length == 0 %}
-            <tr>
-                <td colspan="3">Nema posebnog programa</td>
-            </tr>
-            {% endif %}
-        </tbody>
-    </table>
+    <div class="right-col">
+        <div class="styled-form">
+            <h2>Poseban program</h2>
+            <table class="skills-table">
+                <thead>
+                    <tr>
+                        <th>Naziv</th>
+                        <th>Nivo</th>
+                        <th>Datum</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for skill in skills %}
+                    <tr onclick="if (confirm('Da li ste sigurni da želite da obrišete {{ skill.name }}?')) { window.location.href = '/delete_skill/{{ skill.id }}'; }">
+                        <td>{{ skill.name }}</td>
+                        <td>{{ skill.level }}</td>
+                        <td>{{ skill.date_got.strftime('%d.%m.%Y') }}</td>
+                    </tr>
+                    {% endfor %}
+                    {% if skills|length == 0 %}
+                    <tr><td colspan="3">Nema posebnog programa</td></tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+
+        <form method="POST" action="{{ url_for('program.add_skill') }}" class="styled-form">
+            <h2>Dodaj poseban program</h2>
+            <input type="hidden" name="user_id" value="{{ selected_user.id }}">
+
+            <div class="form-group">
+                <label for="skill_name">Naziv</label>
+                <input type="text" id="skill_name" name="name" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="skill_level">Nivo</label>
+                <input type="number" id="skill_level" name="level" min="1" max="3" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="skill_date">Datum polaganja</label>
+                <input type="date" id="skill_date" name="date_got" class="form-control" required>
+            </div>
+
+            <button class="interactive" type="submit" name="add_skill">Dodaj</button>
+        </form>
+
+        <a href="javascript:history.back()" class="interactive">Nazad</a>
+    </div>
+    {% endif %}
 </div>
-
-<h2>Dodaj novi poseban program</h2>
-<form method="POST" action="{{ url_for('program.add_skill') }}">
-    <input type="hidden" name="user_id" value="{{ selected_user.id }}">
-    <label for="skill_name">Naziv:</label>
-    <input type="text" id="skill_name" name="name" required>
-    <br>
-    <label for="skill_level">Nivo:</label>
-    <input type="number" id="skill_level" name="level" min="1" max="3" required>
-    <br>
-    <label for="skill_date">Datum polaganja:</label>
-    <input type="date" id="skill_date" name="date_got" required>
-    <br>
-    <button class="btn" type="submit" name="add_skill">Dodaj posebni program</button>
-</form>
-<input type="button" value="Nazad" class="btn" onclick="window.location.href = `{{ url_for('odred.odredDashboard', id=current_user.odred.id) }}`">
-{% endif %}
 {% endblock %}

@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Podešavanja naloga
+{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='account-style.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="icon-wrapper">
+    <a href="/dashboard"><img src="/static/logo_green.png" alt="Ikona" class="icon-small" /></a>
+</div>
+
+<div class="nalog-container">
+    <h2 class="section-title">Podešavanja naloga</h2>
+    
+    <div class="form-grid">
+        <div class="form-section">
+            <h3>Promena lozinke</h3>
+            <form method="post" action="/change-password" onsubmit="return validatePassword()">
+                <label>Trenutna lozinka
+                    <input type="password" id="current_password" name="current_password" class="interactive" required>
+                </label>
+                <label>Nova lozinka
+                    <input type="password" id="new_password" minlength="6" name="new_password" class="interactive" required>
+                </label>
+                <label>Potvrdite novu lozinku
+                    <input type="password" id="new_password_check" minlength="6" name="new_password_check" class="interactive" required>
+                </label>
+                <input type="submit" value="Promeni lozinku" class="interactive">
+            </form>
+        </div>
+
+        <div class="form-section">
+            <h3>Promena korisničkog imena</h3>
+            <form method="post" action="/change-username" onsubmit="return validateUsername()">
+                <label>Trenutno korisničko ime
+                    <input type="text" id="current_username" maxlength="25" name="current_username" class="interactive">
+                </label>
+                <label>Novo korisničko ime
+                    <input type="text" id="new_username" maxlength="25" name="new_username" class="interactive">
+                </label>
+                <label>Potvrdite novo korisničko ime
+                    <input type="text" id="new_username_check" maxlength="25" name="new_username_check" class="interactive">
+                </label>
+                <input type="submit" value="Promeni korisničko ime" class="interactive">
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function validatePassword() {
+    const newPassword = document.getElementById('new_password').value;
+    const confirmPassword = document.getElementById('new_password_check').value;
+
+    if (newPassword !== confirmPassword) {
+        alert("Nova lozinka i potvrda nove lozinke se ne poklapaju!");
+        return false;
+    }
+    return true;
+}
+
+function validateUsername() {
+    const newUsername = document.getElementById('new_username').value;
+    const confirmUsername = document.getElementById('new_username_check').value;
+
+    const usernamePattern = /^[a-zA-Z0-9_.]+$/;
+
+    if (newUsername !== confirmUsername) {
+        alert("Novo korisničko ime i potvrda se ne poklapaju!");
+        return false;
+    }
+
+    if (!usernamePattern.test(newUsername)) {
+        alert("Korisničko ime može sadržati samo slova, brojeve, podvlaku (_) i tačku (.)");
+        return false;
+    }
+
+    return true;
+}
+</script>
+{% endblock %}

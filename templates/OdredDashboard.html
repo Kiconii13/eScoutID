@@ -4,75 +4,73 @@
 Odred Izviđača "{{ odred_name }}"
 {% endblock %}
 
+{% block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='odredDashboard-style.css') }}"/>
+{% endblock %}
+
 {% block content %}
 
-<h2>Odreda Izviđača<br>"{{ odred_name }}"</h2>
-<hr>
-<table>
-    <caption>Članovi:</caption>
-    <thead>
-        <tr>
-            <th>Ime i prezime</th>
-            <th>Korisničko ime</th>
-            <th>Kategorija</th>
-            <th>Datum rođenja</th>
-            <th>Datum upisa</th>
-            <th>Broj telefona</th>
-            <th>E-pošta</th>
-            <th>Adresa</th>
-            <th>Četa</th>
-            <th>Vod</th>
-            <th>Plaćena članarina</th>
-        </tr>
-    </thead>
-    <tbody>
-{% for user in users %}
-        <tr class="user-row" onclick='window.location.href=`{{ url_for("odred.editClan", id=user.id) }}`'>
-            <td>{{ user.first_name }} {{ user.last_name }}</td>
-            <td>{{ user.username }}</td>
-            <td>
-            {# Provera starosne kategorije članova u odnosu na današnji dan.#}
-            {# dob - Date Of Birth #}
-            {# age - trenutne godine #}
-            {% set dob = user.dob %}
-            {% set age = now.year - dob.year - ((now.month, now.day) < (dob.month, dob.day)) %}
-           {% if user.gender == 'M' %}
-            {% if age <= 11 %}Poletarac{% elif age <= 15 %}Mlađi izviđač{% elif age <= 19 %}Stariji izviđač{% elif age <= 25 %}Rover{% else %}Brđanin{% endif %}
-            {% elif user.gender == "Z" %}
-            {% if age <= 11 %}Pčelica{% elif age <= 15 %}Mlađa planinka{% elif age <= 19 %}Starija planinka{% elif age <= 25 %}Roverka{% else %}Brđanka{% endif %}
-            {% endif %}
-            </td>
-            <td>{{ user.dob.day }}.{{ user.dob.month }}.{{ user.dob.year }}.</td>
-            <td>{{ user.join_date.day }}.{{ user.join_date.month }}.{{ user.join_date.year }}.</td>
-            <td>
-                <a href="tel:+{{ user.phone_number }}">
-                    {{ user.phone_number }}
-                </a>
-            </td>
-            <td>
-                <a href="mailto:{{ user.email }}">
-                    {{ user.email }}
-                </a>
-            </td>
-            <td>{{ user.address }}</td>
-            <td>{{ user.vod.ceta.name }}</td>
-            <td>{{ user.vod.name }}</td>
-             <td>
-                {% if user.has_paid %}
-                <span class="good">DA</span>
-                {% else %}
-                <span class="bad">NE</span>
-                {% endif %}
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="icon-wrapper">
+    <a href="/dashboard"><img src="/static/logo_green.png" alt="Ikona" class="icon-small" /></a>
+</div>
 
-    <hr>
+<h2 class="odred-name info">Odred Izviđača "{{ odred_name }}"</h2>
+
+<div class="table-wrapper">
+    <table class="styled-table">
+            <caption>Članovi</caption>
+            <thead>
+                <tr>
+                    <th>Ime i prezime</th>
+                    <th>Korisničko ime</th>
+                    <th>Kategorija</th>
+                    <th>Datum rođenja</th>
+                    <th>Datum upisa</th>
+                    <th>Broj telefona</th>
+                    <th>E-pošta</th>
+                    <th>Adresa</th>
+                    <th>Četa</th>
+                    <th>Vod</th>
+                    <th>Plaćena članarina</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for user in users %}
+                <tr class="user-row" onclick='window.location.href=`{{ url_for("odred.editClan", id=user.id) }}`'>
+                    <td>{{ user.first_name }} {{ user.last_name }}</td>
+                    <td>{{ user.username }}</td>
+                    <td>
+                        {% set dob = user.dob %}
+                        {% set age = now.year - dob.year - ((now.month, now.day) < (dob.month, dob.day)) %}
+                        {% if user.gender == 'M' %}
+                            {% if age <= 11 %}Poletarac{% elif age <= 15 %}Mlađi izviđač{% elif age <= 19 %}Stariji izviđač{% elif age <= 25 %}Rover{% else %}Brđanin{% endif %}
+                        {% elif user.gender == 'Z' %}
+                            {% if age <= 11 %}Pčelica{% elif age <= 15 %}Mlađa planinka{% elif age <= 19 %}Starija planinka{% elif age <= 25 %}Roverka{% else %}Brđanka{% endif %}
+                        {% endif %}
+                    </td>
+                    <td>{{ user.dob.day }}.{{ user.dob.month }}.{{ user.dob.year }}.</td>
+                    <td>{{ user.join_date.day }}.{{ user.join_date.month }}.{{ user.join_date.year }}.</td>
+                    <td><a href="tel:+{{ user.phone_number }}">{{ user.phone_number }}</a></td>
+                    <td><a href="mailto:{{ user.email }}">{{ user.email }}</a></td>
+                    <td>{{ user.address }}</td>
+                    <td>{{ user.vod.ceta.name }}</td>
+                    <td>{{ user.vod.name }}</td>
+                    <td>
+                        {% if user.has_paid %}
+                            <span class="good">DA</span>
+                        {% else %}
+                            <span class="bad">NE</span>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+</div>
 {% if current_user.role == "admin" %}
-    <table style="margin: auto;">
-    <caption>Vodovi:</caption>
+<div class="table-wrapper">
+    <table class="styled-table">
+    <caption>Vodovi</caption>
     <thead>
         <tr>
             <th>Naziv voda</th>
@@ -82,35 +80,32 @@ Odred Izviđača "{{ odred_name }}"
         </tr>
     </thead>
     <tbody>
-{% for vod in vods %}
+    {% for vod in vods %}
         <tr class="user-row" onclick='window.location.href=`{{ url_for("odred.vodInfo", id=vod.id) }}`'>
             <td>{{ vod.name }}</td>
             <td>{{ vod.vodnik.first_name }} {{ vod.vodnik.last_name }}</td>
             <td>{{ vod.ceta.name }}</td>
             <td>{{ vod.ceta.vodja.first_name }} {{ vod.ceta.vodja.last_name }}</td>
-        {% endfor %}
+        </tr>
+    {% endfor %}
     </tbody>
 </table>
+</div>
 {% endif %}
-<br>
-{% if current_user.role == "admin" %}
-<input type="button" value="Dodaj novog člana" class="btn" onclick="window.location.href = `{{ url_for('odred.addClan') }}`">
-<a class="btn btn-link" href='{{ url_for("program.add_program") }}'>Položeni program članova</a>
 
-<hr>
-<input type="button" value="Kreiraj vod/četu" class="btn" onclick="window.location.href = `{{ url_for('odred.addCetaVod') }}`" />
-<input type="button" value="Upravljaj pozicijama" class="btn" onclick="window.location.href = `{{ url_for('odred.editRoles') }}`" />
+<div class="admin-buttons">
+    {% if current_user.role == "admin" %}
+        <input type="button" value="Dodaj novog člana" class="interactive" onclick="window.location.href = '{{ url_for('odred.addClan') }}'">
+        <input type="button" value="Položeni program članova" class="interactive" onclick="window.location.href = '{{ url_for('program.add_program') }}'"/>
+        <input type="button" value="Kreiraj vod/četu" class="interactive" onclick="window.location.href = '{{ url_for('odred.addCetaVod') }}'">
+        <input type="button" value="Upravljaj pozicijama" class="interactive" onclick="window.location.href = '{{ url_for('odred.editRoles') }}'">
+    {% endif %}
 
-<hr>
-
-
-{% endif %}
-{% if current_user.role != "savez_admin" %}
-    <input type="button" value="Nazad" class="btn" onclick="window.location.href = `{{ url_for('odred.odred') }}`">
-{% else %}
-    <a href="{{ url_for('savez.savezDashboard') }}" class="btn btn-link">
-        Nazad
-    </a>
-{% endif %}
+    {% if current_user.role != "savez_admin" %}
+        <input type="button" value="Nazad" class="interactive" onclick="window.location.href = '{{ url_for('odred.odred') }}'">
+    {% else %}
+        <a href="javascript:history.back()" class="interactive">Nazad</a>
+    {% endif %}
+</div>
 
 {% endblock %}

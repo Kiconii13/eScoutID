@@ -91,11 +91,7 @@ Upravljanje aktivnostima
     <input type="submit" value="Izbriši aktivnost" name="delete_button" class="btn" onclick="this.form.action_type.value='delete_aktivnost'; return confirm('Da li ste sigurni da želite da obrišete ovu aktivnost?');">
 </form>
 
-
-<hr>
-
-<!-- Dugme za povratak na dashboard -->
-<input type="button" value="Nazad" class="btn" onclick="window.location.href = `{{ url_for('dashboard.dashboard') }}`">
+<a href="javascript:history.back()" class="interactive">Nazad</a>
 {% endblock %}
 
 {% block scripts %}

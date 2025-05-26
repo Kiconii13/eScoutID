@@ -25,9 +25,9 @@
   display: none;
 }
 
-.login-input {
+input[type="text"], input[type="password"], .login-input {
   border: 3px dashed var(--olive);
-  color: var(--moss);
+  color: #000;
   background-color: transparent;
   padding: 8px 15vw;
   font-size: 16px;
@@ -37,7 +37,7 @@
   text-align: center;
 }
 
-.login-input:focus {
+input[type="text"]:focus, input[type="password"]:focus, .login-input:focus {
   outline: none;
 }
 

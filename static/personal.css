@@ -1,49 +1,74 @@
-.dashboard-grid {
+.personal-container {
     display: grid;
-    grid-template-columns: 1fr 2fr;
     gap: 2rem;
     padding: 2rem;
     align-items: start;
 }
 
-.left-col {
+.profile-wrapper {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.img-container {
+.profile-picture {
+    position: relative;
     width: 100%;
-    max-width: 250px;
+    max-width: 150px;
     aspect-ratio: 1 / 1;
     overflow: hidden;
     border-radius: 50%;
-    border: 3px dashed var(--olive);
+    border: 2px dashed var(--olive);
     margin-bottom: 1.5rem;
     box-shadow: 0 0 8px var(--moss);
+    cursor: pointer; /* Dodato da se vidi da je klikabilno */
 }
 
-.img-container img {
+.profile-picture img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-.admin-buttons {
-    margin-top: 1rem;
-    text-align: center;
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;  /* Preuzima dimenzije roditelja (.profile-picture) */
+  height: 100%;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 24px;
+  pointer-events: none; /* Da ne blokira klik na .profile-picture */
 }
 
-.right-col {
+.profile-picture:hover .overlay {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.camera-icon {
+  pointer-events: none;
+}
+
+.profile-info {
     display: flex;
     flex-direction: column;
+    width: 100%;
 }
 
-.odred-name {
-    font-size: 1.8rem;
+.profile-name {
+    font-size: 2rem;
     font-weight: bold;
     margin-bottom: 1.5rem;
     text-align: center;
+    width: 100%;
 }
 
 .columns {
@@ -66,7 +91,6 @@ caption {
     background-color: var(--olive);
     padding: 0.5rem;
     border-radius: 34px 34px 0 0;
-    color: var(--cream);
 }
 
 td {
@@ -76,25 +100,27 @@ td {
 
 td:first-child {
     font-weight: 500;
-    color: var(--cream);
+    color: #333;
     width: 40%;
 }
 
-table:last-child{
-      border-radius: 0 0 34px 34px;
+table:last-child {
+    border-radius: 0 0 34px 34px;
 }
 
-/* Responsive Design */
+/* Responsive */
 @media (max-width: 768px) {
-    .dashboard-grid {
+    .personal-container {
         grid-template-columns: 1fr;
+        gap: 0;
+        padding: 0;
     }
 
     .columns {
         grid-template-columns: 1fr;
     }
 
-    .img-container {
+    .profile-picture {
         max-width: 200px;
     }
 }

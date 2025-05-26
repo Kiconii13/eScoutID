@@ -4,45 +4,54 @@
 Dodaj vod/četu
 {% endblock %}
 
+{% block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='addCetaVod-style.css') }}">
+{% endblock %}
+
 {% block content %}
+<div class="icon-wrapper">
+    <a href="/dashboard"><img src="/static/logo_green.png" alt="Ikona" class="icon-small" /></a>
+</div>
 
-<form action="{{ url_for('odred.newVod') }}" method="post">
-    <h1>Dodaj vod</h1>
-    <label>
-        Naziv:
-        <input type="text" name="name" />
-    </label>
-    <label>
-        Vodnik:
-        <select name="vodnik">
-            {% for vodnik in users %}
-                <option value="{{vodnik.id}}">{{vodnik.first_name}} {{vodnik.last_name}}</option>
-            {% endfor %}
-        </select>
-    </label>
-    <label>
-        Četa:
-        <select name="ceta">
-            {% for ceta in cetas %}
-                <option value="{{ceta.id}}">{{ceta.name}}</option>
-            {% endfor %}
-        </select>
-    </label>
-    <input type="submit" value="Dodaj" class="btn" />
-</form>
+<div class="dashboard-grid">
+    <div class="left-col">
+        <form action="{{ url_for('odred.newVod') }}" method="post" class="styled-form">
+            <h2>Dodaj vod</h2>
+            <div class="form-group">
+                <label for="name">Naziv</label>
+                <input type="text" id="name" name="name" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="vodnik">Vodnik</label>
+                <select name="vodnik" id="vodnik" class="form-control" required>
+                    {% for vodnik in users %}
+                    <option value="{{ vodnik.id }}">{{ vodnik.first_name }} {{ vodnik.last_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="ceta">Četa</label>
+                <select name="ceta" id="ceta" class="form-control" required>
+                    {% for ceta in cetas %}
+                    <option value="{{ ceta.id }}">{{ ceta.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <input type="submit" value="Dodaj" class="interactive">
+        </form>
+    </div>
 
-<hr>
+    <div class="right-col">
+        <form action="{{ url_for('odred.newCeta') }}" method="post" class="styled-form">
+            <h2>Dodaj četu</h2>
+            <div class="form-group">
+                <label for="ceta_name">Naziv</label>
+                <input type="text" id="ceta_name" name="name" class="form-control" required>
+            </div>
+            <input type="submit" value="Dodaj" class="interactive">
+        </form>
 
-<form action="{{ url_for('odred.newCeta') }}" method="post">
-    <h1>Dodaj četu</h1>
-    <label>
-        Naziv:
-        <input type="text" name="name" />
-    </label>
-    <input type="submit" value="Dodaj" class="btn" />
-</form>
-
-<hr>
-
-<input type="button" value="Nazad" class="btn" onclick="window.location.href = `{{url_for('odred.odredDashboard', id=current_user.odred.id)}}`" />
+        <a href="javascript:history.back()" class="interactive">Nazad</a>
+    </div>
+</div>
 {% endblock %}

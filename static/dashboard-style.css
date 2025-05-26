@@ -97,7 +97,7 @@
 }
 
 .options{
-  background-color: var(--lime);
+  background-color: var(--olive);
   border-radius: 14px;
   display: flex;
   flex-direction: column;

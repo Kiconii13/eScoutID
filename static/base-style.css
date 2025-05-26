@@ -18,7 +18,9 @@ body {
   color: var(--lime);
   background-image: url('/static/bg_loop.png');
   background-size: 10%;
-  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  font-family: "Coiny", system-ui;
+  font-weight: 400;
+  font-style: normal;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -35,13 +37,21 @@ footer {
   text-align: right;
   padding: 5px 15vw;
   font-size: 14px;
-  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  font-family: "Coiny", system-ui;
+  font-weight: 400;
+  font-style: normal;
   border-top: 1px solid var(--moss);
   position: fixed;
   bottom: 0;
   width: 100%;
   box-sizing: border-box;
   user-select: none; /* sprečava selekciju teksta */
+}
+
+input, select{
+  font-family: "Coiny", system-ui;
+  font-weight: 400;
+  font-style: normal;
 }
 /* start base css */
 
@@ -57,6 +67,7 @@ main {
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: var(--olive) transparent;
+  box-shadow: 0 0 32px #000
 }
 
 main::-webkit-scrollbar {
@@ -75,18 +86,18 @@ main::-webkit-scrollbar-thumb {
 }
 
 .interactive {
-  background-color: var(--cream);
-  color: var(--lime);
+  background-color: var(--lime);
+  color: var(--cream);
   padding: 8px 16px;
   font-size: 16px;
-  border-radius: 34px;
+  border-radius: 14px;
   border: solid var(--moss);
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .interactive:hover {
-  background-color: var(--olive);
-  color: var(--lime);
+  background-color: var(--moss);
+  color: var(--cream);
 }
 
 .info {
@@ -94,7 +105,7 @@ main::-webkit-scrollbar-thumb {
   color: var(--lime);
   padding: 8px 16px;
   font-size: 16px;
-  border-radius: 34px;
+  border-radius: 14px;
 }
 
 .admin-button {
@@ -104,7 +115,7 @@ main::-webkit-scrollbar-thumb {
   padding: 8px 16px;
   font-size: 16px;
   cursor: pointer;
-  border-radius: 34px;
+  border-radius: 14px;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
@@ -131,7 +142,7 @@ a {
 }
 
 a:hover {
-    text-decoration: underline;
+    text-decoration: none;
 }
 
 .good {
@@ -142,4 +153,45 @@ a:hover {
 .bad {
     color: red;
     font-weight: bold;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="date"],
+input[type="password"],
+input[type="tel"],
+input[type="email"],
+input[type="checkbox"],
+input[type="file"],
+select {
+  background-color: var(--lime);
+  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+  color: #000;
+  border: 2px solid var(--olive);
+  padding: 0.5em;
+  border-radius: 8px;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="date"]:focus,
+input[type="password"]:focus,
+input[type="tel"]:focus,
+input[type="email"]:focus,
+input[type="file"]:focus,
+input[type="checkbox"]:focus,
+select:focus {
+  background-color: var(--moss);
+  box-shadow: 0 0 0 3px rgba(0, 64, 0, 0.3); /* nežna animacija oko inputa */
+  outline: none; /* uklanja default outline */
+}
+
+input[type="checkbox"] {
+  accent-color: var(--olive);
+  cursor: pointer;
+}
+
+
+input[disabled]{
+  filter: grayscale(0.5);
 }

@@ -4,30 +4,40 @@
 Aktivnosti
 {% endblock %}
 
-{% block content %}
+{% block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='aktivnosti-style.css') }}">
+{% endblock %}
 
-<table class="activities-table">
-    <caption>Učešće na aktivnostima</caption>
-    <thead>
-        <tr>
-            <th>Naziv</th>
-            <th>Datum održavanja</th>
-            <th>Mesto održavanja</th>
-            <th>Tip aktivnosti</th>
-            <th>Organizator</th>
-        </tr>
-    </thead>
-    <tbody>
-    {% for activity in current_user.activities %}
-        <tr>
-            <td>{{ activity.name }}</td>
-            <td>{{ activity.due_date.day }}.{{ activity.due_date.month }}.{{ activity.due_date.year }}.</td>
-            <td>{{ activity.location }}</td>
-            <td>{{ activity.type }}</td>
-            <td>{{ activity.organizer_name }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-<input type="button" value="Nazad" class="btn" onclick="window.location.href = `{{ url_for('dashboard.dashboard') }}`">
+{% block content %}
+<div class="icon-wrapper">
+    <a href="/dashboard"><img src="/static/logo_green.png" alt="Ikona" class="icon-small" /></a>
+</div>
+
+<div class="activities-container">
+    <h2 class="section-title">Učešće na aktivnostima</h2>
+    <div class="table-wrapper">
+        <table class="activities-table">
+            <thead>
+                <tr>
+                    <th>Naziv</th>
+                    <th>Datum održavanja</th>
+                    <th>Mesto održavanja</th>
+                    <th>Tip aktivnosti</th>
+                    <th>Organizator</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for activity in current_user.activities %}
+                <tr>
+                    <td>{{ activity.name }}</td>
+                    <td>{{ activity.due_date.day }}.{{ activity.due_date.month }}.{{ activity.due_date.year }}.</td>
+                    <td>{{ activity.location }}</td>
+                    <td>{{ activity.type }}</td>
+                    <td>Odred izviđača "{{ activity.organizer_name }}"</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 {% endblock %}
