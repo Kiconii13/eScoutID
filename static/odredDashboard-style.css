@@ -74,10 +74,9 @@
 
 /* Sticky zaglavlje (opciono) */
 .styled-table thead th {
-    position: sticky;
     top: 0;
     background-color: var(--olive);
-    color: white;
+    color: var(--cream);
     z-index: 2;
 }
 

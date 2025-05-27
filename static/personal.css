@@ -96,8 +96,8 @@ caption {
 
 td {
     padding: 0.6rem 0.8rem;
-    border-bottom: 1px solid #ddd;
 }
+
 
 td:first-child {
     font-weight: 500;
@@ -109,19 +109,71 @@ table:last-child {
     border-radius: 0 0 34px 34px;
 }
 
-/* Responsive */
+
+/* Responsive pravila */
 @media (max-width: 768px) {
     .personal-container {
         grid-template-columns: 1fr;
-        gap: 2rem;
-        padding: 2rem;
+        gap: 1.5rem;
+        padding: 1rem;
     }
 
     .columns {
         grid-template-columns: 1fr;
+        gap: 1rem;
     }
 
     .profile-picture {
-        max-width: 200px;
+        max-width: 120px;
+        margin: 0 auto 1rem;
+    }
+
+    .profile-name {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        padding: 0 1rem;
+        word-wrap: break-word;
+    }
+
+    table {
+        font-size: 0.85rem;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    td {
+        padding: 0.3rem 0.5rem;
+    }
+
+    caption {
+        font-size: 1rem;
+        padding: 0.3rem 0.5rem;
+    }
+}
+
+/* Još strožiji resize za male ekrane */
+@media (max-width: 480px) {
+    .profile-picture {
+        max-width: 80px;
+        margin-bottom: 0.8rem;
+    }
+
+    .profile-name {
+        font-size: 1.1rem;
+        margin-bottom: 0.8rem;
+        padding: 0 0.5rem;
+    }
+
+    table {
+        font-size: 0.7rem;
+    }
+
+    td {
+        padding: 0.2rem 0.4rem;
+    }
+
+    caption {
+        font-size: 0.85rem;
+        padding: 0.2rem 0.4rem;
     }
 }
