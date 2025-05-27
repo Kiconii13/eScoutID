@@ -4,130 +4,90 @@
 {{ h1 }}
 {% endblock %}
 
-{% block content %}
-<form action="#" method="post">
-    <h1>{{ h1 }}</h1>
-    <label>
-        Naziv:
-        <input type="text" name="name" placeholder="Naziv Odreda" value = "{{odred.name}}" required oninvalid="this.setCustomValidity('Unesite naziv odread')" oninput="this.setCustomValidity('')">
-    </label>
-    <label>
-        Grad:
-        <input type="text" name="city" placeholder="Beograd" value = "{{odred.city}}" required oninvalid="this.setCustomValidity('Unesite naziv grada')" oninput="this.setCustomValidity('')">
-    </label>
-    <label>
-        Adresa:
-        <input type="text" name="address" placeholder="Ulica i broj" value = "{{odred.address}}" required oninvalid="this.setCustomValidity('Unesite adresu odreda')" oninput="this.setCustomValidity('')">
-    </label>
-    <label>
-        E-pošta:
-        <input type="email" name="email" placeholder="odred@izvidjaci.com" value = "{{odred.email}}" required oninvalid="this.setCustomValidity('Unesite adresu elektronske pošte odreda')" oninput="this.setCustomValidity('')">
-    </label>
-    <label>
-        Datum osnivanja:
-        <input type="date" name="founded_at" value = "{{odred.founded_at}}" required oninvalid="this.setCustomValidity('Unesite datum osnivanja odreda')" oninput="this.setCustomValidity('')">
-    </label>
-{% if odred.staresina %}
-    <label>
-        Starešina odreda:
-        <select id="staresina_username" name="staresina_username">
-            {% for clan in clanovi %}
-                <option value="{{ clan.username }}" {% if odred.staresina.id == clan.id %}selected{% endif %}>{{ clan.first_name }} {{ clan.last_name }}</option>
-            {% endfor %}
-        </select>
-    </label>
-{% endif %}
-{% if odred.nacelnik %}
-    <label>
-        Načelnik odreda:
-        <select id="nacelnik_username" name="nacelnik_username">
-            {% for clan in clanovi %}
-                {% if odred.nacelnik.id != clan.id %}
-                <option value="{{ clan.username }}">{{ clan.first_name }} {{ clan.last_name }}</option>
-                {% else %}
-                <option value="{{ clan.username }}" selected>{{ clan.first_name }} {{ clan.last_name }}</option>
-                {% endif %}
-            {% endfor %}
-        </select>
-    </label>
-{% endif %}
-    <label>
-        Status:
-        <select id="status" name="status" required>
-            <option value="pridružen">Pridružen</option>
-            <option value="punopravan" {% if odred.status == "punopravan" %}selected{% endif %}>Punopravan</option>
-        </select>
-    </label>
-
-    <label>
-        Profilna fotografija:
-        <input type="file">
-    </label>
-
-    <input type="text" name="image" hidden id="b64_img">
-
-    <input type="submit" value="{{ h1 }}" class="btn">
-    {% if h1 != "Dodaj odred" and odred.id != current_user.odred.id%}
-    <a class = 'btn btn-link' href="{{ url_for('savez.deleteOdred', id=odred.id) }}" onclick="return confirm('Da li ste sigurni da želite da obrišete ovaj odred?');">Obriši odred</a>
-    {% endif %}
-    <a href="{{ url_for('savez.savezDashboard') }}" class="btn btn-link">
-        Nazad
-    </a>
-</form>
+{% block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='addOdred-style.css') }}">
 {% endblock %}
 
-{% block scripts %}
-<script>
-    let b64 = '';
-    const form = document.querySelector('form');
+{% block content %}
+<div class="icon-wrapper">
+    <a href="{{ url_for('savez.savezDashboard') }}"><img src="/static/logo_green.png" alt="Ikona" class="icon-small" /></a>
+</div>
 
-    async function streamToArrayBuffer(stream) {
-      const reader = stream.getReader();
-      let result = new Uint8Array();
-      let done, value;
-      while ({ done, value } = await reader.read(), !done) {
-        const newResult = new Uint8Array(result.length + value.length);
-        newResult.set(result);
-        newResult.set(value, result.length);
-        result = newResult;
-      }
-      return result.buffer;
-    }
+<div class="dashboard-grid">
+    <div class="right-col">
+        <form action="#" method="post" class="styled-form" enctype="multipart/form-data">
+            <h1>{{ h1 }}</h1>
 
-    async function compressData(arrayBuffer) {
-      const stream = new CompressionStream('gzip');
-      const writer = stream.writable.getWriter();
-      writer.write(new Uint8Array(arrayBuffer));
-      writer.close();
+            <div class="form-group">
+                <label for="name">Naziv:</label>
+                <input class="form-control" type="text" name="name" id="name" placeholder="Naziv Odreda" value="{% if not odred.name == None %}{{ odred.name }}{% endif %}" required>
+            </div>
 
-      const compressedArrayBuffer = await streamToArrayBuffer(stream.readable);
-      return compressedArrayBuffer;
-    }
+            <div class="form-group">
+                <label for="city">Grad:</label>
+                <input class="form-control" type="text" name="city" id="city" placeholder="Beograd" value="{% if not odred.city == None %}{{ odred.city }}{% endif %}" required>
+            </div>
 
-    form.addEventListener('submit', async (event) => {
-        event.preventDefault();
+            <div class="form-group">
+                <label for="address">Adresa:</label>
+                <input class="form-control" type="text" name="address" id="address" placeholder="Ulica i broj" value="{% if not odred.address == None %}{{ odred.address }}{% endif %}" required>
+            </div>
 
-        const file = document.querySelector('input[type=file]')['files'][0];
-        const reader = new FileReader();
+            <div class="form-group">
+                <label for="email">E-pošta:</label>
+                <input class="form-control" type="email" name="email" id="email" placeholder="odred@izvidjaci.com" value="{% if not odred.email == None %}{{ odred.email }}{% endif %}" required>
+            </div>
 
-        if (document.querySelector('input[type=file]')['files'].length != 1) {
-            document.getElementById("b64_img").value = "nochange";
-            event.target.submit();
-            return;
-        }
+            <div class="form-group">
+                <label for="founded_at">Datum osnivanja:</label>
+                <input class="form-control" type="date" name="founded_at" id="founded_at" value="{% if not odred.founded_at == None %}{{ odred.founded_at }}{% endif %}" required>
+            </div>
 
-        reader.onload = async () => {
-            const arrayBuffer = reader.result;
+            {% if odred.staresina %}
+            <div class="form-group">
+                <label for="staresina_username">Starešina odreda:</label>
+                <select class="form-control" id="staresina_username" name="staresina_username">
+                    {% for clan in clanovi %}
+                    <option value="{{ clan.username }}" {% if odred.staresina.id == clan.id %}selected{% endif %}>{{ clan.first_name }} {{ clan.last_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            {% endif %}
 
-            const compressedArrayBuffer = await compressData(arrayBuffer);
-            const base64Encoded = btoa(String.fromCharCode(...new Uint8Array(compressedArrayBuffer)));
+            {% if odred.nacelnik %}
+            <div class="form-group">
+                <label for="nacelnik_username">Načelnik odreda:</label>
+                <select class="form-control" id="nacelnik_username" name="nacelnik_username">
+                    {% for clan in clanovi %}
+                    <option value="{{ clan.username }}" {% if odred.nacelnik.id == clan.id %}selected{% endif %}>{{ clan.first_name }} {{ clan.last_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            {% endif %}
 
-            document.getElementById("b64_img").value = base64Encoded;
+            <div class="form-group">
+                <label for="status">Status:</label>
+                <select class="form-control" id="status" name="status" required>
+                    <option value="pridružen" {% if odred.status == "pridružen" %}selected{% endif %}>Pridružen</option>
+                    <option value="punopravan" {% if odred.status == "punopravan" %}selected{% endif %}>Punopravan</option>
+                </select>
+            </div>
 
-            // Podnesi obrazac tek nakon što se b64_img popuni
-            event.target.submit();
-        }
-        reader.readAsArrayBuffer(file);
-    });
-</script>
+            <div class="form-group">
+                <label for="profile_image">Profilna fotografija:</label>
+                <input class="form-control" type="file" id="profile_image">
+            </div>
+
+            <input type="text" name="image" hidden id="b64_img">
+
+            <input type="submit" value="{{ h1 }}" class="interactive">
+
+            {% if h1 != "Dodaj odred" and odred.id != current_user.odred.id %}
+            <a class="interactive" href="{{ url_for('savez.deleteOdred', id=odred.id) }}" onclick="return confirm('Da li ste sigurni da želite da obrišete ovaj odred?');">Obriši odred</a>
+            {% endif %}
+
+            <a href="{{ url_for('savez.savezDashboard') }}" class="interactive">Nazad</a>
+        </form>
+    </div>
+</div>
 {% endblock %}

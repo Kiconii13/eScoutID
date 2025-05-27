@@ -91,6 +91,7 @@ caption {
     background-color: var(--olive);
     padding: 0.5rem;
     border-radius: 34px 34px 0 0;
+    color: var(--cream);
 }
 
 td {
@@ -101,7 +102,7 @@ td {
 td:first-child {
     font-weight: 500;
     color: #333;
-    width: 40%;
+    width: 50%;
 }
 
 table:last-child {
@@ -112,8 +113,8 @@ table:last-child {
 @media (max-width: 768px) {
     .personal-container {
         grid-template-columns: 1fr;
-        gap: 0;
-        padding: 0;
+        gap: 2rem;
+        padding: 2rem;
     }
 
     .columns {

@@ -29,27 +29,40 @@
   align-items: center;
   gap: 15px;
   box-sizing: border-box;
+  position: relative;
 }
 
-.profile-picture {
+/*Stari CSS za profile picture bez achivementa u donjem desnom uglu*/
+/*.profile-picture{*/
+/*  position: relative;
+/*  border: 3px dashed var(--olive);*/
+/*  border-radius: 50%;*/
+/*  width: 33%;*/
+/*  aspect-ratio: 1 / 1;*/
+/*  background-color: var(--lime);*/
+/*  flex-shrink: 0;*/
+/*  overflow: hidden;*/
+/*  box-shadow: 0 0 8px var(--moss);*/
+/*  cursor: pointer; !* Dodato da se vidi da je klikabilno *!*/
+/*}*/
+
+.profile-picture{
   position: relative; /* Dodato da overlay može da se pozicionira unutar */
-  border: 3px dashed var(--olive);
-  border-radius: 50%;
   width: 33%;
   aspect-ratio: 1 / 1;
-  background-color: var(--lime);
   flex-shrink: 0;
   overflow: hidden;
-  box-shadow: 0 0 8px var(--moss);
   cursor: pointer; /* Dodato da se vidi da je klikabilno */
 }
 
-.profile-picture img {
+.profile-picture .picture {
   width: 100%;
   height: 100%;
+  border: 3px dashed var(--olive);
+  border-radius: 50%;
+  background-color: var(--lime);
   object-fit: cover;
   display: block;
-  border-radius: 50%;
 }
 
 .overlay {
@@ -140,3 +153,25 @@
   }
 
 }
+
+.achievement-icon {
+  position: absolute;
+  bottom: 5%;  /* Pozicionira se u odnosu na profile-picture */
+  right: 5%;
+  width: 30%;   /* Relativno u odnosu na veličinu profile-picture */
+  height: 30%;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  /*background-color: rgba(251, 249, 239, 0.3);*/
+  z-index: 5;
+  border: 0px;
+}
+
+.achievement-icon img {
+  width: 100%;
+  height: 100%;
+  padding-bottom: 5%;
+  object-fit: contain;
+}
+
+

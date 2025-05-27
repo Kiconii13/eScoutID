@@ -4,110 +4,124 @@
 Upravljanje aktivnostima
 {% endblock %}
 
-{% block content %}
-<h1>Upravljanje aktivnostima</h1>
-<hr>
+{% block style %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='addAktivnost-style.css') }}" />
+{% endblock %}
 
-<!-- Forma za dodavanje aktivnosti -->
-<form action="{{ url_for('aktivnosti.new_aktivnost') }}" method="POST">
-    <h2>Dodaj aktivnost</h2>
-    <label>
+{% block content %}
+
+<div class="icon-wrapper" style="margin-bottom: 1rem;">
+  <a href="/dashboard">
+    <img src="/static/logo_green.png" alt="Ikona" class="icon-small" />
+  </a>
+</div>
+
+<h1 class="page-title">Upravljanje aktivnostima</h1>
+
+<div class="two-column-container">
+  <section class="form-section">
+    <form action="{{ url_for('aktivnosti.new_aktivnost') }}" method="POST" class="styled-form">
+      <h2 class="form-title">Dodaj aktivnost</h2>
+      <label>
         Naziv aktivnosti:
         <input type="text" name="name" placeholder="Pecanje" required>
-    </label>
-    <label>
+      </label>
+      <label>
         Datum održavanja:
         <input type="date" name="due_date" required>
-    </label>
-    <label>
+      </label>
+      <label>
         Mesto održavanja:
         <input type="text" name="location" placeholder="Velika Plana" required>
-    </label>
-    <label>
+      </label>
+      <label>
         Tip aktivnosti:
         <select name="type" required>
-            <option value="Aktivnost">Aktivnost</option>
-            <option value="Tecaj">Tecaj</option>
-            <option value="Seminar">Seminar</option>
-            <option value="Izlet">Izlet</option>
-            <option value="Bivak">Bivak</option>
-            <option value="Tabor">Tabor</option>
-            <option value="Smotra">Smotra</option>
+          <option value="Aktivnost">Aktivnost</option>
+          <option value="Tecaj">Tecaj</option>
+          <option value="Seminar">Seminar</option>
+          <option value="Izlet">Izlet</option>
+          <option value="Bivak">Bivak</option>
+          <option value="Tabor">Tabor</option>
+          <option value="Smotra">Smotra</option>
         </select>
-    </label>
-    {% if current_user.role == "savez_admin" %}
-    <label>
+      </label>
+      {% if current_user.role == "savez_admin" %}
+      <label>
         Tip organizatora:
         <select name="organizer_type" required>
-            <option value="Savez">Savez</option>
-            <option value="International">International</option>
+          <option value="Savez">Savez</option>
+          <option value="International">International</option>
         </select>
-    </label>
-    <label>
+      </label>
+      <label>
         Naziv organizatora:
         <input type="text" name="organizer_name" placeholder="PFE" required>
-    </label>
-    {% else %}
-    <label>
+      </label>
+      {% else %}
+      <label>
         Naziv organizatora:
         <input type="text" name="organizer_name" value="{{current_user.odred.name}}" disabled>
-    </label>
-    {% endif %}
-    <input type="submit" value="Napravi aktivnost" class="btn" />
-</form>
+      </label>
+      {% endif %}
+      <input type="submit" value="Napravi aktivnost" class="interactive" />
+    </form>
+  </section>
 
-<hr>
-
-<!-- Kombinovana forma za različite akcije nad aktivnostima -->
-<form action="{{ url_for('aktivnosti.handle_action') }}" method="POST" style="text-align: center;">
-    <h2>Zabeleži učešće</h2>
-    <label>
+  <section class="form-section">
+    <form action="{{ url_for('aktivnosti.handle_action') }}" method="POST" class="styled-form" style="text-align: center;">
+      <h2 class="form-title">Zabeleži učešće / Upravljanje aktivnostima</h2>
+      <label>
         Username člana:
         <input type="text" name="user" placeholder="aa.12345c">
-    </label>
+      </label>
 
-    <h2>Izaberite aktivnost</h2>
-    <label>
+      <label>
         Naziv aktivnosti i organizator:
         <select name="activity" required>
-            {% for activity in activities %}
-            <option value="{{ activity.id }}">{{ activity.name }} - {{ activity.organizer_name }}</option>
-            {% endfor %}
+          {% for activity in activities %}
+          <option value="{{ activity.id }}">{{ activity.name }} - {{ activity.organizer_name }}</option>
+          {% endfor %}
         </select>
-    </label>
+      </label>
 
-    {% if qrimg %}
-    <label>
+      {% if qrimg %}
+      <label>
         <img src="{{ qrimg }}" class="qrcode_img"><br>
-        <a href="{{ qrimg }}" download="QRcode.png" ><i>Preuzmi QR kod</i></a>
-    </label>
-    {% endif %}
+        <a href="{{ qrimg }}" download="QRcode.png"><i>Preuzmi QR kod</i></a>
+      </label>
+      {% endif %}
 
-    <!-- Dugmad za različite akcije -->
-    <input type="hidden" name="action_type" value="">
-    <input type="submit" value="Zabeleži učešće" name="add_button" class="btn" onclick="this.form.action_type.value='log_aktivnost';">
-    <input type="submit" value="Generiši QR kod" name="qr_button" class="btn" onclick="this.form.action_type.value='generate_qr';">
-    <input type="submit" value="Informacije o aktivnosti" name="info_button" class="btn" onclick="this.form.action_type.value='info_aktivnost';">
-    <input type="submit" value="Izbriši aktivnost" name="delete_button" class="btn" onclick="this.form.action_type.value='delete_aktivnost'; return confirm('Da li ste sigurni da želite da obrišete ovu aktivnost?');">
-</form>
+      <input type="hidden" name="action_type" value="">
+      <input type="submit" value="Zabeleži učešće" name="add_button" class="interactive" onclick="this.form.action_type.value='log_aktivnost';">
+      <input type="submit" value="Generiši QR kod" name="qr_button" class="interactive" onclick="this.form.action_type.value='generate_qr';">
+      <input type="submit" value="Informacije o aktivnosti" name="info_button" class="interactive" onclick="this.form.action_type.value='info_aktivnost';">
+      <input type="submit" value="Izbriši aktivnost" name="delete_button" class="interactive" onclick="this.form.action_type.value='delete_aktivnost'; return confirm('Da li ste sigurni da želite da obrišete ovu aktivnost?');">
+    </form>
+  </section>
+</div>
 
-<a href="javascript:history.back()" class="interactive">Nazad</a>
+<div style="margin-top: 1.5rem; text-align: center;">
+  <a href="javascript:history.back()" class="interactive">Nazad</a>
+</div>
+
 {% endblock %}
 
 {% block scripts %}
-    <script>
-        let selectElement = document.querySelector('select[name="activity"]');
-        let qrButton = document.querySelector('input[name="qr_button"]');
-        let infoButton = document.querySelector('input[name="info_button"]');
-        let deleteButton = document.querySelector('input[name="delete_button"]');
-        let addButton = document.querySelector('input[name="add_button"]');
+<script>
+  let selectElement = document.querySelector('select[name="activity"]');
+  let qrButton = document.querySelector('input[name="qr_button"]');
+  let infoButton = document.querySelector('input[name="info_button"]');
+  let deleteButton = document.querySelector('input[name="delete_button"]');
+  let addButton = document.querySelector('input[name="add_button"]');
 
-        function toggleQRButton() {
-            qrButton.disabled = infoButton.disabled = deleteButton.disabled = addButton.disabled = !selectElement.value;
-        }
+  function toggleQRButton() {
+    const disabled = !selectElement.value;
+    qrButton.disabled = infoButton.disabled = deleteButton.disabled = addButton.disabled = disabled;
+  }
 
-        toggleQRButton();
+  toggleQRButton();
 
-        selectElement.addEventListener('change', toggleQRButton);
-    </script>
+  selectElement.addEventListener('change', toggleQRButton);
+</script>
 {% endblock %}

@@ -1,0 +1,71 @@
+/* Naslov stranice */
+h1 {
+  color: var(--lime);
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+/* Stilizovane tabele */
+table {
+  border-collapse: collapse;
+  margin: 1rem auto 2rem auto;
+  width: 90%;
+  max-width: 900px;
+  background-color: var(--lime);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 0 12px rgba(0,0,0,0.15);
+}
+
+/* Caption */
+table caption {
+  caption-side: top;
+  text-align: center;
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: var(--lime);
+  padding: 12px 0 8px 0;
+}
+
+/* Zaglavlje tabele */
+thead th {
+  background-color: var(--olive);
+  color: var(--cream);
+  font-weight: 700;
+  padding: 10px 12px;
+  text-align: center;
+}
+thead th:first-child{
+    border-radius: 14px 0 0 0;
+}
+
+thead th:last-child{
+    border-radius: 0 14px 0 0;
+}
+
+/* Ćelije u tbody */
+tbody td {
+  padding: 10px 12px;
+  color: var(--cream);
+  text-align: center;
+  border-bottom: 1.5px solid var(--moss);
+}
+
+/* Redovi - na hover menja pozadinu */
+tbody tr:hover {
+  background-color: var(--lime);
+  color: #222;
+  cursor: default;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Responsive - tabele se prilagođavaju manjim ekranima */
+@media (max-width: 767.98px) {
+  table {
+    width: 100%;
+    font-size: 0.9rem;
+  }
+  thead th, tbody td {
+    padding: 8px 6px;
+  }
+}

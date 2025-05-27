@@ -76,8 +76,8 @@ td {
 
 td:first-child {
     font-weight: 500;
-    color: var(--cream);
-    width: 40%;
+    color: #333;
+    width: 50%;
 }
 
 table:last-child{

@@ -99,6 +99,7 @@ Odred Izviđača "{{ odred_name }}"
         <input type="button" value="Položeni program članova" class="interactive" onclick="window.location.href = '{{ url_for('program.add_program') }}'"/>
         <input type="button" value="Kreiraj vod/četu" class="interactive" onclick="window.location.href = '{{ url_for('odred.addCetaVod') }}'">
         <input type="button" value="Upravljaj pozicijama" class="interactive" onclick="window.location.href = '{{ url_for('odred.editRoles') }}'">
+        <input type="button" value="Odredske aktivnosti" class="interactive" onclick="window.location.href = '{{ url_for('aktivnosti.addAktivnost') }}'">
     {% endif %}
 
     {% if current_user.role != "savez_admin" %}

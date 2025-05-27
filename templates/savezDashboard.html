@@ -4,10 +4,19 @@
 Kontrolna tabla Saveza
 {% endblock %}
 
+{% block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='savezDashboard-style.css') }}">
+{% endblock %}
+
 {% block content %}
-    <h2>Savez Izviđača Srbije</h2>
-    <hr>
-    <table>
+<div class="icon-wrapper">
+  <a href="/dashboard"><img src="/static/logo_green.png" alt="Ikona" class="icon-small" /></a>
+</div>
+
+<h2 class="odred-name info">Savez Izviđača Srbije</h2>
+
+<div class="table-wrapper">
+    <table class="styled-table">
         <caption>Spisak odreda</caption>
         <thead>
             <tr>
@@ -23,28 +32,32 @@ Kontrolna tabla Saveza
             </tr>
         </thead>
         <tbody>
-        {% for (odred,broj,clanarine) in odredi %}
+        {% for (odred, broj, clanarine) in odredi %}
             {% if odred.id != 1 %}
-            <tr>
+            <tr class="user-row">
                 <td><a href="/editOdred/{{ odred.id }}">{{ odred.name }}</a></td>
                 <td>{{ odred.city }}</td>
                 <td>{{ odred.address }}</td>
                 <td>{{ odred.founded_at.day }}.{{ odred.founded_at.month }}.{{ odred.founded_at.year }}.</td>
                 <td>{{ odred.staresina.first_name }} {{ odred.staresina.last_name }}</td>
                 <td>{{ odred.nacelnik.first_name }} {{ odred.nacelnik.last_name }}</td>
-                <td><a href="odredDashboard/{{ odred.id }}">{{ broj }}</a></td>
-                {% if clanarine >= 40 %}
-                    <td><span class="good">{{ clanarine }}</span></td>
-                {% else %}
-                    <td><span class="bad">{{ clanarine }}</span></td>
-                {% endif %}
+                <td><a href="/odredDashboard/{{ odred.id }}">{{ broj }}</a></td>
+                <td>
+                    {% if clanarine >= 40 %}
+                        <span class="good">{{ clanarine }}</span>
+                    {% else %}
+                        <span class="bad">{{ clanarine }}</span>
+                    {% endif %}
+                </td>
                 <td>{{ odred.status }}</td>
             </tr>
             {% endif %}
         {% endfor %}
         </tbody>
     </table>
-    <a href="{{ url_for('savez.addOdred') }}">
-        <input type="button" value="Dodaj odred" class="btn" />
-    </a>
+</div>
+
+<div class="admin-buttons">
+    <input type="button" value="Dodaj odred" class="interactive" onclick="window.location.href='{{ url_for('savez.addOdred') }}'">
+</div>
 {% endblock %}
