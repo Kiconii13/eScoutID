@@ -50,4 +50,9 @@
     gap: 1.5rem;
     padding: 0 1rem;
   }
+
+  input[type="submit"] {
+        width: 100%;
+        margin: 0.4rem auto;
+    }
 }

@@ -189,6 +189,9 @@ input[type="checkbox"] {
   accent-color: var(--olive);
 }
 
+select{
+  min-height: 3rem;
+}
 
 input[disabled]{
   filter: grayscale(0.5);

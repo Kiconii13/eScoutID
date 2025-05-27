@@ -4,6 +4,8 @@
     gap: 2rem;
     padding: 2rem;
     align-items: start;
+    box-sizing: border-box;
+    margin: auto;
 }
 
 .left-col {
@@ -58,6 +60,7 @@ table {
     margin-bottom: 1rem;
     background-color: var(--moss);
     overflow: hidden;
+    border-radius: 0 0 34px 34px;
 }
 
 caption {
@@ -80,14 +83,11 @@ td:first-child {
     width: 50%;
 }
 
-table:last-child{
-      border-radius: 0 0 34px 34px;
-}
-
 /* Responsive Design */
 @media (max-width: 768px) {
     .dashboard-grid {
         grid-template-columns: 1fr;
+        padding: 1rem;
     }
 
     .columns {
@@ -96,5 +96,10 @@ table:last-child{
 
     .img-container {
         max-width: 200px;
+        margin: 0 auto 1rem;
+    }
+
+    table {
+        font-size: 0.9rem;
     }
 }
