@@ -1,15 +1,15 @@
 .login-title {
-  font-size: 82px;
+  font-size: 5rem;
   color: var(--pine);
 }
 
 .login-subtitle {
-  font-size: 46px;
+  font-size: 2rem;
   color: var(--pine);
 }
 
 .login-logo {
-  width: 10%;
+  width: 5rem;
   margin-bottom: 25px;
 }
 
@@ -29,8 +29,8 @@ input[type="text"], input[type="password"], .login-input {
   border: 3px dashed var(--olive);
   color: #000;
   background-color: transparent;
-  padding: 8px 15vw;
-  font-size: 16px;
+  padding: 0.5rem 15vw;
+  font-size: 1rem;
   cursor: pointer;
   border-radius: 15px;
   margin: 8px;
@@ -57,4 +57,22 @@ input[type="text"]:focus, input[type="password"]:focus, .login-input:focus {
 .login-button:hover {
   background-color: var(--olive);
   color: var(--lime);
+}
+
+@media (max-width: 768px) {
+  .login-title{
+    font-size: 3rem;
+  }
+
+  .login-subtitle{
+    font-size: 1.5rem;
+  }
+
+  .login-logo{
+    width: 3rem;
+  }
+
+  input[type="text"], input[type="password"], .login-input {
+    padding: 0.5rem;
+  }
 }
