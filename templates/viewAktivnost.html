@@ -4,11 +4,20 @@
 {{ activity.name }}
 {% endblock %}
 
+{% block style %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='viewAktivnost-style.css') }}"/>
+{% endblock %}
 
 {% block content %}
-<h1>{{ activity.name }}</h1>
 
-<hr>
+<div class="icon-wrapper" style="margin-bottom: 1rem;">
+  <a href="/dashboard">
+    <img src="/static/logo_green.png" alt="Ikona" class="icon-small" />
+  </a>
+</div>
+
+
+<h1>{{ activity.name }}</h1>
 
 <table style="margin-left: auto; margin-right: auto;">
     <caption>Opšte informacije</caption>
@@ -56,5 +65,5 @@
     </tbody>
         {% endfor %}
 </table>
-<input type="button" value="Nazad" class="btn" onclick="window.location.href = `{{ url_for('dashboard.dashboard') }}`">
+<a href="javascript:history.back()" class="interactive">Nazad</a>
 {% endblock %}

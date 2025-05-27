@@ -1,0 +1,206 @@
+:root {
+  --cream: #fbf9ef;
+  --lime: #9ebf3f;
+  --olive: #485c22;
+  --white: #fff;
+  --moss: #91a84c;
+  --pine: #507d30;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--olive);
+  color: var(--lime);
+  background-image: url('/static/bg_loop.png');
+  background-size: 10%;
+  font-family: "Coiny", system-ui;
+  font-weight: 400;
+  font-style: normal;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* Dodato za vertikalno centriranje */
+  min-height: 100vh;
+  animation: none;
+  background-position: var(--bg-pos-x, 0) var(--bg-pos-y, 0);
+  margin: 0;
+}
+
+footer {
+  background-color: var(--olive);
+  color: var(--lime);
+  text-align: right;
+  padding: 5px 15vw;
+  font-size: 14px;
+  font-family: "Coiny", system-ui;
+  font-weight: 400;
+  font-style: normal;
+  border-top: 1px solid var(--moss);
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  box-sizing: border-box;
+  user-select: none; /* sprečava selekciju teksta */
+}
+
+input, select{
+  font-family: "Coiny", system-ui;
+  font-weight: 400;
+  font-style: normal;
+}
+/* start base css */
+
+main {
+  background-color: var(--cream);
+  width: 75vw;
+  height: 75vh;
+  margin: auto;
+  border-radius: 34px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--olive) transparent;
+  box-shadow: 0 0 32px #000
+}
+
+main::-webkit-scrollbar {
+  width: 6px;
+}
+
+main::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 34px;
+}
+
+main::-webkit-scrollbar-thumb {
+  background-color: var(--olive);
+  border-radius: 34px;
+  border: none;
+}
+
+.interactive {
+  background-color: var(--lime);
+  color: var(--cream);
+  padding: 8px 16px;
+  font-size: 16px;
+  border-radius: 14px;
+  border: solid var(--moss);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.interactive:hover {
+  background-color: var(--moss);
+  color: var(--cream);
+}
+
+.info {
+  background-color: var(--olive);
+  color: var(--lime);
+  padding: 8px 16px;
+  font-size: 16px;
+  border-radius: 14px;
+}
+
+.admin-button {
+  border: 3px dashed var(--lime);
+  color: var(--lime);
+  background-color: transparent;
+  padding: 8px 16px;
+  font-size: 16px;
+  border-radius: 14px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.admin-button:hover {
+  background-color: var(--moss);
+  color: var(--white);
+}
+
+.icon-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.icon-small {
+  width: 6vh;
+  height: 6vh;
+  object-fit: contain;
+}
+
+a {
+    color: #336699;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+.good {
+    color: green;
+    font-weight: bold;
+}
+
+.bad {
+    color: red;
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="date"],
+input[type="password"],
+input[type="tel"],
+input[type="email"],
+input[type="checkbox"],
+input[type="file"],
+select {
+  background-color: var(--lime);
+  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+  color: #000;
+  border: 2px solid var(--olive);
+  padding: 0.5em;
+  border-radius: 8px;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="date"]:focus,
+input[type="password"]:focus,
+input[type="tel"]:focus,
+input[type="email"]:focus,
+input[type="file"]:focus,
+input[type="checkbox"]:focus,
+select:focus {
+  background-color: var(--moss);
+  box-shadow: 0 0 0 3px rgba(0, 64, 0, 0.3); /* nežna animacija oko inputa */
+  outline: none; /* uklanja default outline */
+}
+
+input[type="checkbox"] {
+  accent-color: var(--olive);
+}
+
+
+input[disabled]{
+  filter: grayscale(0.5);
+}
+
+@media (max-width: 768px) {
+  main{
+    width: 90vw;
+    height: 85vh;
+  }
+
+  footer{
+    position: initial;
+  }
+}

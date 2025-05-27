@@ -1,0 +1,53 @@
+/* Dve kolone na većim ekranima */
+.two-column-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 1rem;
+}
+
+/* Sekcije sa formama */
+.form-section {
+  background-color: var(--cream);
+  border-radius: 14px;
+  padding: 20px 25px;
+  box-sizing: border-box;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Naslovi u formama */
+.form-title {
+  color: var(--lime);
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+/* Stilovi za formu i inpute */
+.styled-form label {
+  display: flex;
+  flex-direction: column;
+  color: var(--lime);
+  font-weight: 600;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+}
+
+/* QR kod slika */
+.qrcode_img {
+    max-width: 180px;
+    border-radius: 10px;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
+    margin:auto;
+}
+
+
+@media (max-width: 768px) {
+  .two-column-container {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding: 0 1rem;
+  }
+}

@@ -4,120 +4,57 @@
 Moj nalog
 {% endblock %}
 
+{% block style %}
+        <link rel="stylesheet" href="{{ url_for('static', filename='dashboard-style.css') }}" />
+{% endblock %}
+
 {% block content %}
-<div class="dash">
-<div class="img-col">
-    <div class="img-container">
-        <img src="" alt="Fotografija" id="output">
+  <div class="icon-wrapper">
+      <a href="/dashboard"><img src="/static/logo_green.png" alt="Ikona" class="icon-small" /></a>
+  </div>
+  <div class="columns">
+    <div class="column left-column">
+<div class="profile-wrapper">
+    <div class="profile-picture">
+        <img src="" alt="Fotografija" id="output" class="picture">
         <div class="overlay">
-            <span class="camera-icon"><svg xmlns="http://www.w3.org/2000/svg" width="1.06em" height="1em" viewBox="0 0 432 408"><path fill="currentColor" d="M145 216q0-68 68.5-68t68.5 68t-68.5 68t-68.5-68m4-213h128l39 42h68q18 0 30.5 12.5T427 88v256q0 18-12.5 30.5T384 387H43q-18 0-30.5-12.5T0 344V88q0-18 12.5-30.5T43 45h67zm64 320q44 0 75.5-31.5T320 216t-31.5-75.5T213 109t-75 31.5t-31 75.5t31 75.5t75 31.5"/></svg></span>
+            <span class="camera-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="1.06em" height="1em" viewBox="0 0 432 408">
+                    <path fill="currentColor" d="M145 216q0-68 68.5-68t68.5 68t-68.5 68t-68.5-68m4-213h128l39 42h68q18 0 30.5 12.5T427 88v256q0 18-12.5 30.5T384 387H43q-18 0-30.5-12.5T0 344V88q0-18 12.5-30.5T43 45h67zm64 320q44 0 75.5-31.5T320 216t-31.5-75.5T213 109t-75 31.5t-31 75.5t31 75.5t75 31.5"/>
+                </svg>
+            </span>
         </div>
-    </div>
-    <h2 class="ime-prezime">
-        {{ current_user.first_name }} {{ current_user.last_name }}
-    </h2>
-</div>
-    <input type="file" id="fileInput" style="display: none;" accept="image/*">
-    <div class="data-col">
-        <div class="columns">
-            <div class="left-col">
-                <table>
-                    <caption>
-                        Lične informacije
-                    </caption>
-                    <tr>
-                        <td>Datum rođenja:</td>
-                        <td>{{ current_user.dob.day }}.{{ current_user.dob.month }}.{{ current_user.dob.year }}.</td>
-                    </tr>
-                    <tr>
-                        <td>Broj telefona:</td>
-                        <td>
-                            <a href="tel:+{{ current_user.phone_number }}">
-                                {{ current_user.phone_number }}
-                            </a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>E-Pošta:</td>
-                        <td>
-                            <a href="mailto:{{ current_user.email }}">
-                                {{ current_user.email }}
-                            </a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Adresa stanovanja:</td>
-                        <td>{{ current_user.address }}</td>
-                    </tr>
-                </table>
-            </div>
-            <div class="right-col">
-                <table>
-                    <caption>
-                        Odredske informacije
-                    </caption>
-                    <tr>
-                        <td>Datum učlanjenja:</td>
-                        <td>{{ current_user.join_date.day }}.{{ current_user.join_date.month }}.{{ current_user.join_date.year }}.</td>
-                    </tr>
-                    <tr>
-                        <td>Kategorija:</td>
-                        <td>
-                        {% set dob = current_user.dob %}
-                        {% set age = now.year - dob.year - ((now.month, now.day) < (dob.month, dob.day)) %}
-                       {% if current_user.gender == 'M' %}
-                        {% if age <= 11 %}Poletarac{% elif age <= 15 %}Mladji izviđač{% elif age <= 19 %}Stariji izviđač{% elif age <= 25 %}Rover{% else %}Brdjanin{% endif %}
-                        {% elif current_user.gender == "Z" %}
-                        {% if age <= 11 %}Pčelica{% elif age <= 15 %}Mlađa planinka{% elif age <= 19 %}Starija planinka{% elif age <= 25 %}Roverka{% else %}Brđanka{% endif %}
-                        {% endif %}
-                        </td>
-                    </tr>
-                    <tr class = "user-row" onclick='window.location.href=`{{ url_for("odred.vodInfo", id=current_user.vod.id) }}`'>
-                        <td>Vod:</td>
-                        <td>{{ current_user.vod }}</td>
-                    </tr>
-                    <tr>
-                        <td>Zaduženje:</td>
-                        <td>{{ current_user.role }}</td>
-                    </tr>
-                    <tr>
-                        <td>Plaćena članarina:</td>
-                        <td>
-                            {% if current_user.has_paid %}
-                            <span class="good">
-                                DA
-                            </span>
-                            {% else %}
-                            <span class="bad">
-                                NE
-                            </span>
-                            {% endif %}
-                        </td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-        <div class="button-row">
-            <a href="{{ url_for('program.program') }}">
-                <input type="button" value="Program" class="btn" />
-            </a>
-            <a href="{{ url_for('aktivnosti.aktivnosti') }}">
-                <input type="button" value="Moje aktivnosti" class="btn" />
-            </a>
-            <a href="{{ url_for('dashboard.changePassword') }}">
-                <input type="button" value="Promena lozinke" class="btn" />
-            </a>
-            <a href="{{ url_for('dashboard.changeUsername') }}">
-                <input type="button" value="Promena korisničkog imena" class="btn" />
-            </a>
-            {% if current_user.role != 'clan' %}
-            <a href="{{ url_for('aktivnosti.addAktivnost') }}">
-                <input type="button" value="Upravljaj aktivnostima" class="btn" />
-            </a>
-            {% endif %}
+        <input type="file" id="fileInput" style="display: none;" accept="image/*">
+
+        <!-- Premesti achievement unutar profile-picture -->
+        <div class="achievement-icon">
+            <img src="/static/treci_krin.png" alt="Dostignuće">
         </div>
     </div>
 </div>
+
+        {% if current_user.role != 'clan' %}
+                <div class="admin-console">
+                    {% if current_user.role == 'admin' %}
+            <input type="button" value="Upravljaj odredom" onclick="window.location.href = '{{ url_for('odred.odredDashboard', id=current_user.odred.id) }}'" class="admin-button" />
+                    {% endif %}
+                    {% if current_user.role == "savez_admin" %}
+                        <input type="button" value="Upravljaj savezom" onclick="window.location.href= '{{ url_for('savez.savezDashboard') }}'" class="admin-button"/>
+                    {% endif %}
+                </div>
+        {% endif %}
+    </div>
+    <div class="column right-column">
+        <div class="options">
+            <input type="button" value="Lične informacije" class="interactive" onclick="window.location.href='{{ url_for('dashboard.personal') }}'"/>
+            <input type="button" value="Odredske informacije" class="interactive" onclick="window.location.href = `{{url_for('odred.odred')}}`"/>
+            <input type="button" value="Moj program" class="interactive" onclick="window.location.href = `{{url_for('program.program')}}`"/>
+            <input type="button" value="Moje aktivnosti" class="interactive" onclick="window.location.href = `{{url_for('aktivnosti.aktivnosti')}}`"/>
+            <input type="button" value="Korisnički nalog" class="interactive" onclick="window.location.href = `{{url_for('dashboard.account')}}`"/>
+            <input type="button" value="Odjavi se" class="interactive" onclick="window.location.href = `{{url_for('auth.logout')}}`">
+        </div>
+    </div>
+  </div>
 
 {% endblock %}
 
@@ -167,7 +104,7 @@ Moj nalog
             });
     };
 
-    document.querySelector('.img-col').addEventListener('click', function() {
+    document.querySelector('.profile-picture').addEventListener('click', function() {
         document.getElementById('fileInput').click();
     });
 
@@ -225,7 +162,55 @@ Moj nalog
         const compressedArrayBuffer = await streamToArrayBuffer(stream.readable);
         return compressedArrayBuffer;
     }
-</script>
 
+    function setAchievementFromLevels(levels) {
+  // Mape nivoa u id dostignuća
+  const krinMap = [null, "prvi_krin", "drugi_krin", "treci_krin"];
+  const zvezdaMap = [null, "prva_zvezda", "druga_zvezda", "treca_zvezda"];
+  const letMap = [null, "let_vrapca", "let_laste", "let_orla"];
+
+  // Skupi sva dostignuća koja korisnik ima (nivo > 0)
+  const userAchievements = [];
+
+  if (levels.krin_level > 0) userAchievements.push(krinMap[levels.krin_level]);
+  if (levels.zvezda_level > 0) userAchievements.push(zvezdaMap[levels.zvezda_level]);
+  if (levels.let_level > 0) userAchievements.push(letMap[levels.let_level]);
+
+  // Prioriteti od najvrednijeg do najmanje vrednog
+  const achievementPriority = [
+    "treci_krin",
+    "drugi_krin",
+    "prvi_krin",
+    "treca_zvezda",
+    "druga_zvezda",
+    "prva_zvezda",
+    "let_orla",
+    "let_laste",
+    "let_vrapca"
+  ];
+
+  const highestAchievement = achievementPriority.find(id => userAchievements.includes(id));
+
+  const achievementImg = document.querySelector('.achievement-icon img');
+
+  if (highestAchievement && achievementImg) {
+    achievementImg.src = `/static/${highestAchievement}_n.png`;
+    achievementImg.alt = `Dostignuće: ${highestAchievement}`;
+    achievementImg.parentElement.style.display = 'block';
+  } else if (achievementImg) {
+    achievementImg.parentElement.style.display = 'none';
+  }
+}
+
+// Primer korišćenja, npr. current_user objekat iz backenda
+const current_user = {
+  krin_level: {{ current_user.krin_level }},
+  zvezda_level: {{ current_user.zvezda_level }},
+  let_level: {{ current_user.let_level }}
+};
+
+setAchievementFromLevels(current_user);
+
+</script>
 
 {% endblock %}

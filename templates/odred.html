@@ -4,27 +4,36 @@
 Odred Izviđača "{{ current_user.odred.name }}"
 {% endblock %}
 
-{% block content %}
+{% block style %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='odred-style.css') }}" />
+{% endblock %}
 
-<div class="dash">
-    <div class="img-col">
+{% block content %}
+  <div class="icon-wrapper">
+      <a href="/dashboard"><img src="/static/logo_green.png" alt="Ikona" class="icon-small" /></a>
+  </div>
+<div class="dashboard-grid">
+    <div class="left-col">
         <div class="img-container">
-        <img src="" alt="Fotografija" id="output">
+            <img id="output" src="" alt="Fotografija odreda">
         </div>
-        <h2 class="ime-prezime">
-            Odred Izviđača "{{ current_user.odred.name }}"
-        </h2>
+        {% if current_user.role != "clan" %}
+        <div>
+            <input type="button" value="Upravljaj odredom" onclick="window.location.href = '{{ url_for('odred.odredDashboard', id=current_user.odred.id) }}'" class="admin-button" />
+        </div>
+        {% endif %}
     </div>
 
-    <div class="data-col">
+    <div class="right-col">
+        <h2 class="odred-name info">
+            Odred Izviđača "{{ current_user.odred.name }}"
+        </h2>
         <div class="columns">
-            <div class="left-col">
+            <div class="left-info">
                 <table>
-                    <caption>
-                        Opšte informacije
-                    </caption>
+                    <caption>Opšte informacije</caption>
                     <tr>
-                        <td>Datum Osnivanja:</td>
+                        <td>Datum osnivanja:</td>
                         <td>{{ current_user.odred.founded_at.day }}.{{ current_user.odred.founded_at.month }}.{{ current_user.odred.founded_at.year }}.</td>
                     </tr>
                     <tr>
@@ -33,7 +42,7 @@ Odred Izviđača "{{ current_user.odred.name }}"
                     </tr>
                     <tr>
                         <td>E-Pošta:</td>
-                        <td><a href="mailto:{{ current_user.email }}">{{ current_user.odred.email }}</a></td>
+                        <td><a href="mailto:{{ current_user.odred.email }}">{{ current_user.odred.email }}</a></td>
                     </tr>
                     <tr>
                         <td>Adresa:</td>
@@ -41,13 +50,11 @@ Odred Izviđača "{{ current_user.odred.name }}"
                     </tr>
                 </table>
             </div>
-            <div class="right-col">
+            <div class="right-info">
                 <table>
-                    <caption>
-                        Informacije o organizaciji
-                    </caption>
+                    <caption>Informacije o organizaciji</caption>
                     <tr>
-                        <td>Starešina odreda: </td>
+                        <td>Starešina odreda:</td>
                         <td>{{ current_user.odred.staresina.first_name }} {{ current_user.odred.staresina.last_name }}</td>
                     </tr>
                     <tr>
@@ -58,34 +65,25 @@ Odred Izviđača "{{ current_user.odred.name }}"
                         <td>Status u savezu:</td>
                         <td>{{ current_user.odred.status }}</td>
                     </tr>
+                {% if current_user.role == "admin" %}
                     <tr>
                         <td>Broj članova:</td>
                         <td>{{ broj_clanova }}</td>
                     </tr>
-                    {% if current_user.role == "admin" %}
                     <tr>
-                        <td>Broj Plaćenih članarina:</td>
+                        <td>Broj plaćenih članarina:</td>
                         {% if broj_clanarina >= 40 %}
                             <td><span class="good">{{ broj_clanarina }}</span></td>
                         {% else %}
                             <td><span class="bad">{{ broj_clanarina }}</span></td>
                         {% endif %}
                     </tr>
-                    {% endif %}
+                {% endif %}
                 </table>
             </div>
         </div>
-        <div class="button-row">
-
-        </div>
     </div>
-    {% if current_user.role != "clan" %}
-    
-    <input type="button" value="Upravljaj odredom" class="btn" onclick="window.location.href = `{{ url_for('odred.odredDashboard', id = current_user.odred.id) }}`">
-    
-    {% endif %}
 </div>
-
 {% endblock %}
 
 {% block scripts %}
@@ -128,12 +126,11 @@ Odred Izviđača "{{ current_user.odred.name }}"
             .then(text => {
                 if (text !== "default") {
                     showImage(text);
-                }
-                else {
+                } else {
                     document.getElementById('output').src = "/static/sis_logo.jpg";
                 }
             });
     };
 </script>
-
 {% endblock %}
+

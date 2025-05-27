@@ -1,83 +1,85 @@
 {% extends 'base.html' %}
 
 {% block title %}
-Vod: {{vod.name}}
+Vod: {{ vod.name }}
+{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='editVod-style.css') }}">
 {% endblock %}
 
 {% block content %}
-<table>
-    <thead>
-        <tr>
-            <th colspan="8">Četa: {{vod.ceta.name}}</th>
-        </tr>
-        <tr>
-            <th colspan="8">Vod: {{vod.name}}</th>
-        </tr>
-        <tr>
-            <th colspan="8">Vođa čete: {{ vod.ceta.vodja.first_name }} {{ vod.ceta.vodja.last_name }}</th>
-        </tr>
-        <tr>
-            <th colspan="8">Vodnik: {{ vod.vodnik.first_name }} {{ vod.vodnik.last_name }}</th></tr>
-        <tr>
-            <th>Ime i prezime</th>
-            <th>Korisničko ime</th>
-            <th>Datum rođenja</th>
-            <th>Datum upisa</th>
-            <th>Broj telefona</th>
-            <th>E-pošta</th>
-            <th>Adresa</th>
-            <th>Plaćena članarina</th>
-        </tr>
-    </thead>
-    <tbody>
-{% for user in users %}
-        <tr class="user-row">
-            <td>{{ user.first_name }} {{ user.last_name }}</td>
-            <td>{{ user.username }}</td>
-            <td>{{ user.dob.day }}.{{ user.dob.month }}.{{ user.dob.year }}.</td>
-            <td>{{ user.join_date.day }}.{{ user.join_date.month }}.{{ user.join_date.year }}.</td>
-            <td>
-                <a href="tel:{{ user.phone_number }}">
-                    {{ user.phone_number }}
-                </a>
-            </td>
-            <td>
-                <a href="mailto:{{ user.email }}">
-                    {{ user.email }}
-                </a>
-            </td>
-            <td>{{ user.address }}</td>
-             <td>
-                {% if user.has_paid %}
-                <span class="good">DA</span>
-                {% else %}
-                <span class="bad">NE</span>
-                {% endif %}
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-{% if current_user.role != "clan" %}
-    <form action="{{ url_for('odred.editVod', id=vod.id) }}" method="POST">
-    <label> Naziv voda
-        <input type="text" name="vod_name" id="vod_name" value="{{ vod.name }}" required>
-    </label>
-    <label>
-        Četa
-        <select name="ceta" id="ceta" required>
-            {% for ceta in cete %}
-                <option value="{{ ceta.id }}" {% if vod.ceta_id == ceta.id %}selected{% endif %}>{{ ceta.name }}</option>
-            {% endfor %}
-        </select>
-    </label>
-    <input type="submit" value="Ažuriraj vod" class="btn">
-            <input type="button" value="Obriši vod" class="btn" onclick="window.location.href = `{{ url_for('odred.deleteVod', id=vod.id) }}`">
-</form>
-{% endif %}
-    {% if current_user.role != "clan" %}
-    <input type="button" value="Nazad" class="btn" onclick="window.location.href = `{{ url_for('odred.odredDashboard', id=vod.ceta.odred_id) }}`">
-    {% else %}
-    <input type="button" value="Nazad" class="btn" onclick="window.location.href = `{{ url_for('dashboard.dashboard') }}`">
-    {% endif %}
+<div class="icon-wrapper">
+    <a href="/dashboard"><img src="/static/logo_green.png" alt="Ikona" class="icon-small" /></a>
+</div>
+
+<div class="dashboard-grid">
+    <div class="left-col">
+        <div class="info-box">
+            <h2>Četa: {{ vod.ceta.name }}</h2>
+            <h2>Vod: {{ vod.name }}</h2>
+            <p><strong>Vođa čete:</strong> {{ vod.ceta.vodja.first_name }} {{ vod.ceta.vodja.last_name }}</p>
+            <p><strong>Vodnik:</strong> {{ vod.vodnik.first_name }} {{ vod.vodnik.last_name }}</p>
+        </div>
+
+        {% if current_user.role != "clan" %}
+        <form action="{{ url_for('odred.editVod', id=vod.id) }}" method="POST" class="styled-form">
+            <div class="form-group">
+                <label for="vod_name">Naziv voda</label>
+                <input class="form-control" type="text" name="vod_name" id="vod_name" value="{{ vod.name }}" required>
+            </div>
+            <div class="form-group">
+                <label for="ceta">Četa</label>
+                <select name="ceta" id="ceta" class="form-control" required>
+                    {% for ceta in cete %}
+                    <option value="{{ ceta.id }}" {% if vod.ceta_id == ceta.id %}selected{% endif %}>{{ ceta.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <input type="submit" value="Ažuriraj vod" class="interactive">
+            <input type="button" value="Obriši vod" class="interactive" onclick="window.location.href = `{{ url_for('odred.deleteVod', id=vod.id) }}`">
+        </form>
+        {% endif %}
+    </div>
+
+    <div class="right-col">
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Ime i prezime</th>
+                        <th>Korisničko ime</th>
+                        <th>Datum rođenja</th>
+                        <th>Datum upisa</th>
+                        <th>Broj telefona</th>
+                        <th>E-pošta</th>
+                        <th>Adresa</th>
+                        <th>Članarina</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user.first_name }} {{ user.last_name }}</td>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.dob.day }}.{{ user.dob.month }}.{{ user.dob.year }}.</td>
+                        <td>{{ user.join_date.day }}.{{ user.join_date.month }}.{{ user.join_date.year }}.</td>
+                        <td><a href="tel:{{ user.phone_number }}">{{ user.phone_number }}</a></td>
+                        <td><a href="mailto:{{ user.email }}">{{ user.email }}</a></td>
+                        <td>{{ user.address }}</td>
+                        <td>
+                            {% if user.has_paid %}
+                            <span class="good">DA</span>
+                            {% else %}
+                            <span class="bad">NE</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <a href="javascript:history.back()" class="interactive">Nazad</a>
+    </div>
+</div>
 {% endblock %}

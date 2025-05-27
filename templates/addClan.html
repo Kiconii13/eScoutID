@@ -4,98 +4,116 @@
 {{ h1 }}
 {% endblock %}
 
-{% block content %}
-<form action="#" method="post">
-    <h1>{{ h1 }}</h1>
-    
-    <label>
-        Korisničko ime: 
-        <input type="text" id="username" name="username" value = "{{clan.username}}" oninvalid="this.setCustomValidity('Unesite korisnicko ime clana')" oninput="this.setCustomValidity('')" disabled>
-    </label>
-
-    <label>
-        Ime: 
-        <input type="text" id="first_name" name="first_name" value = "{{clan.first_name}}" required oninvalid="this.setCustomValidity('Unesite ime člana')" oninput="this.setCustomValidity('')" autofocus>
-    </label>
-    <label>
-        Prezime: 
-        <input type="text" id="last_name" name="last_name" value = "{{clan.last_name}}" required oninvalid="this.setCustomValidity('Unesite prezime člana')" oninput="this.setCustomValidity('')">
-    </label>
-    <label>
-        Status:
-        <select id="role" name="role" data-selected="{{ clan.role }}" {% if clan.role in ["admin", "savez_admin"] and current_user.id != clan.id %} readonly {% endif %}>
-            <option value="clan" {% if clan.role == "clan" %}selected{% endif %}>Član</option>
-            <option value="admin" {% if clan.role == "admin" %}selected{% endif %}>Administrator</option>
-            {% if current_user.role == "savez_admin" %}
-            <option value="savez_admin" {% if clan.role == "savez_admin" %}selected{% endif %}>Administrator saveza</option>
-            {% endif %}
-        </select>
-    </label>
-    <label>
-        JMBG:
-        <input type="text" id="jmbg" name="jmbg" placeholder="0101007500006" required minlength="13" maxlength="13" pattern="^(0[1-9]|[12][0-9]|3[01])(0[1-9]|1[0-2])[0-9]{3}[0-9]{2}[0-9]{3}[0-9]$" value="{{ clan.jmbg }}">
-    </label>
-    <label>
-        Datum učlanjivanja: 
-        <input type="date" id="join_date" name="join_date" value = "{{clan.join_date}}">
-    </label>
-    <label>
-        Broj izviđačke knjižice:
-        <input type="number" id="scout_id_number" name="scout_id_number" value="{{ clan.scout_id_number }}">
-    </label>
-    <label>
-        Broj telefona (u formatu <strong>pozivni broj-broj</strong> npr. +381612345678):
-        <input type="tel" id="phone_number" name="phone_number" value = "{{clan.phone_number}}" pattern='^\+3816[0-9]{6,8}$'>
-    </label>
-    <label>
-        E-pošta:
-        <input type="email" id="email" name="email" value = "{{clan.email}}">
-    </label>
-    <label>
-        Adresa: 
-        <input type="text" id="address" name="address" value = "{{clan.address}}" ><br>
-    </label>
-    <label style="display: flex;">
-        Plaćena članarina:
-        <input type="checkbox" id="has_paid" name="has_paid" {% if clan.has_paid %} checked {% endif %}>
-    </label>
-    <label>
-        Vod:
-        <select name="vod">
-            {% for vod in vods %}
-            <option value="{{ vod.id }}" {% if clan.vod_id == vod.id %} selected {% endif %}>{{ vod.name }}</option>
-            {% endfor %}
-        </select>
-    </label>
-    <label>
-        Profilna fotografija:
-        <input type="file">
-    </label>
-
-    {% if action != "add" %}
-    <label>
-        Odred: 
-        <input type="text" id="odred_id" name="odred_id" value = "{{odred}}" disabled>
-    </label>
-    {% endif %}
-
-    
-    <input type="text" name="image" hidden id="b64_img">
-
-
-    <input type="submit" value="{{h1}}" class="btn">
-    
-    {% if action != "add" and clan.id != current_user.id %}
-    <a class = 'btn btn-link' href="{{ url_for('odred.deleteClan', id=clan.id) }}" onclick="return confirm('Da li ste sigurni da želite da obrišete ovog člana?');">Obriši člana</a>
-    {% endif %}
-
-    {% if action == "add" %}
-    <input type="button" value="Nazad" class="btn" onclick="window.location.href = `{{ url_for('odred.odredDashboard', id=current_user.odred.id) }}`">
-    {% else %}
-    <input type="button" value="Nazad" class="btn" onclick="window.location.href = `{{ url_for('odred.odredDashboard', id=clan.odred.id) }}`">
-    {% endif %}
-</form>
+{% block style %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='addClan-style.css') }}"/>
 {% endblock %}
+
+{% block content %}
+<div class="icon-wrapper">
+    <a href="/dashboard"><img src="/static/logo_green.png" alt="Ikona" class="icon-small" /></a>
+</div>
+
+<div class="dashboard-grid">
+    <div class="right-col">
+        <form action="#" method="post" class="styled-form" enctype="multipart/form-data">
+            <h1>{{ h1 }}</h1>
+
+            <div class="form-group">
+                <label for="username">Korisničko ime:</label>
+                <input class="form-control" type="text" id="username" name="username" value="{% if not clan.username == None %}{{ clan.username }}{% endif %}" disabled>
+            </div>
+
+            <div class="form-group">
+                <label for="first_name">Ime:</label>
+                <input class="form-control" type="text" id="first_name" name="first_name" value="{% if not clan.first_name == None %}{{ clan.first_name }}{% endif %}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="last_name">Prezime:</label>
+                <input class="form-control" type="text" id="last_name" name="last_name" value="{% if not clan.last_name == None %}{{ clan.last_name }}{% endif %}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="role">Status:</label>
+                <select id="role" name="role" class="form-control" data-selected="{{ clan.role }}" {% if clan.role in ["admin", "savez_admin"] and current_user.id != clan.id %} readonly {% endif %}>
+                    <option value="clan" {% if clan.role == "clan" %}selected{% endif %}>Član</option>
+                    <option value="admin" {% if clan.role == "admin" %}selected{% endif %}>Administrator</option>
+                    {% if current_user.role == "savez_admin" %}
+                    <option value="savez_admin" {% if clan.role == "savez_admin" %}selected{% endif %}>Administrator saveza</option>
+                    {% endif %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="jmbg">JMBG:</label>
+                <input class="form-control" type="text" id="jmbg" name="jmbg" value="{% if not clan.jmbg == None %}{{ clan.jmbg }}{% endif %}" required minlength="13" maxlength="13"
+                       pattern="^(0[1-9]|[12][0-9]|3[01])(0[1-9]|1[0-2])[0-9]{3}[0-9]{2}[0-9]{3}[0-9]$">
+            </div>
+
+            <div class="form-group">
+                <label for="join_date">Datum učlanjivanja:</label>
+                <input class="form-control" type="date" id="join_date" name="join_date" value="{% if not clan.join_date == None %}{{ clan.join_date }}{% endif %}">
+            </div>
+
+            <div class="form-group">
+                <label for="scout_id_number">Broj izviđačke knjižice:</label>
+                <input class="form-control" type="number" id="scout_id_number" name="scout_id_number" value="{% if not clan.scout_id_number == None %}{{ clan.scout_id_number }}{% endif %}">
+            </div>
+
+            <div class="form-group">
+                <label for="phone_number">Broj telefona:</label>
+                <input class="form-control" type="tel" id="phone_number" name="phone_number" value="{% if not clan.phone_number == None %}{{ clan.phone_number }}{% endif %}" pattern="^\+3816[0-9]{6,8}$">
+            </div>
+
+            <div class="form-group">
+                <label for="email">E-pošta:</label>
+                <input class="form-control" type="email" id="email" name="email" value="{% if not clan.email == None %}{{ clan.email }}{% endif %}">
+            </div>
+
+            <div class="form-group">
+                <label for="address">Adresa:</label>
+                <input class="form-control" type="text" id="address" name="address" value="{% if not clan.address == None %}{{ clan.address }}{% endif %}">
+            </div>
+
+            <div class="form-group checkbox-group">
+                <label for="has_paid">Plaćena članarina:</label>
+                <input type="checkbox" id="has_paid" name="has_paid" {% if clan.has_paid %} checked {% endif %}>
+            </div>
+
+            <div class="form-group">
+                <label for="vod">Vod:</label>
+                <select class="form-control" name="vod">
+                    {% for vod in vods %}
+                    <option value="{{ vod.id }}" {% if clan.vod_id == vod.id %} selected {% endif %}>{{ vod.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="profile_image">Profilna fotografija:</label>
+                <input class="form-control" type="file">
+            </div>
+
+            {% if action != "add" %}
+            <div class="form-group">
+                <label for="odred_id">Odred:</label>
+                <input class="form-control" type="text" id="odred_id" name="odred_id" value="{{ odred }}" disabled>
+            </div>
+            {% endif %}
+
+            <input type="text" name="image" hidden id="b64_img">
+            <input type="submit" value="{{ h1 }}" class="interactive">
+
+            {% if action != "add" and clan.id != current_user.id %}
+            <a class="interactive" href="{{ url_for('odred.deleteClan', id=clan.id) }}" onclick="return confirm('Da li ste sigurni da želite da obrišete ovog člana?');">Obriši člana</a>
+            {% endif %}
+
+            <a href="javascript:history.back()" class="interactive">Nazad</a>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
 
 {% block scripts %}
 <script>

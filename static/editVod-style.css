@@ -1,0 +1,119 @@
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 2rem;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: auto;
+}
+
+.left-col, .right-col {
+    background-color: white;
+    border-radius: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+}
+
+.right-col{
+    overflow-x: auto;
+}
+
+.info-box h2 {
+    margin: 0.5rem 0;
+    color: var(--moss, #3a5a40);
+}
+
+.info-box p {
+    margin: 0.3rem 0;
+}
+
+.styled-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-weight: bold;
+    margin-bottom: 0.3rem;
+}
+
+.form-control {
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+}
+
+.table-container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+th, td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: var(--olive, #a3b18a);
+    color: white;
+    font-weight: bold;
+}
+
+tr:hover {
+    background-color: #f3f3f3;
+}
+
+table th:first-child{
+    border-radius:14px 0 0 0 ;
+}
+
+table th:last-child{
+    border-radius:0 14px 0 0 ;
+}
+
+table tr:last-child td:last-child{
+    border-radius: 0 0 14px 0;
+}
+
+table tr:last-child td:first-child{
+    border-radius: 0 0 0 14px;
+}
+
+.good {
+    color: green;
+    font-weight: bold;
+}
+
+.bad {
+    color: red;
+    font-weight: bold;
+}
+
+@media (max-width: 768px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+        padding: 1rem;
+    }
+
+    .left-col, .right-col {
+        padding: 1rem;
+    }
+
+    table {
+        font-size: 0.85rem;
+    }
+}
