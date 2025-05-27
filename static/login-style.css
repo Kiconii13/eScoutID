@@ -69,7 +69,9 @@ input[type="text"]:focus, input[type="password"]:focus, .login-input:focus {
   }
 
   .login-logo{
-    width: 3rem;
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+    width: 8rem;
   }
 
   input[type="text"], input[type="password"], .login-input {
