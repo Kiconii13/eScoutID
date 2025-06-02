@@ -6,6 +6,7 @@
 
 {% block style %}
     <link rel="stylesheet" href="{{ url_for('static', filename='addClan-style.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='personal.css') }}" />
 {% endblock %}
 
 {% block content %}
@@ -13,103 +14,122 @@
     <a href="/dashboard"><img src="/static/logo_green.png" alt="Ikona" class="icon-small" /></a>
 </div>
 
-<div class="dashboard-grid">
-    <div class="right-col">
-        <form action="#" method="post" class="styled-form" enctype="multipart/form-data">
-            <h1>{{ h1 }}</h1>
-
-            <div class="form-group">
-                <label for="username">Korisničko ime:</label>
-                <input class="form-control" type="text" id="username" name="username" value="{% if not clan.username == None %}{{ clan.username }}{% endif %}" disabled>
+<div class="personal-container">
+    <div class="profile-wrapper">
+        <h1>{{ h1 }}</h1>
+        <div class="profile-picture">
+                <img src="" alt="Fotografija" id="output">
             </div>
+        <div class="profile-info">
+            <form action="#" method="post" class="styled-form" enctype="multipart/form-data">
+                <div class="profile-name info">{% if not clan.username == None %}{{ clan.username }}{% endif %}</div>
+                <div class="columns">
+                    <div class="left-info">
+                        <table>
+                        <caption>Lične informacije</caption>
+                        <tr>
+                            <td>Ime:</td>
+                            <td>
+                                <input class="form-control" type="text" id="first_name" name="first_name" value="{% if not clan.first_name == None %}{{ clan.first_name }}{% endif %}" required>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Prezime:</td>
+                            <td>
+                                <input class="form-control" type="text" id="last_name" name="last_name" value="{% if not clan.last_name == None %}{{ clan.last_name }}{% endif %}" required>
+                            </td>      
+                        </tr>
+                        <tr>
+                            <td>JMBG:</td>
+                            <td>
+                                <input class="form-control" type="text" id="jmbg" name="jmbg" value="{% if not clan.jmbg == None %}{{ clan.jmbg }}{% endif %}" required minlength="13" maxlength="13"
+                                pattern="^(0[1-9]|[12][0-9]|3[01])(0[1-9]|1[0-2])[0-9]{3}[0-9]{2}[0-9]{3}[0-9]$">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Broj telefona:</td>
+                            <td>
+                                <input class="form-control" type="tel" id="phone_number" name="phone_number" value="{% if not clan.phone_number == None %}{{ clan.phone_number }}{% endif %}" pattern="^\+3816[0-9]{6,8}$">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Adresa:</td>
+                            <td>
+                                <input class="form-control" type="text" id="address" name="address" value="{% if not clan.address == None %}{{ clan.address }}{% endif %}">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>E-Pošta:</td>
+                            <td>
+                                <input class="form-control" type="email" id="email" name="email" value="{% if not clan.email == None %}{{ clan.email }}{% endif %}">
+                            </td>
+                        </tr>
+                    </table>
+                    </div>
+                    <div class="right-info">
+                        <table>
+                        <caption>Članske informacije</caption>
+                            <tr>
+                                <td>Broj izviđačke knjžice:</td>
+                                <td>
+                                    <input class="form-control" type="number" id="scout_id_number" name="scout_id_number" value="{% if not clan.scout_id_number == None %}{{ clan.scout_id_number }}{% endif %}">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Datum učlanjivanja:</td>
+                                <td>
+                                    <input class="form-control" type="date" id="join_date" name="join_date" value="{% if not clan.join_date == None %}{{ clan.join_date }}{% endif %}">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Plaćena članarina:</td>
+                                <td>
+                                    <input type="checkbox" id="has_paid" name="has_paid" {% if clan.has_paid %} checked {% endif %}>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Vod:</td>
+                                <td>
+                                    <select class="form-control" name="vod">
+                                    {% for vod in vods %}
+                                    <option value="{{ vod.id }}" {% if clan.vod_id == vod.id %} selected {% endif %}>{{ vod.name }}</option>
+                                    {% endfor %}
+                                    </select>
+                                </td>
+                            </tr>
+                            {% if action != "add" %}
+                            <tr>
+                                <td>Odred:</td>
+                                <td>
+                                    <input class="form-control" type="text" id="odred_id" name="odred_id" value="{{ odred }}" disabled>
+                                </td>
+                            </tr>
+                            {% endif %}
+                            <tr>
+                                <td>Status:</td>
+                                <td>
+                                    <select id="role" name="role" class="form-control" data-selected="{{ clan.role }}" {% if clan.role in ["admin", "savez_admin"] and current_user.id != clan.id %} readonly {% endif %}>
+                                        <option value="clan" {% if clan.role == "clan" %}selected{% endif %}>Član</option>
+                                        <option value="admin" {% if clan.role == "admin" %}selected{% endif %}>Administrator</option>
+                                        {% if current_user.role == "savez_admin" %}
+                                        <option value="savez_admin" {% if clan.role == "savez_admin" %}selected{% endif %}>Administrator saveza</option>
+                                        {% endif %}
+                                    </select>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
 
-            <div class="form-group">
-                <label for="first_name">Ime:</label>
-                <input class="form-control" type="text" id="first_name" name="first_name" value="{% if not clan.first_name == None %}{{ clan.first_name }}{% endif %}" required>
-            </div>
-
-            <div class="form-group">
-                <label for="last_name">Prezime:</label>
-                <input class="form-control" type="text" id="last_name" name="last_name" value="{% if not clan.last_name == None %}{{ clan.last_name }}{% endif %}" required>
-            </div>
-
-            <div class="form-group">
-                <label for="role">Status:</label>
-                <select id="role" name="role" class="form-control" data-selected="{{ clan.role }}" {% if clan.role in ["admin", "savez_admin"] and current_user.id != clan.id %} readonly {% endif %}>
-                    <option value="clan" {% if clan.role == "clan" %}selected{% endif %}>Član</option>
-                    <option value="admin" {% if clan.role == "admin" %}selected{% endif %}>Administrator</option>
-                    {% if current_user.role == "savez_admin" %}
-                    <option value="savez_admin" {% if clan.role == "savez_admin" %}selected{% endif %}>Administrator saveza</option>
-                    {% endif %}
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="jmbg">JMBG:</label>
-                <input class="form-control" type="text" id="jmbg" name="jmbg" value="{% if not clan.jmbg == None %}{{ clan.jmbg }}{% endif %}" required minlength="13" maxlength="13"
-                       pattern="^(0[1-9]|[12][0-9]|3[01])(0[1-9]|1[0-2])[0-9]{3}[0-9]{2}[0-9]{3}[0-9]$">
-            </div>
-
-            <div class="form-group">
-                <label for="join_date">Datum učlanjivanja:</label>
-                <input class="form-control" type="date" id="join_date" name="join_date" value="{% if not clan.join_date == None %}{{ clan.join_date }}{% endif %}">
-            </div>
-
-            <div class="form-group">
-                <label for="scout_id_number">Broj izviđačke knjižice:</label>
-                <input class="form-control" type="number" id="scout_id_number" name="scout_id_number" value="{% if not clan.scout_id_number == None %}{{ clan.scout_id_number }}{% endif %}">
-            </div>
-
-            <div class="form-group">
-                <label for="phone_number">Broj telefona:</label>
-                <input class="form-control" type="tel" id="phone_number" name="phone_number" value="{% if not clan.phone_number == None %}{{ clan.phone_number }}{% endif %}" pattern="^\+3816[0-9]{6,8}$">
-            </div>
-
-            <div class="form-group">
-                <label for="email">E-pošta:</label>
-                <input class="form-control" type="email" id="email" name="email" value="{% if not clan.email == None %}{{ clan.email }}{% endif %}">
-            </div>
-
-            <div class="form-group">
-                <label for="address">Adresa:</label>
-                <input class="form-control" type="text" id="address" name="address" value="{% if not clan.address == None %}{{ clan.address }}{% endif %}">
-            </div>
-
-            <div class="form-group checkbox-group">
-                <label for="has_paid">Plaćena članarina:</label>
-                <input type="checkbox" id="has_paid" name="has_paid" {% if clan.has_paid %} checked {% endif %}>
-            </div>
-
-            <div class="form-group">
-                <label for="vod">Vod:</label>
-                <select class="form-control" name="vod">
-                    {% for vod in vods %}
-                    <option value="{{ vod.id }}" {% if clan.vod_id == vod.id %} selected {% endif %}>{{ vod.name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="profile_image">Profilna fotografija:</label>
-                <input class="form-control" type="file">
-            </div>
-
-            {% if action != "add" %}
-            <div class="form-group">
-                <label for="odred_id">Odred:</label>
-                <input class="form-control" type="text" id="odred_id" name="odred_id" value="{{ odred }}" disabled>
-            </div>
-            {% endif %}
-
-            <input type="text" name="image" hidden id="b64_img">
-            <input type="submit" value="{{ h1 }}" class="interactive">
+            <input type="submit" value="{{h1}}" class="interactive">
 
             {% if action != "add" and clan.id != current_user.id %}
             <a class="interactive" href="{{ url_for('odred.deleteClan', id=clan.id) }}" onclick="return confirm('Da li ste sigurni da želite da obrišete ovog člana?');">Obriši člana</a>
             {% endif %}
 
             <a href="javascript:history.back()" class="interactive">Nazad</a>
-        </form>
+            </form>
+        </div>
     </div>
 </div>
 {% endblock %}
@@ -117,9 +137,6 @@
 
 {% block scripts %}
 <script>
-    let b64 = '';
-    const form = document.querySelector('form');
-
     async function streamToArrayBuffer(stream) {
         const reader = stream.getReader();
         let result = new Uint8Array();
@@ -133,6 +150,74 @@
         return result.buffer;
     }
 
+    async function decompressData(arrayBuffer) {
+        const stream = new DecompressionStream('gzip');
+        const writer = stream.writable.getWriter();
+        writer.write(new Uint8Array(arrayBuffer));
+        writer.close();
+
+        const decompressedArrayBuffer = await streamToArrayBuffer(stream.readable);
+        return decompressedArrayBuffer;
+    }
+
+    async function showImage(b64) {
+        const compressedFromBase64 = new Uint8Array(atob(b64).split('').map(char => char.charCodeAt(0)));
+        const decompressedArrayBuffer = await decompressData(compressedFromBase64);
+
+        const blob = new Blob([decompressedArrayBuffer], { type: 'image' });
+        const url = URL.createObjectURL(blob);
+        document.getElementById('output').src = url;
+    }
+
+    window.onload = async () => {
+        fetch(`{{ url_for("odred.getPfp", id = clan.id ) }}`)
+            .then(data => data.text())
+            .then(text => {
+                if (text !== "default") {
+                    showImage(text);
+                } else {
+                    document.getElementById('output').src = "/static/anonymous_pfp.png";
+                }
+            });
+    };
+
+    document.querySelector('.profile-picture').addEventListener('click', function() {
+        document.getElementById('fileInput').click();
+    });
+
+    document.getElementById('fileInput').addEventListener('change', async function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            // Provera MIME tipa da bi se osiguralo da je fajl slika
+            const validImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+            const validFileExtensions = ['jpg', 'jpeg', 'png'];
+            const fileExtension = file.name.split('.').pop().toLowerCase();
+
+            if (!validImageTypes.includes(file.type) || !validFileExtensions.includes(fileExtension)) {
+                alert("Samo slike u formatima .png i .jpeg su dozvoljene za upload.");
+                return;
+            }
+
+            // Provera veličine fajla (maksimalno 1 MB)
+            const maxSizeInBytes = 1024 * 1024; // 1 MB u bajtovima
+            if (file.size > maxSizeInBytes) {
+                alert("Slika ne sme biti veća od 1 MB.");
+                return;
+            }
+
+            const reader = new FileReader();
+
+            reader.onload = async function(e) {
+                const arrayBuffer = e.target.result;
+                const compressedArrayBuffer = await compressData(arrayBuffer);
+                const base64Encoded = btoa(String.fromCharCode(...new Uint8Array(compressedArrayBuffer)));
+
+            }
+
+            reader.readAsArrayBuffer(file);
+        }
+    });
+
     async function compressData(arrayBuffer) {
         const stream = new CompressionStream('gzip');
         const writer = stream.writable.getWriter();
@@ -142,50 +227,6 @@
         const compressedArrayBuffer = await streamToArrayBuffer(stream.readable);
         return compressedArrayBuffer;
     }
-
-    form.addEventListener('submit', async (event) => {
-        event.preventDefault();
-
-        const file = document.querySelector('input[type=file]')['files'][0];
-        const reader = new FileReader();
-
-        if (document.querySelector('input[type=file]')['files'].length != 1) {
-            document.getElementById("b64_img").value = "nochange";
-            event.target.submit();
-            return;
-        }
-
-        // Provera MIME tipa da bi se osiguralo da je fajl slika
-        const validImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-        const validFileExtensions = ['jpg', 'jpeg', 'png'];
-        const fileExtension = file.name.split('.').pop().toLowerCase();
-
-        if (!validImageTypes.includes(file.type) || !validFileExtensions.includes(fileExtension)) {
-            alert("Samo slike su dozvoljene za upload.");
-            return;
-        }
-
-        // Provera veličine fajla (maksimalno 1 MB)
-        const maxSizeInBytes = 1024 * 1024; // 1 MB u bajtovima
-        if (file.size > maxSizeInBytes) {
-            alert("Slika ne sme biti veća od 1 MB.");
-            return;
-        }
-
-
-        reader.onload = async () => {
-            const arrayBuffer = reader.result;
-
-            const compressedArrayBuffer = await compressData(arrayBuffer);
-            const base64Encoded = btoa(String.fromCharCode(...new Uint8Array(compressedArrayBuffer)));
-
-            document.getElementById("b64_img").value = base64Encoded;
-        }
-        reader.readAsArrayBuffer(file);
-
-        reader.onloadend = () => {
-            event.target.submit();
-        }
-    });
 </script>
+
 {% endblock %}
