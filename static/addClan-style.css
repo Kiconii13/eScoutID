@@ -73,4 +73,8 @@ input[type="checkbox"] {
     .right-col {
         padding: 1rem;
     }
+
+    select{
+        min-height: 3.5rem;
+    }
 }

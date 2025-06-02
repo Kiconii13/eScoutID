@@ -9,7 +9,7 @@
 
 .table-wrapper {
     max-height: 50vh;
-    min-height: 10rem;
+    min-height: 33vh;
     overflow-y: auto;
     overflow-x: auto;
     padding: 0.5rem;
