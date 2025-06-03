@@ -91,3 +91,22 @@
     </div>
 </div>
 {% endblock %}
+
+{% block scripts %}
+<script>
+document.getElementById("profile_image").addEventListener("change", function(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = function(e) {
+        // Dobija base64 string bez prefiksa (npr. "data:image/png;base64,...")
+        const base64String = e.target.result.split(',')[1];
+        document.getElementById("b64_img").value = base64String;
+    };
+
+    reader.readAsDataURL(file);
+});
+</script>
+{% endblock %}

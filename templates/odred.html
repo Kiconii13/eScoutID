@@ -88,48 +88,19 @@ Odred Izviđača "{{ current_user.odred.name }}"
 
 {% block scripts %}
 <script>
-    async function streamToArrayBuffer(stream) {
-        const reader = stream.getReader();
-        let result = new Uint8Array();
-        let done, value;
-        while ({ done, value } = await reader.read(), !done) {
-            const newResult = new Uint8Array(result.length + value.length);
-            newResult.set(result);
-            newResult.set(value, result.length);
-            result = newResult;
-        }
-        return result.buffer;
-    }
-
-    async function decompressData(arrayBuffer) {
-        const stream = new DecompressionStream('gzip');
-        const writer = stream.writable.getWriter();
-        writer.write(new Uint8Array(arrayBuffer));
-        writer.close();
-
-        const decompressedArrayBuffer = await streamToArrayBuffer(stream.readable);
-        return decompressedArrayBuffer;
-    }
-
-    async function showImage(b64) {
-        const compressedFromBase64 = new Uint8Array(atob(b64).split('').map(char => char.charCodeAt(0)));
-        const decompressedArrayBuffer = await decompressData(compressedFromBase64);
-
-        const blob = new Blob([decompressedArrayBuffer], { type: 'image' });
-        const url = URL.createObjectURL(blob);
-        document.getElementById('output').src = url;
-    }
-
     window.onload = async () => {
-        fetch(`{{ url_for("savez.getPfp", id = current_user.odred.id ) }}`)
-            .then(data => data.text())
-            .then(text => {
-                if (text !== "default") {
-                    showImage(text);
-                } else {
-                    document.getElementById('output').src = "/static/sis_logo.jpg";
-                }
-            });
+        try {
+            const response = await fetch(`{{ url_for("savez.getPfp", id = current_user.odred.id ) }}`);
+            const text = await response.text();
+
+            if (text !== "default") {
+                document.getElementById('output').src = "data:image/jpeg;base64," + text;
+            } else {
+                document.getElementById('output').src = "/static/sis_logo.jpg";
+            }
+        } catch (err) {
+            console.error("Error loading image:", err);
+        }
     };
 </script>
 {% endblock %}

@@ -116,8 +116,9 @@ def editOdred(id):
             return redirect(url_for("savez.editOdred", id=odred.id))
         odred.nacelnik_id = nacelnik.id
         odred.status = request.form.get('status')
-        if request.form["image"] != "nochange":
-            odred.avatar = request.form["image"]
+        image_b64 = request.form.get("image")
+        if image_b64 and image_b64.strip() != "":
+            odred.avatar = image_b64
         db.session.commit()
         return redirect(url_for("savez.savezDashboard"))
     else:

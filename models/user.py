@@ -89,8 +89,8 @@ class User(db.Model, UserMixin):
         user.address = request.form["address"]
         user.has_paid = 1 if request.form.get('has_paid') else 0
         user.vod_id = request.form["vod"]
-        if request.form["image"] != "nochange":
-            user.avatar = request.form["image"]
+        # if request.form["fileInput"] != "nochange":
+        #     user.avatar = request.form["fileInput"]
         if not user.username:
             user.username = f"{user.last_name[0].lower()}{user.first_name[0].lower()}.{randint(1000, 9999)}"
 

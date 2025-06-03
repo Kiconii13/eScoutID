@@ -133,7 +133,7 @@ def getPfp(id):
 @login_required
 def updatePfp(id):
     user = User.query.get_or_404(id)
-    if user.id != current_user.id:
+    if user.id != current_user.id and current_user.role != "savez_admin" and current_user.role != "admin":
         return jsonify({"error": "Unauthorized"}), 403
 
     data = request.get_json()
