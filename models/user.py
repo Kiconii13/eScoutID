@@ -6,6 +6,20 @@ from flask_login import UserMixin
 
 from datetime import datetime
 from random import randint
+import re
+
+
+def normalize_characters(text):
+    translation_table = str.maketrans({
+        'š': 's', 'Š': 'S',
+        'č': 'c', 'Č': 'C',
+        'ć': 'c', 'Ć': 'C',
+        'ž': 'z', 'Ž': 'Z',
+        'đ': 'd', 'Đ': 'D'
+    })
+    normalized = text.translate(translation_table)
+    # Uklanjanje svih karaktera koji nisu engleska slova
+    return re.sub(r'[^a-zA-Z]', '', normalized)
 
 
 class User(db.Model, UserMixin):
@@ -74,7 +88,6 @@ class User(db.Model, UserMixin):
         # Kreiramo datum rođenja
         self.dob = datetime(year, month, day)
 
-
     def defUser(user):
         user.first_name = request.form["first_name"]
         user.last_name = request.form["last_name"]
@@ -89,10 +102,16 @@ class User(db.Model, UserMixin):
         user.address = request.form["address"]
         user.has_paid = 1 if request.form.get('has_paid') else 0
         user.vod_id = request.form["vod"]
-        # if request.form["fileInput"] != "nochange":
-        #     user.avatar = request.form["fileInput"]
+
         if not user.username:
-            user.username = f"{user.last_name[0].lower()}{user.first_name[0].lower()}.{randint(1000, 9999)}"
+            first = normalize_characters(user.first_name)
+            last = normalize_characters(user.last_name)
+
+            # Ako se dogodi da je neko ime/presime ostalo prazno posle filtriranja, koristi fallback "x"
+            first_char = first[0].lower() if first else 'x'
+            last_char = last[0].lower() if last else 'x'
+
+            user.username = f"{last_char}{first_char}.{randint(1000, 9999)}"
 
         return user
 
